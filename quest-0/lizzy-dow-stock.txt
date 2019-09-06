@@ -1,1 +1,1 @@
-hello there this is lizzy's branch
+hello there this is lizzy's branch. I am a senior in computer engineering and I really enjoy using git and github because its pretty fun. 
