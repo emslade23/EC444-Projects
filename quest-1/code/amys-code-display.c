@@ -190,6 +190,7 @@ static void test_alpha_display() {
     fonttable[36] = 0b0000110000001001; // Z
 
     while (1) {
+        printf(">> Enter up to 4 characters or numbers to display: \n");
     gets(buf);
     printf("%s\n",buf);
 
@@ -309,7 +310,6 @@ static void test_alpha_display() {
 
 
     int ret;
-    printf(">> Test Alphanumeric Display: \n");
 
     // Set up routines
     // Turn on alpha oscillator
