@@ -149,26 +149,162 @@ int set_brightness_max(uint8_t val) {
 static void test_alpha_display() {
     // Debug
     char buf[5];
+    uint16_t fonttable[40];
     uint16_t map[5];
+    fonttable[0] = 0b0000110000111111; // 0
+    fonttable[1] = 0b0000000000000110; // 1
+    fonttable[2] = 0b0000000011011011; // 2
+    fonttable[3] = 0b0000000010001111; // 3
+    fonttable[4] = 0b0000000011100110; // 4
+    fonttable[5] = 0b0010000001101001; // 5
+    fonttable[6] = 0b0000000011111101; // 6
+    fonttable[7] = 0b0000000000000111; // 7
+    fonttable[8] = 0b0000000011111111; // 8
+    fonttable[9] = 0b0000000011101111; // 9
+    fonttable[10] = 0b0000000000000000; //
+    fonttable[11] = 0b0000000011110111; // A
+    fonttable[12] = 0b0001001010001111; // B
+    fonttable[13] = 0b0000000000111001; // C
+    fonttable[14] = 0b0001001000001111; // D
+    fonttable[15] = 0b0000000011111001; // E
+    fonttable[16] = 0b0000000001110001; // F
+    fonttable[17] = 0b0000000010111101; // G
+    fonttable[18] = 0b0000000011110110; // H
+    fonttable[19] = 0b0001001000000000; // I
+    fonttable[20] = 0b0000000000011110; // J
+    fonttable[21] = 0b0010010001110000; // K
+    fonttable[22] = 0b0000000000111000; // L
+    fonttable[23] = 0b0000010100110110; // M
+    fonttable[24] = 0b0010000100110110; // N
+    fonttable[25] = 0b0000000000111111; // O
+    fonttable[26] = 0b0000000011110011; // P
+    fonttable[27] = 0b0010000000111111; // Q
+    fonttable[28] = 0b0010000011110011; // R
+    fonttable[29] = 0b0000000011101101; // S
+    fonttable[30] = 0b0001001000000001; // T
+    fonttable[31] = 0b0000000000111110; // U
+    fonttable[32] = 0b0000110000110000; // V
+    fonttable[33] = 0b0010100000110110; // W
+    fonttable[34] = 0b0010110100000000; // X
+    fonttable[35] = 0b0001010100000000; // Y
+    fonttable[36] = 0b0000110000001001; // Z
 
+    while (1) {
     gets(buf);
-
+    printf("%s\n",buf);
 
     for (int i = 0; buf[i]; i++) {
-        printf("%d\n",buf[i]);
-    }
-
-    if(buf[0] == '0') {
-        map[0] = 0b0000110000111111;
-    }
-    if(buf[1] == '1') {
-        map[1] = 0b0000000000000110;
-    }
-    if(buf[2] == '2') {
-        map[2] = 0b0000000011011011;
-    }
-    if(buf[3] == '3') {
-        map[3] = 0b0000000010001111;
+        if(buf[i] == '0') {
+            map[i] = fonttable[0];
+        }
+        if(buf[i] == '1') {
+            map[i] = fonttable[1];
+        }
+        if(buf[i] == '2') {
+            map[i] = fonttable[2];
+        }
+        if(buf[i] == '3') {
+            map[i] = fonttable[3];
+        }
+        if(buf[i] == '4') {
+            map[i] = fonttable[4];
+        }
+        if(buf[i] == '5') {
+            map[i] = fonttable[5];
+        }
+        if(buf[i] == '6') {
+            map[i] = fonttable[6];
+        }
+        if(buf[i] == '7') {
+            map[i] = fonttable[7];
+        }
+        if(buf[i] == '8') {
+            map[i] = fonttable[8];
+        }
+        if(buf[i] == '9') {
+            map[i] = fonttable[9];
+        }
+        if(buf[i] == ' ') {
+            map[i] = fonttable[10];
+        }
+        if(buf[i] == 'a') {
+            map[i] = fonttable[11];
+        }
+        if(buf[i] == 'b') {
+            map[i] = fonttable[12];
+        }
+        if(buf[i] == 'c') {
+            map[i] = fonttable[13];
+        }
+        if(buf[i] == 'd') {
+            map[i] = fonttable[14];
+        }
+        if(buf[i] == 'e') {
+            map[i] = fonttable[15];
+        }
+        if(buf[i] == 'f') {
+            map[i] = fonttable[16];
+        }
+        if(buf[i] == 'g') {
+            map[i] = fonttable[17];
+        }
+        if(buf[i] == 'h') {
+            map[i] = fonttable[18];
+        }
+        if(buf[i] == 'i') {
+            map[i] = fonttable[19];
+        }
+        if(buf[i] == 'j') {
+            map[i] = fonttable[20];
+        }
+        if(buf[i] == 'k') {
+            map[i] = fonttable[21];
+        }
+        if(buf[i] == 'l') {
+            map[i] = fonttable[22];
+        }
+        if(buf[i] == 'm') {
+            map[i] = fonttable[23];
+        }
+        if(buf[i] == 'n') {
+            map[i] = fonttable[24];
+        }
+        if(buf[i] == 'o') {
+            map[i] = fonttable[25];
+        }
+        if(buf[i] == 'p') {
+            map[i] = fonttable[26];
+        }
+        if(buf[i] == 'q') {
+            map[i] = fonttable[27];
+        }
+        if(buf[i] == 'r') {
+            map[i] = fonttable[28];
+        }
+        if(buf[i] == 's') {
+            map[i] = fonttable[29];
+        }
+        if(buf[i] == 't') {
+            map[i] = fonttable[30];
+        }
+        if(buf[i] == 'u') {
+            map[i] = fonttable[31];
+        }
+        if(buf[i] == 'v') {
+            map[i] = fonttable[32];
+        }
+        if(buf[i] == 'w') {
+            map[i] = fonttable[33];
+        }
+        if(buf[i] == 'x') {
+            map[i] = fonttable[34];
+        }
+        if(buf[i] == 'y') {
+            map[i] = fonttable[35];
+        }
+        if(buf[i] == 'z') {
+            map[i] = fonttable[36];
+        }
     }
 
 
@@ -189,12 +325,12 @@ static void test_alpha_display() {
     uint16_t displaybuffer[8];
 
     displaybuffer[0] = map[0];
-    displaybuffer[1] = map[1];  // D.
-    displaybuffer[2] = map[2];  // C.
-    displaybuffer[3] = map[3];  // L.
+    displaybuffer[1] = map[1];
+    displaybuffer[2] = map[2];
+    displaybuffer[3] = map[3];
 
     // Continually writes the same command
-    while (1) {
+    //while (1) {
 
       // Send commands characters to display over I2C
       i2c_cmd_handle_t cmd4 = i2c_cmd_link_create();
@@ -209,12 +345,8 @@ static void test_alpha_display() {
       ret = i2c_master_cmd_begin(I2C_EXAMPLE_MASTER_NUM, cmd4, 1000 / portTICK_RATE_MS);
       i2c_cmd_link_delete(cmd4);
 
-      // for (int i = 0; i < 8; i++) {
-      //     printf("%04x\n", displaybuffer[i]);
-      // }
-
       if(ret == ESP_OK) {
-        printf("im printing ok\n\n");
+          printf("^^I displayed this!\n\n");
       }
     }
 
