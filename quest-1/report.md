@@ -4,7 +4,10 @@ Authors: FirstName1 LastName1, FirstName2 LastName2, FirstName3 LastName 3
 YYYY-MM-DD
 
 ## Summary
-
+## What's left?
+1.) get servo to work for 180, seconds and minutes
+2.) up and down RTOS skill
+3.) quest
 
 
 ## Evaluation Criteria
