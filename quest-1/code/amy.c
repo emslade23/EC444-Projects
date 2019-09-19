@@ -173,12 +173,12 @@ static void test_alpha_display() {
     printf(">> Enter the minute, if one digit add 0 before it: \n");
     gets(minute);
     printf("%s\n", minute);
-    while(isitdigit(minute) == false || atoi(minute) > 60) {
+    while(isitdigit(minute) == false || atoi(minute) > 59) {
         if(isitdigit(minute) == false) {
             printf("Error: Please enter only numbers:\n");
             gets(minute);
             printf("%s\n", minute);
-        } else if(atoi(minute) > 60) {
+        } else if(atoi(minute) > 59) {
             printf("Error: Please enter a number under 60:\n");
             gets(minute);
             printf("%s\n", minute);
