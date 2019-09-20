@@ -66,6 +66,10 @@ In this quest, we made a Retro Alarm Clock. The primary function of the alarm cl
 (from ec444 site)
 
 Here, you can perform multiple tasks at different speeds and have them run in parallel. This is useful because it allows the ESP clocks to synchronize, and not cause unwanted results between different processes.
+
+
+We used delays to keep track of the time in our alarm clock. The problem with delays is that they are not completely accurate, so over time, the minutes and seconds will become less and less accurate to reality. 
+If you want to constantly synchronize our retro alarm clock with the actual time and keep making sure that the delay is not causing noise in the system, then it makes the most sense to use an interrupt where you are constantly checking the alarm clock's time with the system time in the computer or in the ESP-IDF machine. This way, you are constantly resetting the alarm such that it stays updated with the current time. This removes the noise from the system. 
 ****
 
 ### Qualitative Criteria
