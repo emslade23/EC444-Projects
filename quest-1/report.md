@@ -16,8 +16,9 @@ In this quest, we made a Retro Alarm Clock. The primary function of the alarm cl
 
 
 '''
-	void init() {				// Convenient way to organize initialization
 	
+	
+	void init() {				// Convenient way to organize initialization
 	     ...    				// Do it in this sub
 	     
 	}
@@ -83,6 +84,9 @@ Any specific details about your approach, how you did it, components, or items t
 
 ## Sketches and Photos
 <center><img src="./images/example.png" width="70%" /></center>  
+<center><img src="./images/IMG_0130.jpg" width="70%" /></center> 
+<center><img src="./images/IMG_0761.jpg" width="70%" /></center> 
+<center><img src="./images/IMG_7307.jpg" width="70%" /></center> 
 <center>
 
 </center>
@@ -90,7 +94,7 @@ Any specific details about your approach, how you did it, components, or items t
 
 ## Supporting Artifacts
 - [Link to repo](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/edit/master/quest-1/report.md)
-- [Link to video demo]()
+- [Link to video demo](https://www.youtube.com/watch?v=R4QLnZ1VeeM&feature=youtu.be)
 
 
 ## References
