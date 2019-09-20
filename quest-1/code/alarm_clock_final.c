@@ -39,18 +39,15 @@
 #define NACK_VAL                           0xFF // i2c nack value
 /////////////////////////////////////////////////////
 
+// Define for the LED
 #define BLINK 26
 
-// Defines for the seconds servo
+// Defines for the servos
 #define SERVO_MIN_PULSEWIDTH 550 //Minimum pulse width in microsecond
 #define SERVO_MAX_PULSEWIDTH 2700 //Maximum pulse width in microsecond
 #define SERVO_MAX_DEGREE 180 //Maximum angle in degree upto which servo can rotate
 
-// Defines for the hour servo
-#define SERVO_MIN_PULSEWIDTH_HOUR 550 //Minimum pulse width in microsecond
-#define SERVO_MAX_PULSEWIDTH_HOUR 2700 //Maximum pulse width in microsecond
-#define SERVO_MAX_DEGREE_HOUR 180 //Maximum angle in degree upto which servo can rotate
-
+// Font table for the alphanumeric display
 uint16_t font_table(int num) {
     uint16_t fonttable[10];
     fonttable[0] = 0b0000110000111111; // 0
@@ -66,6 +63,7 @@ uint16_t font_table(int num) {
     return fonttable[num];
 }
 
+// Global variables
 char hour[2];
 char minute[2];
 int int_hour = 0;
@@ -77,6 +75,7 @@ char mialarmtime[2];
 int int_hralarmtime = 0;
 int int_mialarmtime = 0;
 
+// Checks if input are integers between 0 and 9
 bool isitdigit(char str[2])
 {
     int i = 0;
@@ -93,11 +92,8 @@ bool isitdigit(char str[2])
     }
 }
 
-// sets the initial time for the display
+// asks the user for input of the inital time and askes them if they want to set an alarm
 static void set_time() {
-
-    // Set up routines
-    // Turn on alpha oscillator
 
     // Asks the user to enter the hour
     printf(">> Enter the hour, if one digit add 0 before it: \n");
@@ -177,15 +173,15 @@ static void set_time() {
         int_mialarmtime = atoi(mialarmtime);
     }
     printf("Alarm time is set to %d:%d.\n", int_hralarmtime, int_mialarmtime);
-
 }
 
-// Code for seconds servo
+// Initialization for seconds servo
 static void servo_initialize_seconds(void)
 {
     mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0A, 18);    //Set GPIO 18 as PWM0A, to which seconds servo is connected
 }
 
+// Initialization for minutes servo
 static void servo_initialize_minutes(void)
 {
     mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0B, 19);    //Set GPIO 19 as PWM0A, to which minute is connected
@@ -368,7 +364,7 @@ int hr_increment(int min, int hr, char hour[2])
 }
 
 
-
+// main code for alphanumeric display
 static void test_alpha_display() {
     int ret;
     int currenttime[] = {0,0,0,0};
@@ -384,20 +380,15 @@ static void test_alpha_display() {
             int_hour = hr_increment(int_minute, int_hour, hour);
             int_minute = min_increment(int_minute, minute);
         }
-        //if(int_hour == int_hralarmtime && int_minute == int_mialarmtime) {
-        //    printf("The alarm is triggered!");
-            //int_hralarmtime == 99;
-            //int_mialarmtime == 99;
-        //}
             //show numbers on display
             currenttime[0] = hour[0] - '0';
             currenttime[1] = hour[1] - '0';
             currenttime[2] = minute[0] - '0';
             currenttime[3] = minute[1] - '0';
 
-            for (int i = 0; i <= 3; i++) {
-                displaybuffer[i] = font_table(currenttime[i]);
-            }
+        for (int i = 0; i <= 3; i++) {
+            displaybuffer[i] = font_table(currenttime[i]);
+        }
 
             // Send commands characters to display over I2C
             i2c_cmd_handle_t cmd4 = i2c_cmd_link_create();
@@ -415,6 +406,7 @@ static void test_alpha_display() {
     }
 }
 
+// Main code for led to blink when alarm is triggered
 static void led() {
     gpio_pad_select_gpio(BLINK);
     gpio_set_direction(BLINK, GPIO_MODE_OUTPUT);
@@ -426,8 +418,6 @@ static void led() {
             vTaskDelay(1000 / portTICK_PERIOD_MS);
             gpio_set_level(BLINK, 1);
             vTaskDelay(1000 / portTICK_PERIOD_MS);
-            //int_hralarmtime == 99;
-            //int_mialarmtime == 99;
         }
         vTaskDelay(10 / portTICK_RATE_MS);
         gpio_set_level(BLINK, 1);
@@ -436,6 +426,7 @@ static void led() {
 
 void app_main(void)
 {
+
     ESP_ERROR_CHECK( uart_driver_install(UART_NUM_0, 256, 0, 0, NULL, 0) );
     esp_vfs_dev_uart_use_driver(UART_NUM_0);
 
