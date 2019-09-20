@@ -119,7 +119,7 @@ static void set_time() {
     printf("%s\n", minute);
     while(isitdigit(minute) == false || atoi(minute) > 59) { // Error check the input
         if(isitdigit(minute) == false) {
-            printf("Error: Please enter only numbers:\n");
+            printf("Error: Please enter only numbers:\n"); // asks user for correct input on a loop
             gets(minute);
             printf("%s\n", minute);
         } else if(atoi(minute) > 59) {
@@ -135,7 +135,7 @@ static void set_time() {
     printf("Time is set to %d:%d.\n", int_hour, int_minute);
 
     // set alarm
-    printf(">> Do you want to set an alarm? Type 1 for yes and any other key for no: \n");
+    printf(">> Do you want to set an alarm? Type 1 for yes and any other key for no: \n"); //gives user choice to set alarm or not
     gets(alarmset);
     if(alarmset[0] == '1') {
         printf(">> Enter alarm hour time: \n");
@@ -152,7 +152,7 @@ static void set_time() {
                 printf("%s\n", hralarmtime);
             }
         }
-        printf("Alarm hour is set to %s.\n", hralarmtime);
+        printf("Alarm hour is set to %s.\n", hralarmtime); 
         int_hralarmtime = atoi(hralarmtime);
 
         printf(">> Enter alarm minute time: \n");
@@ -172,7 +172,7 @@ static void set_time() {
         printf("Alarm hour is set to %s.\n", mialarmtime);
         int_mialarmtime = atoi(mialarmtime);
     }
-    printf("Alarm time is set to %d:%d.\n", int_hralarmtime, int_mialarmtime);
+    printf("Alarm time is set to %d:%d.\n", int_hralarmtime, int_mialarmtime); // display set alarm time
 }
 
 // Initialization for seconds servo
@@ -217,7 +217,7 @@ void seconds_servo_control(void *arg)
     mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_0, &pwm_config);    //Configure PWM0A & PWM0B with above settings
     while (1) {
         for (count = 0; count < SERVO_MAX_DEGREE; count = count + 3) {
-            printf("Angle of rotation: %d\n", count);
+            //printf("Angle of rotation: %d\n", count);
             angle = servo_per_degree_init(count);
             //printf("pulse width: %dus\n", angle);
             mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, angle);
@@ -243,7 +243,7 @@ void minutes_servo_control(void *arg)
     mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_0, &pwm_config);    //Configure PWM0A & PWM0B with above settings
     while (1) {
         for (counth = counth; counth < SERVO_MAX_DEGREE; counth = counth + 3) {
-            printf("hour count: %d\n", counth);
+            //printf("hour count: %d\n", counth);
             angle = servo_per_degree_init(counth);
             //printf("pulse width: %dus\n", angle);
             mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, angle);
@@ -326,13 +326,13 @@ int set_brightness_max(uint8_t val) {
 // Minute increment function for the display
 int min_increment(int minute, char min[2])
 {
-    if(minute == 59) {
+    if(minute == 59) { // max count for min is 59 and resets to 0 
         minute = 0;
         min[0] = '0';
         min[1] = '0';
     } else {
         minute++;
-        if(min[1] == '9') {
+        if(min[1] == '9') { // resets last minute digit to 0 afte reaching 9 
             min[1] ='0';
             min[0]++;
         } else {
@@ -342,17 +342,17 @@ int min_increment(int minute, char min[2])
     return minute;
 }
 
-// function for managing
+// function for managing hour display and incrementaton 
 int hr_increment(int min, int hr, char hour[2])
 {
-    if (min == 59){
-        if(hr == 23){
+    if (min == 59){ //increments hours when last minute is 59 
+        if(hr == 23){ // max hour is 23, resets hour to 0
             hr = 0;
             hour[0] = '0';
             hour[1] = '0';
         }else{
             hr++;
-            if(hour[1]=='9'){
+            if(hour[1]=='9'){ // resets last hour digit to 0 when reached 9
                 hour[1] = '0';
                 hour[0]++;
             }else{
@@ -376,9 +376,9 @@ static void test_alpha_display() {
     uint16_t displaybuffer[8];
 
     while(1) {
-          // increases the hour/minute depending on if minute reaches 60, hour reaches 24, etc
+          // increases the hour/minute depending on if minute reaches 60, hour reaches 23
         if(count == 177) {
-            int_hour = hr_increment(int_minute, int_hour, hour);
+            int_hour = hr_increment(int_minute, int_hour, hour); 
             int_minute = min_increment(int_minute, minute);
         }
             // converts the hour and minute char digits into integer
