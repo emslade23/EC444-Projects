@@ -65,6 +65,74 @@ uint16_t font_table(int num) {
     return fonttable[num];
 }
 
+char hour[2];
+char minute[2];
+int int_hour = 0;
+int int_minute = 0;
+uint32_t counth = 0;
+
+bool isitdigit(char str[2])
+{
+    int i = 0;
+    int counter = 0;
+    for(i = 0; i < 2 ; i++) {
+        if (str[i] >= '0' && str[i] <= '9'){
+            counter++;
+        }
+    }
+    if(counter == 2) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// sets the initial time for the display
+static void set_time() {
+
+    // Set up routines
+    // Turn on alpha oscillator
+
+    // Asks the user to enter the hour
+    printf(">> Enter the hour, if one digit add 0 before it: \n");
+    gets(hour);
+    printf("%s\n", hour);
+    while(isitdigit(hour) == false || atoi(hour) > 23) { // Error check the input
+        if(isitdigit(hour) == false) {
+            printf("Error: Please enter only numbers:\n");
+            gets(hour);
+            printf("%s\n", hour);
+        } else if(atoi(hour) > 23) {
+            printf("Error: Please enter a number under 24:\n");
+            gets(hour);
+            printf("%s\n", hour);
+        }
+    }
+    printf("Hour is set to %s.\n", hour);
+    int_hour = atoi(hour);
+
+    // Asks the user to enter the minute
+    printf(">> Enter the minute, if one digit add 0 before it: \n");
+    gets(minute);
+    printf("%s\n", minute);
+    while(isitdigit(minute) == false || atoi(minute) > 59) { // Error check the input
+        if(isitdigit(minute) == false) {
+            printf("Error: Please enter only numbers:\n");
+            gets(minute);
+            printf("%s\n", minute);
+        } else if(atoi(minute) > 59) {
+            printf("Error: Please enter a number under 60:\n");
+            gets(minute);
+            printf("%s\n", minute);
+        }
+    }
+    printf("Minute is set to %s.\n", minute);
+    int_minute = atoi(minute);
+    counth = int_minute * 3;
+
+    printf("Time is set to %d:%d.\n", int_hour, int_minute);
+}
+
 // Code for seconds servo
 static void servo_initialize_seconds(void)
 {
@@ -73,7 +141,8 @@ static void servo_initialize_seconds(void)
 
 static void servo_initialize_minutes(void)
 {
-    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0B, 12);    //Set GPIO 12 as PWM0A, to which minute is connected
+    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0B, 19);    //Set GPIO 19 as PWM0A, to which minute is connected
+
 }
 
 
@@ -115,8 +184,6 @@ void seconds_servo_control(void *arg)
     }
 }
 
-uint32_t counth = 0;
-
 void minutes_servo_control(void *arg)
 {
     uint32_t angle;
@@ -133,14 +200,14 @@ void minutes_servo_control(void *arg)
     pwm_config.duty_mode = MCPWM_DUTY_MODE_0;
     mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_0, &pwm_config);    //Configure PWM0A & PWM0B with above settings
     while (1) {
-        for (counth = 0; counth < SERVO_MAX_DEGREE; counth = counth + 3) {
+        for (counth = counth; counth < SERVO_MAX_DEGREE; counth = counth + 3) {
             printf("hour count: %d\n", counth);
             angle = servo_per_degree_init(counth);
             //printf("pulse width: %dus\n", angle);
-            mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, angle);
-            //mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 60);
-            vTaskDelay(100);     //Add delay, since it takes time for servo to rotate, generally 100ms/60degree rotation at 5V
+            mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, angle);
+            vTaskDelay(6000);     //Add delay, since it takes time for servo to rotate, generally 100ms/60degree rotation at 5V
         }
+        counth = 0;
     }
 }
 
@@ -255,71 +322,6 @@ int hr_increment(int min, int hr, char hour[2])
 }
 
 
-bool isitdigit(char str[2])
-{
-    int i = 0;
-    int counter = 0;
-    for(i = 0; i < 2 ; i++) {
-        if (str[i] >= '0' && str[i] <= '9'){
-            counter++;
-        }
-    }
-    if(counter == 2) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-char hour[2];
-char minute[2];
-int int_hour = 0;
-int int_minute = 0;
-
-// sets the initial time for the display
-static void set_time() {
-
-    // Set up routines
-    // Turn on alpha oscillator
-
-    // Asks the user to enter the hour
-    printf(">> Enter the hour, if one digit add 0 before it: \n");
-    gets(hour);
-    printf("%s\n", hour);
-    while(isitdigit(hour) == false || atoi(hour) > 23) { // Error check the input
-        if(isitdigit(hour) == false) {
-            printf("Error: Please enter only numbers:\n");
-            gets(hour);
-            printf("%s\n", hour);
-        } else if(atoi(hour) > 23) {
-            printf("Error: Please enter a number under 24:\n");
-            gets(hour);
-            printf("%s\n", hour);
-        }
-    }
-    printf("Hour is set to %s.\n", hour);
-    int_hour = atoi(hour);
-
-    // Asks the user to enter the minute
-    printf(">> Enter the minute, if one digit add 0 before it: \n");
-    gets(minute);
-    printf("%s\n", minute);
-    while(isitdigit(minute) == false || atoi(minute) > 59) { // Error check the input
-        if(isitdigit(minute) == false) {
-            printf("Error: Please enter only numbers:\n");
-            gets(minute);
-            printf("%s\n", minute);
-        } else if(atoi(minute) > 59) {
-            printf("Error: Please enter a number under 60:\n");
-            gets(minute);
-            printf("%s\n", minute);
-        }
-    }
-    printf("Minute is set to %s.\n", minute);
-    int_minute = atoi(minute);
-
-    printf("Time is set to %d:%d.\n", int_hour, int_minute);
-}
 
 static void test_alpha_display() {
     int ret;
