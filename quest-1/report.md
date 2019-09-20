@@ -54,7 +54,8 @@ In this quest, we made a Retro Alarm Clock. The primary function of the alarm cl
 		xTaskCreate(task_2, "task_2",1024*2, NULL, configMAX_PRIORITIES-1, NULL);
 		
 	} // Instantiate tasks with priorites and stack size 
-	'''
+	
+'''
 
 (from ec444 site)
 
@@ -83,9 +84,13 @@ Any specific details about your approach, how you did it, components, or items t
 	- in order to increment the numbers for the hours and the minutes, we have counters to keep track of this, and also delays so that each iteration takes a second, so that 60 iterations equals one minute passing and 3600 iterations equals one hour passing.
 
 ## Sketches and Photos
-<center><img src="./images/example.png" width="70%" /></center>  
+It is the time 2:09 and so as you can see the second display is ticking and the minutes display is aligned properly to 9 minutes given that our servos range is 180 degrees.
 <center><img src="./images/IMG_0130.jpg" width="70%" /></center> 
+
+You can see that the angle of rotation increments by three each time, because since our servos range is 180 degrees, we have 3 degrees of rotation occuring per second. 
 <center><img src="./images/IMG_0761.jpg" width="70%" /></center> 
+
+This is an example at 1:32 and you can see that the seconds servo is ticking away, and the minutes servo is aligned with approximately 30 minutes. 
 <center><img src="./images/IMG_7307.jpg" width="70%" /></center> 
 <center>
 
