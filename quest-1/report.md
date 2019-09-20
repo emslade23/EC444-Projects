@@ -99,7 +99,7 @@ This is an example at 1:32 and you can see that the seconds servo is ticking awa
 
 ## Supporting Artifacts
 - [Link to repo](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/edit/master/quest-1/report.md)
-- [Link to video demo](https://www.youtube.com/watch?v=R4QLnZ1VeeM&feature=youtu.be)
+- [Link to video demo](https://www.youtube.com/watch?v=3sD5_wn7ulk&feature=youtu.be)
 
 
 ## References
