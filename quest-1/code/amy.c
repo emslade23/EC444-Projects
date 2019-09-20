@@ -422,15 +422,15 @@ static void led() {
     while(1) {
         if(int_hour == int_hralarmtime && int_minute == int_mialarmtime) {
             printf("The alarm is triggered!");
-            gpio_set_level(BLINK, 1);
-            vTaskDelay(1000 / portTICK_PERIOD_MS);
             gpio_set_level(BLINK, 0);
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+            gpio_set_level(BLINK, 1);
             vTaskDelay(1000 / portTICK_PERIOD_MS);
             //int_hralarmtime == 99;
             //int_mialarmtime == 99;
         }
         vTaskDelay(10 / portTICK_RATE_MS);
-        gpio_set_level(BLINK, 0);
+        gpio_set_level(BLINK, 1);
     }
 }
 
