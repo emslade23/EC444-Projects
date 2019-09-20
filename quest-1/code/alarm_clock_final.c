@@ -152,7 +152,7 @@ static void set_time() {
                 printf("%s\n", hralarmtime);
             }
         }
-        printf("Alarm hour is set to %s.\n", hralarmtime); 
+        printf("Alarm hour is set to %s.\n", hralarmtime);
         int_hralarmtime = atoi(hralarmtime);
 
         printf(">> Enter alarm minute time: \n");
@@ -326,13 +326,13 @@ int set_brightness_max(uint8_t val) {
 // Minute increment function for the display
 int min_increment(int minute, char min[2])
 {
-    if(minute == 59) { // max count for min is 59 and resets to 0 
+    if(minute == 59) { // max count for min is 59 and resets to 0
         minute = 0;
         min[0] = '0';
         min[1] = '0';
     } else {
         minute++;
-        if(min[1] == '9') { // resets last minute digit to 0 afte reaching 9 
+        if(min[1] == '9') { // resets last minute digit to 0 afte reaching 9
             min[1] ='0';
             min[0]++;
         } else {
@@ -342,10 +342,10 @@ int min_increment(int minute, char min[2])
     return minute;
 }
 
-// function for managing hour display and incrementaton 
+// function for managing hour display and incrementaton
 int hr_increment(int min, int hr, char hour[2])
 {
-    if (min == 59){ //increments hours when last minute is 59 
+    if (min == 59){ //increments hours when last minute is 59
         if(hr == 23){ // max hour is 23, resets hour to 0
             hr = 0;
             hour[0] = '0';
@@ -378,7 +378,7 @@ static void test_alpha_display() {
     while(1) {
           // increases the hour/minute depending on if minute reaches 60, hour reaches 23
         if(count == 177) {
-            int_hour = hr_increment(int_minute, int_hour, hour); 
+            int_hour = hr_increment(int_minute, int_hour, hour);
             int_minute = min_increment(int_minute, minute);
         }
             // converts the hour and minute char digits into integer
