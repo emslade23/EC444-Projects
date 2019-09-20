@@ -13,10 +13,8 @@ In this quest, we made a Retro Alarm Clock. The primary function of the alarm cl
 3. Can set time: **Yes**
 4. Demo delivered at scheduled time and report submitted in team folder with all required **Yes**
 5. Investigative question response: How can you synchronize multiple ESP clocks with each other? You can synchronize multiple ESP clocks using FreeRTOS. 
-'''
-#include ...				// Includes and defines
 
-#define ...
+
 
 	void init() {				// Convenient way to organize initialization
 	
@@ -54,9 +52,8 @@ In this quest, we made a Retro Alarm Clock. The primary function of the alarm cl
 		
 		xTaskCreate(task_2, "task_2",1024*2, NULL, configMAX_PRIORITIES-1, NULL);
 		
-	} // Instantiate tasks with priorites and stack size
-	
-'''
+	} // Instantiate tasks with priorites and stack size '''
+
 (from ec444 site)
 
 Here, you can perform multiple tasks at different speeds and have them run in parallel. This is useful because it allows the ESP clocks to synchronize, and not cause unwanted results between different processes. 
