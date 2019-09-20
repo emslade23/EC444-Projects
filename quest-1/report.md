@@ -1,18 +1,62 @@
 # Quest Name
-Authors: FirstName1 LastName1, FirstName2 LastName2, FirstName3 LastName 3
+Authors: Amy Dong, Quianna Mortimer, Elizabeth Slade
 
-YYYY-MM-DD
+2019-09-23
 
 ## Summary
+In this quest, we made a Retro Alarm Clock. The primary function of the alarm clock is to work as a timer. So when a user inputs a specific time, then our clock will take in that time and start a timer. When this timer starts, the seconds will be recorded by one of the servos. Then, the minutes will be recorded by the last two digits on the Alphanumeric display and by the second servo. The hours will be recorded by the first two digits of the alphanumeric display. 
 
+## Design Specifications and Evaluation Criteria:
+### Objective Criteria
+1. Two servos indicate actual time in seconds and minutes: **Yes**
+2. Alphanumeric display indicates actual time in hours and minutes: **Yes**
+3. Can set time: **Yes**
+4. Demo delivered at scheduled time and report submitted in team folder with all required **Yes**
+5. Investigative question response: How can you synchronize multiple ESP clocks with each other? You can synchronize multiple ESP clocks using FreeRTOS. 
+#include ...				// Includes and defines
+#define ...
 
+	void init() {				// Convenient way to organize initialization
+	     ...    				// Do it in this sub
+	}
 
-## Evaluation Criteria
+	static void task_1()			// Define your first task here
+	{
+		while(1){			// Or for( ;; )
+			Do some stuff;		// Your task code here
+		}
+	}
+
+	static void task_2()			// Define your second task here
+	{
+		while(1){			// Or for( ;; )
+			Do some stuff;		// Your task code here
+		}
+	}
+
+	voide app_main()
+	{
+		init();				// Initialize stuff
+		xTaskCreate(task_1, "task_1",1024*2, NULL, configMAX_PRIORITIES, NULL);
+		xTaskCreate(task_2, "task_2",1024*2, NULL, configMAX_PRIORITIES-1, NULL);
+	}			    		// Instantiate tasks with priorites and stack size
+(from ec444 site)
+
+Here, you can perform multiple tasks at different speeds and have them run in parallel. This is useful because it allows the ESP clocks to synchronize, and not cause unwanted results between different processes. 
+****
+
+### Qualitative Criteria
+1. Quality of solution 
+2. Quality of report.md including use of graphics
+3. Quality of code reporting
+4. Quality of video presentation
+
+Reiteration of design specifications and evaluation criteria – indicate which ones you met, not met
 
 
 
 ## Solution Design
-
+- any specific details about your approach, how you did it, components, or items to call out that make your work special
 
 
 ## Sketches and Photos
@@ -26,6 +70,7 @@ YYYY-MM-DD
 
 
 ## References
+References or links to any code or techniques adopted if not your own
 
 -----
 
