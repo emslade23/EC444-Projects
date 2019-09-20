@@ -1,4 +1,4 @@
-# Quest Name
+# Retro Alarm Clock!
 Authors: Amy Dong, Quianna Mortimer, Elizabeth Slade
 
 2019-09-23
