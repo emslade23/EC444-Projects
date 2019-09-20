@@ -108,9 +108,3 @@ References or links to any code or techniques adopted if not your own
 - We also referenced the esp-idf example documentation: https://github.com/espressif/esp-idf/blob/master/examples/peripherals/mcpwm/mcpwm_basic_config/main/mcpwm_basic_config_example.c
 -----
 
-## Reminders
-
-- Video recording in landscape not to exceed 90s
-- Each team member appears in video
-- Make sure video permission is set accessible to the instructors
-- Repo is private
