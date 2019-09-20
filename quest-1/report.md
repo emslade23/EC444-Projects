@@ -79,7 +79,7 @@ Any specific details about your approach, how you did it, components, or items t
 - Special Elements
 	- In order to create the seconds ticker, we created a xTaskDelay of 100 milliseconds in order for it to delay every second. 
 	- In order to create the minutes ticker, we created a xTaskDelay of 6000 milliseconds in order to delay until a minute passes.
-	- in order to increment the numbers for 
+	- in order to increment the numbers for the hours and the minutes, we have counters to keep track of this, and also delays so that each iteration takes a second, so that 60 iterations equals one minute passing and 3600 iterations equals one hour passing.
 
 ## Sketches and Photos
 <center><img src="./images/example.png" width="70%" /></center>  
