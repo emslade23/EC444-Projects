@@ -15,7 +15,7 @@ In this quest, we made a Retro Alarm Clock. The primary function of the alarm cl
 5. Investigative question response: How can you synchronize multiple ESP clocks with each other? You can synchronize multiple ESP clocks using FreeRTOS. 
 
 
-
+'''
 	void init() {				// Convenient way to organize initialization
 	
 	     ...    				// Do it in this sub
@@ -52,7 +52,8 @@ In this quest, we made a Retro Alarm Clock. The primary function of the alarm cl
 		
 		xTaskCreate(task_2, "task_2",1024*2, NULL, configMAX_PRIORITIES-1, NULL);
 		
-	} // Instantiate tasks with priorites and stack size '''
+	} // Instantiate tasks with priorites and stack size 
+	'''
 
 (from ec444 site)
 
