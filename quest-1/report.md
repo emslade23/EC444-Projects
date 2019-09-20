@@ -4,6 +4,12 @@ Authors: Amy Dong, Quianna Mortimer, Elizabeth Slade
 2019-09-23
 
 ## Summary
+
+## What's left?
+1.) get servo to work for 180, seconds and minutes
+2.) up and down RTOS skill
+3.) quest
+=======
 In this quest, we made a Retro Alarm Clock. The primary function of the alarm clock is to work as a timer. So when a user inputs a specific time, then our clock will take in that time and start a timer. When this timer starts, the seconds will be recorded by one of the servos. Then, the minutes will be recorded by the last two digits on the Alphanumeric display and by the second servo. The hours will be recorded by the first two digits of the alphanumeric display. 
 
 ## Design Specifications and Evaluation Criteria:
@@ -67,7 +73,6 @@ Here, you can perform multiple tasks at different speeds and have them run in pa
 2. Quality of report.md including use of graphics
 3. Quality of code reporting
 4. Quality of video presentation
-
 
 
 
