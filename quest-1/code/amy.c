@@ -236,10 +236,10 @@ int min_increment(int minute, char min[2])
 int hr_increment(int min, int hr, char hour[2])
 {
     if (min == 59){
-        if(hr == 24){
-            hr = 1;
+        if(hr == 23){
+            hr = 0;
             hour[0] = '0';
-            hour[1] = '1';
+            hour[1] = '0';
         }else{
             hr++;
             if(hour[1]=='9'){
@@ -286,12 +286,12 @@ static void set_time() {
     printf(">> Enter the hour, if one digit add 0 before it: \n");
     gets(hour);
     printf("%s\n", hour);
-    while(isitdigit(hour) == false || atoi(hour) > 24) { // Error check the input
+    while(isitdigit(hour) == false || atoi(hour) > 23) { // Error check the input
         if(isitdigit(hour) == false) {
             printf("Error: Please enter only numbers:\n");
             gets(hour);
             printf("%s\n", hour);
-        } else if(atoi(hour) > 24) {
+        } else if(atoi(hour) > 23) {
             printf("Error: Please enter a number under 24:\n");
             gets(hour);
             printf("%s\n", hour);
@@ -309,7 +309,7 @@ static void set_time() {
             printf("Error: Please enter only numbers:\n");
             gets(minute);
             printf("%s\n", minute);
-        } else if(atoi(minute) > 60) {
+        } else if(atoi(minute) > 59) {
             printf("Error: Please enter a number under 60:\n");
             gets(minute);
             printf("%s\n", minute);
@@ -333,10 +333,8 @@ static void test_alpha_display() {
     while(1) {
         //printf("%d\n",count);
         if(count == 177) {
-            int_minute = min_increment(int_minute, minute);
-        }
-        if(counth == 177) {
             int_hour = hr_increment(int_minute, int_hour, hour);
+            int_minute = min_increment(int_minute, minute);
         }
             //show numbers on display
             currenttime[0] = hour[0] - '0';
