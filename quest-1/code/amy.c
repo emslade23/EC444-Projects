@@ -11,6 +11,9 @@
 #include "string.h"
 #include "driver/gpio.h"
 #include "esp_vfs_dev.h"
+#include "esp_attr.h"
+#include "driver/mcpwm.h"
+#include "soc/mcpwm_periph.h"
 
 //defines for display
 // 14-Segment Display
@@ -36,6 +39,16 @@
 #define NACK_VAL                           0xFF // i2c nack value
 /////////////////////////////////////////////////////
 
+// Defines for the seconds servo
+#define SERVO_MIN_PULSEWIDTH 550 //Minimum pulse width in microsecond
+#define SERVO_MAX_PULSEWIDTH 2700 //Maximum pulse width in microsecond
+#define SERVO_MAX_DEGREE 180 //Maximum angle in degree upto which servo can rotate
+
+// Defines for the hour servo
+#define SERVO_MIN_PULSEWIDTH_HOUR 550 //Minimum pulse width in microsecond
+#define SERVO_MAX_PULSEWIDTH_HOUR 2700 //Maximum pulse width in microsecond
+#define SERVO_MAX_DEGREE_HOUR 180 //Maximum angle in degree upto which servo can rotate
+
 uint16_t font_table(int num) {
     uint16_t fonttable[9];
     fonttable[0] = 0b0000110000111111; // 0
@@ -52,10 +65,88 @@ uint16_t font_table(int num) {
     return fonttable[num];
 }
 
+// Code for seconds servo
+static void servo_initialize_seconds(void)
+{
+    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0A, 18);    //Set GPIO 18 as PWM0A, to which seconds servo is connected
+}
+
+static void servo_initialize_minutes(void)
+{
+    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0B, 12);    //Set GPIO 12 as PWM0A, to which minute is connected
+}
+
+
+// Calculate pulse width for seconds servo
+static uint32_t servo_per_degree_init(uint32_t degree_of_rotation)
+{
+    uint32_t cal_pulsewidth = 0;
+    cal_pulsewidth = (SERVO_MIN_PULSEWIDTH + (((SERVO_MAX_PULSEWIDTH - SERVO_MIN_PULSEWIDTH) * (degree_of_rotation)) / (SERVO_MAX_DEGREE)));
+    return cal_pulsewidth;
+}
+
+uint32_t count;
+
+// Code for seconds servo
+void seconds_servo_control(void *arg)
+{
+    uint32_t angle;
+    //1. mcpwm gpio initialization
+    servo_initialize_seconds();
+
+    //2. initial mcpwm configuration
+    //printf("Configuring Initial Parameters of mcpwm......\n");
+    mcpwm_config_t pwm_config;
+    pwm_config.frequency = 50;    //frequency = 50Hz, i.e. for every servo motor time period should be 20ms
+    pwm_config.cmpr_a = 0;    //duty cycle of PWMxA = 0
+    pwm_config.cmpr_b = 0;    //duty cycle of PWMxb = 0
+    pwm_config.counter_mode = MCPWM_UP_COUNTER;
+    pwm_config.duty_mode = MCPWM_DUTY_MODE_0;
+    mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_0, &pwm_config);    //Configure PWM0A & PWM0B with above settings
+    while (1) {
+        for (count = 0; count < SERVO_MAX_DEGREE; count = count + 3) {
+            printf("Angle of rotation: %d\n", count);
+            angle = servo_per_degree_init(count);
+            //printf("pulse width: %dus\n", angle);
+            mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, angle);
+            //mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 60);
+            vTaskDelay(100);     //Add delay, since it takes time for servo to rotate, generally 100ms/60degree rotation at 5V
+        }
+    }
+}
+
+uint32_t counth = 0;
+
+void minutes_servo_control(void *arg)
+{
+    uint32_t angle;
+    //1. mcpwm gpio initialization
+    servo_initialize_minutes();
+
+    //2. initial mcpwm configuration
+    //printf("Configuring Initial Parameters of mcpwm......\n");
+    mcpwm_config_t pwm_config;
+    pwm_config.frequency = 50;    //frequency = 50Hz, i.e. for every servo motor time period should be 20ms
+    pwm_config.cmpr_a = 0;    //duty cycle of PWMxA = 0
+    pwm_config.cmpr_b = 0;    //duty cycle of PWMxb = 0
+    pwm_config.counter_mode = MCPWM_UP_COUNTER;
+    pwm_config.duty_mode = MCPWM_DUTY_MODE_0;
+    mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_0, &pwm_config);    //Configure PWM0A & PWM0B with above settings
+    while (1) {
+        for (counth = 0; counth < SERVO_MAX_DEGREE; counth = counth + 3) {
+            printf("hour count: %d\n", counth);
+            angle = servo_per_degree_init(counth);
+            //printf("pulse width: %dus\n", angle);
+            mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, angle);
+            //mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 60);
+            vTaskDelay(100);     //Add delay, since it takes time for servo to rotate, generally 100ms/60degree rotation at 5V
+        }
+    }
+}
+
 // init for display
 static void i2c_example_master_init(){
     // Debug
-    printf("\n>> i2c Config\n");
     int err;
 
     // Port configuration
@@ -70,14 +161,14 @@ static void i2c_example_master_init(){
     conf.scl_pullup_en = GPIO_PULLUP_ENABLE;                  // Internal pullup
     conf.master.clk_speed = I2C_EXAMPLE_MASTER_FREQ_HZ;       // CLK frequency
     err = i2c_param_config(i2c_master_port, &conf);           // Configure
-    if (err == ESP_OK) {printf("- parameters: ok\n");}
+    //if (err == ESP_OK) {printf("- parameters: ok\n");}
 
     // Install I2C driver
     err = i2c_driver_install(i2c_master_port, conf.mode,
                              I2C_EXAMPLE_MASTER_RX_BUF_DISABLE,
                              I2C_EXAMPLE_MASTER_TX_BUF_DISABLE, 0);
     // i2c_set_data_mode(i2c_master_port,I2C_DATA_MODE_LSB_FIRST,I2C_DATA_MODE_LSB_FIRST);
-    if (err == ESP_OK) {printf("- initialized: yes\n\n");}
+    //if (err == ESP_OK) {printf("- initialized: yes\n\n");}
 
     // Dat in MSB mode
     i2c_set_data_mode(i2c_master_port, I2C_DATA_MODE_MSB_FIRST, I2C_DATA_MODE_MSB_FIRST);
@@ -123,6 +214,25 @@ int set_brightness_max(uint8_t val) {
     return ret;
 }
 
+// Minute increment function for the display
+int min_increment(int minute, char min[2])
+{
+    if(minute == 59) {
+        minute = 0;
+        min[0] = '0';
+        min[1] = '0';
+    } else {
+        minute++;
+        if(min[1] == '9') {
+            min[1] ='0';
+            min[0]++;
+        } else {
+            min[1]++;
+        }
+    }
+    return minute;
+}
+
 bool isitdigit(char str[2])
 {
     int i = 0;
@@ -139,24 +249,22 @@ bool isitdigit(char str[2])
     }
 }
 
-static void test_alpha_display() {
-    char hour[2];
-    char minute[2];
-    int int_hour = 0;
-    int int_minute = 0;
-    uint16_t displaybuffer[8];
-    int currenttime[] = {0,0,0,0};
-    int ret;
-        // Set up routines
-        // Turn on alpha oscillator
-        ret = alpha_oscillator();
-        ret = no_blink();
-        ret = set_brightness_max(0xF);
+char hour[2];
+char minute[2];
+int int_hour = 0;
+int int_minute = 0;
 
+// sets the initial time for the display
+static void set_time() {
+
+    // Set up routines
+    // Turn on alpha oscillator
+
+    // Asks the user to enter the hour
     printf(">> Enter the hour, if one digit add 0 before it: \n");
     gets(hour);
     printf("%s\n", hour);
-    while(isitdigit(hour) == false || atoi(hour) > 24) {
+    while(isitdigit(hour) == false || atoi(hour) > 24) { // Error check the input
         if(isitdigit(hour) == false) {
             printf("Error: Please enter only numbers:\n");
             gets(hour);
@@ -170,15 +278,16 @@ static void test_alpha_display() {
     printf("Hour is set to %s.\n", hour);
     int_hour = atoi(hour);
 
+    // Asks the user to enter the minute
     printf(">> Enter the minute, if one digit add 0 before it: \n");
     gets(minute);
     printf("%s\n", minute);
-    while(isitdigit(minute) == false || atoi(minute) > 59) {
+    while(isitdigit(minute) == false || atoi(minute) > 59) { // Error check the input
         if(isitdigit(minute) == false) {
             printf("Error: Please enter only numbers:\n");
             gets(minute);
             printf("%s\n", minute);
-        } else if(atoi(minute) > 59) {
+        } else if(atoi(minute) > 60) {
             printf("Error: Please enter a number under 60:\n");
             gets(minute);
             printf("%s\n", minute);
@@ -188,34 +297,46 @@ static void test_alpha_display() {
     int_minute = atoi(minute);
 
     printf("Time is set to %d:%d.\n", int_hour, int_minute);
+}
 
+static void test_alpha_display() {
+    int ret;
+    int currenttime[] = {0,0,0,0};
+    ret = alpha_oscillator();
+    ret = no_blink();
+    ret = set_brightness_max(0xF);
 
-    currenttime[0] = hour[0] - '0';
-    currenttime[1] = hour[1] - '0';
-    currenttime[2] = minute[0] - '0';
-    currenttime[3] = minute[1] - '0';
-
-    for (int i = 0; i <= 3; i++) {
-        displaybuffer[i] = font_table(currenttime[i]);
-    }
+    uint16_t displaybuffer[8];
 
     while(1) {
-        // Send commands characters to display over I2C
-        i2c_cmd_handle_t cmd4 = i2c_cmd_link_create();
-        i2c_master_start(cmd4);
-        i2c_master_write_byte(cmd4, ( SLAVE_ADDR << 1 ) | WRITE_BIT, ACK_CHECK_EN);
-        i2c_master_write_byte(cmd4, (uint8_t)0x00, ACK_CHECK_EN);
-        for (uint8_t i=0; i<8; i++) {
-            i2c_master_write_byte(cmd4, displaybuffer[i] & 0xFF, ACK_CHECK_EN);
-            i2c_master_write_byte(cmd4, displaybuffer[i] >> 8, ACK_CHECK_EN);
+        //printf("%d\n",count);
+        if(count == 177) {
+            int_minute = min_increment(int_minute, minute);
         }
-        i2c_master_stop(cmd4);
-        ret = i2c_master_cmd_begin(I2C_EXAMPLE_MASTER_NUM, cmd4, 1000 / portTICK_RATE_MS);
-        i2c_cmd_link_delete(cmd4);
+            //show numbers on display
+            currenttime[0] = hour[0] - '0';
+            currenttime[1] = hour[1] - '0';
+            currenttime[2] = minute[0] - '0';
+            currenttime[3] = minute[1] - '0';
 
-        //if(ret == ESP_OK) {
-        //    printf("I displayed this!\n\n");
-        //}
+            for (int i = 0; i <= 3; i++) {
+                displaybuffer[i] = font_table(currenttime[i]);
+            }
+            //int_hour = hr_increment(int_minute, int_hour);
+
+            // Send commands characters to display over I2C
+            i2c_cmd_handle_t cmd4 = i2c_cmd_link_create();
+            i2c_master_start(cmd4);
+            i2c_master_write_byte(cmd4, ( SLAVE_ADDR << 1 ) | WRITE_BIT, ACK_CHECK_EN);
+            i2c_master_write_byte(cmd4, (uint8_t)0x00, ACK_CHECK_EN);
+            for (uint8_t i=0; i<8; i++) {
+                i2c_master_write_byte(cmd4, displaybuffer[i] & 0xFF, ACK_CHECK_EN);
+                i2c_master_write_byte(cmd4, displaybuffer[i] >> 8, ACK_CHECK_EN);
+            }
+            i2c_master_stop(cmd4);
+            ret = i2c_master_cmd_begin(I2C_EXAMPLE_MASTER_NUM, cmd4, 1000 / portTICK_RATE_MS);
+            i2c_cmd_link_delete(cmd4);
+            vTaskDelay(1000 / portTICK_RATE_MS);
     }
 }
 
@@ -224,6 +345,10 @@ void app_main(void)
     ESP_ERROR_CHECK( uart_driver_install(UART_NUM_0, 256, 0, 0, NULL, 0) );
     esp_vfs_dev_uart_use_driver(UART_NUM_0);
 
+    set_time();
     i2c_example_master_init();
     xTaskCreate(test_alpha_display,"test_alpha_display", 4096, NULL, configMAX_PRIORITIES, NULL);
+    xTaskCreate(seconds_servo_control, "seconds_servo_control", 4096, NULL, configMAX_PRIORITIES-1, NULL);
+    xTaskCreate(minutes_servo_control, "minutes_servo_control", 4096, NULL, configMAX_PRIORITIES-2, NULL);
+
 }
