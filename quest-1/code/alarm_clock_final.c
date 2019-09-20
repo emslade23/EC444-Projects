@@ -342,6 +342,7 @@ int min_increment(int minute, char min[2])
     return minute;
 }
 
+// function for managing
 int hr_increment(int min, int hr, char hour[2])
 {
     if (min == 59){
@@ -375,17 +376,18 @@ static void test_alpha_display() {
     uint16_t displaybuffer[8];
 
     while(1) {
-        //printf("%d\n",count);
+          // increases the hour/minute depending on if minute reaches 60, hour reaches 24, etc
         if(count == 177) {
             int_hour = hr_increment(int_minute, int_hour, hour);
             int_minute = min_increment(int_minute, minute);
         }
-            //show numbers on display
+            // converts the hour and minute char digits into integer
             currenttime[0] = hour[0] - '0';
             currenttime[1] = hour[1] - '0';
             currenttime[2] = minute[0] - '0';
             currenttime[3] = minute[1] - '0';
 
+            // gets the correct mapping from the font table
         for (int i = 0; i <= 3; i++) {
             displaybuffer[i] = font_table(currenttime[i]);
         }
