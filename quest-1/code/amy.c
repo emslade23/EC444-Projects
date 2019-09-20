@@ -39,6 +39,8 @@
 #define NACK_VAL                           0xFF // i2c nack value
 /////////////////////////////////////////////////////
 
+#define BLINK 26
+
 // Defines for the seconds servo
 #define SERVO_MIN_PULSEWIDTH 550 //Minimum pulse width in microsecond
 #define SERVO_MAX_PULSEWIDTH 2700 //Maximum pulse width in microsecond
@@ -50,7 +52,7 @@
 #define SERVO_MAX_DEGREE_HOUR 180 //Maximum angle in degree upto which servo can rotate
 
 uint16_t font_table(int num) {
-    uint16_t fonttable[9];
+    uint16_t fonttable[10];
     fonttable[0] = 0b0000110000111111; // 0
     fonttable[1] = 0b0000000000000110; // 1
     fonttable[2] = 0b0000000011011011; // 2
@@ -61,7 +63,6 @@ uint16_t font_table(int num) {
     fonttable[7] = 0b0000000000000111; // 7
     fonttable[8] = 0b0000000011111111; // 8
     fonttable[9] = 0b0000000011101111; // 9
-    fonttable[10] = 0b0000000000000000; //
     return fonttable[num];
 }
 
@@ -70,6 +71,11 @@ char minute[2];
 int int_hour = 0;
 int int_minute = 0;
 uint32_t counth = 0;
+char alarmset[1];
+char hralarmtime[2];
+char mialarmtime[2];
+int int_hralarmtime = 0;
+int int_mialarmtime = 0;
 
 bool isitdigit(char str[2])
 {
@@ -131,6 +137,47 @@ static void set_time() {
     counth = int_minute * 3;
 
     printf("Time is set to %d:%d.\n", int_hour, int_minute);
+
+    // set alarm
+    printf(">> Do you want to set an alarm? Type 1 for yes and any other key for no: \n");
+    gets(alarmset);
+    if(alarmset[0] == '1') {
+        printf(">> Enter alarm hour time: \n");
+        gets(hralarmtime);
+        printf("%s\n", hralarmtime);
+        while(isitdigit(hralarmtime) == false || atoi(hralarmtime) > 59) { // Error check the input
+            if(isitdigit(hralarmtime) == false) {
+                printf("Error: Please enter only numbers:\n");
+                gets(hralarmtime);
+                printf("%s\n", hralarmtime);
+            } else if(atoi(hralarmtime) > 59) {
+                printf("Error: Please enter a number under 60:\n");
+                gets(hralarmtime);
+                printf("%s\n", hralarmtime);
+            }
+        }
+        printf("Alarm hour is set to %s.\n", hralarmtime);
+        int_hralarmtime = atoi(hralarmtime);
+
+        printf(">> Enter alarm minute time: \n");
+        gets(mialarmtime);
+        printf("%s\n", mialarmtime);
+        while(isitdigit(mialarmtime) == false || atoi(mialarmtime) > 59) { // Error check the input
+            if(isitdigit(mialarmtime) == false) {
+                printf("Error: Please enter only numbers:\n");
+                gets(mialarmtime);
+                printf("%s\n", mialarmtime);
+            } else if(atoi(mialarmtime) > 59) {
+                printf("Error: Please enter a number under 60:\n");
+                gets(mialarmtime);
+                printf("%s\n", mialarmtime);
+            }
+        }
+        printf("Alarm hour is set to %s.\n", mialarmtime);
+        int_mialarmtime = atoi(mialarmtime);
+    }
+    printf("Alarm time is set to %d:%d.\n", int_hralarmtime, int_mialarmtime);
+
 }
 
 // Code for seconds servo
@@ -178,7 +225,6 @@ void seconds_servo_control(void *arg)
             angle = servo_per_degree_init(count);
             //printf("pulse width: %dus\n", angle);
             mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, angle);
-            //mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 60);
             vTaskDelay(100);     //Add delay, since it takes time for servo to rotate, generally 100ms/60degree rotation at 5V
         }
     }
@@ -338,6 +384,11 @@ static void test_alpha_display() {
             int_hour = hr_increment(int_minute, int_hour, hour);
             int_minute = min_increment(int_minute, minute);
         }
+        //if(int_hour == int_hralarmtime && int_minute == int_mialarmtime) {
+        //    printf("The alarm is triggered!");
+            //int_hralarmtime == 99;
+            //int_mialarmtime == 99;
+        //}
             //show numbers on display
             currenttime[0] = hour[0] - '0';
             currenttime[1] = hour[1] - '0';
@@ -364,6 +415,24 @@ static void test_alpha_display() {
     }
 }
 
+static void led() {
+    gpio_pad_select_gpio(BLINK);
+    gpio_set_direction(BLINK, GPIO_MODE_OUTPUT);
+
+    while(1) {
+        if(int_hour == int_hralarmtime && int_minute == int_mialarmtime) {
+            printf("The alarm is triggered!");
+            gpio_set_level(BLINK, 1);
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+            gpio_set_level(BLINK, 0);
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+            //int_hralarmtime == 99;
+            //int_mialarmtime == 99;
+        }
+        vTaskDelay(10 / portTICK_RATE_MS);
+    }
+}
+
 void app_main(void)
 {
     ESP_ERROR_CHECK( uart_driver_install(UART_NUM_0, 256, 0, 0, NULL, 0) );
@@ -374,5 +443,6 @@ void app_main(void)
     xTaskCreate(test_alpha_display,"test_alpha_display", 4096, NULL, configMAX_PRIORITIES, NULL);
     xTaskCreate(seconds_servo_control, "seconds_servo_control", 4096, NULL, configMAX_PRIORITIES-1, NULL);
     xTaskCreate(minutes_servo_control, "minutes_servo_control", 4096, NULL, configMAX_PRIORITIES-2, NULL);
+    xTaskCreate(led, "led", 4096, NULL, configMAX_PRIORITIES-3, NULL);
 
 }
