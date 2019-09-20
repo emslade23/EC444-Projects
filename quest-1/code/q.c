@@ -157,14 +157,24 @@ int min_increment(int minute, char min[2])
   return minute;
 }
 
-int hr_increment(int min, int hr)
+int hr_increment(int min, int hr, char hour[2])
 {
   if (min == 59){
-    hr++;
+    if(hr == 24){
+      hr = 1;
+      hour[0] = '0';
+      hour[1] = '1';
+    }else{
+      hr++;
+      if(hour[1]=='9'){
+        hour[1] = '0';
+        hour[0]++;
+      }else{
+        hour[1]++;
+      }
+    }
   }
-  if (hr == 24){
-    hr = 1;
-  }
+
   return hr;
 }
 
@@ -244,7 +254,7 @@ static void test_alpha_display() {
       }
 
       int_minute = min_increment(int_minute, minute);
-      int_hour = hr_increment(int_minute, int_hour);
+      int_hour = hr_increment(int_minute, int_hour, hour);
 
     //end of q's change
         // Send commands characters to display over I2C
