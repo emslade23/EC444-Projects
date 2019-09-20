@@ -1,3 +1,5 @@
+
+=======
 # Retro Alarm Clock!
 Authors: Amy Dong, Quianna Mortimer, Elizabeth Slade
 
@@ -117,3 +119,4 @@ References or links to any code or techniques adopted if not your own
 - We used the EC444 site for code throughout the project. Specifically the code for Console IO, Alphanumeric Display, Servos, FreeRTOS, and some more
 - We also referenced the esp-idf example documentation: https://github.com/espressif/esp-idf/blob/master/examples/peripherals/mcpwm/mcpwm_basic_config/main/mcpwm_basic_config_example.c
 -----
+
