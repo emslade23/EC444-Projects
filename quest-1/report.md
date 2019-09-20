@@ -10,7 +10,7 @@ Authors: Amy Dong, Quianna Mortimer, Elizabeth Slade
 2.) up and down RTOS skill
 3.) quest
 =======
-In this quest, we made a Retro Alarm Clock. The primary function of the alarm clock is to work as a timer. So when a user inputs a specific time, then our clock will take in that time and start a timer. When this timer starts, the seconds will be recorded by one of the servos. Then, the minutes will be recorded by the last two digits on the Alphanumeric display and by the second servo. The hours will be recorded by the first two digits of the alphanumeric display. 
+In this quest, we made a Retro Alarm Clock. The primary function of the alarm clock is to work as a timer. So when a user inputs a specific time, then our clock will take in that time and start a timer. When this timer starts, the seconds will be recorded by one of the servos. Then, the minutes will be recorded by the last two digits on the Alphanumeric display and by the second servo. The hours will be recorded by the first two digits of the alphanumeric display.
 
 ## Design Specifications and Evaluation Criteria:
 ### Objective Criteria
@@ -104,7 +104,8 @@ This is an example at 1:32 and you can see that the seconds servo is ticking awa
 
 ## Supporting Artifacts
 - [Link to repo](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/edit/master/quest-1/report.md)
-- [Link to video demo](https://www.youtube.com/watch?v=3sD5_wn7ulk&feature=youtu.be)
+[![Watch the video](https://img.youtube.com/vi/3sD5_wn7ulk/maxresdefault.jpg)](https://youtu.be/3sD5_wn7ulk)
+
 
 
 ## References
