@@ -11,8 +11,8 @@ In this quest, we made a Retro Alarm Clock. The primary function of the alarm cl
 1. Two servos indicate actual time in seconds and minutes: **Yes**
 2. Alphanumeric display indicates actual time in hours and minutes: **Yes**
 3. Can set time: **Yes**
-4. Demo delivered at scheduled time and report submitted in team folder with all required 
-5. Investigative question response: How can you synchronize multiple ESP clocks with each other?
+4. Demo delivered at scheduled time and report submitted in team folder with all required **Yes**
+5. Investigative question response: How can you synchronize multiple ESP clocks with each other? You can synchronize multiple ESP clocks using FreeRTOS. 
 ****
 
 ### Qualitative Criteria
