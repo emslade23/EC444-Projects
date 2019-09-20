@@ -430,6 +430,7 @@ static void led() {
             //int_mialarmtime == 99;
         }
         vTaskDelay(10 / portTICK_RATE_MS);
+        gpio_set_level(BLINK, 0);
     }
 }
 
