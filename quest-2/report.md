@@ -1,10 +1,10 @@
-# Quest Name
-Authors: FirstName1 LastName1, FirstName2 LastName2, FirstName3 LastName 3
+# Quest 2: Sensor Central 
+Authors: Elizabeth Slade, Amy Dong, Quianna Mortimer 
 
-YYYY-MM-DD
+2019-10-05
 
 ## Summary
-
+This quest required the periodic measuring of IR and ultrsonic sensor in meter and the measuring of thermistor in Celsius which were then plotted in real time. 
 
 
 ## Evaluation Criteria
