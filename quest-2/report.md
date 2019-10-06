@@ -25,7 +25,8 @@ This quest required the periodic measuring of IR and ultrsonic sensor in meters 
 4. 
 
 ## Sketches and Photos
-"![IMG_1536](https://user-images.githubusercontent.com/24261732/66262251-a6c69700-e7aa-11e9-811f-df76786576a5.JPG)" 
+
+<center><img src="./images/IMG_1536.jpg" width="70%" /></center>
 <center> </center>
 
 
