@@ -1,6 +1,7 @@
 // Author: Amy Dong, Elizabeth Slade, Quianna Mortimer
 // Date: 2019/10/08
 
+// library includes
 #include <stdio.h>
 #include <stdlib.h>
 #include "freertos/FreeRTOS.h"
@@ -14,10 +15,10 @@
 #include "esp_adc_cal.h"
 #include <math.h>
 
-#define DEFAULT_VREF    1100        //Use adc2_vref_to_gpio() to obtain a better estimate
-#define NO_OF_SAMPLES   64          //Multisampling
+#define DEFAULT_VREF    1100      
+#define NO_OF_SAMPLES   10          //Multisampling
 
-
+// assigning channels and adcs
 static esp_adc_cal_characteristics_t *adc_chars_rangefinder;
 static esp_adc_cal_characteristics_t *adc_chars_ultrasound;
 static esp_adc_cal_characteristics_t *adc_chars_thermistor;
@@ -26,26 +27,28 @@ static const adc_channel_t channel_rangefinder = ADC_CHANNEL_6; //A2
 static const adc_channel_t channel_ultrasound = ADC_CHANNEL_0; //A4
 static const adc_channel_t channel_thermistor = ADC_CHANNEL_3; //A3
 static const adc_channel_t channel_battery = ADC_CHANNEL_7; //A10
+// changing attenuation for the rangefinder
 static const adc_atten_t atten_rangefinder = ADC_ATTEN_DB_11;
 static const adc_atten_t atten_ultrasound = ADC_ATTEN_DB_0;
 static const adc_atten_t atten_thermistor = ADC_ATTEN_DB_0;
 static const adc_unit_t unit = ADC_UNIT_1;
 static const adc_unit_t unit2 = ADC_UNIT_2;
 
+//global variables
 float rangefinder_distance = 0;
 float ultrasound_distance = 0;
 float temperature = 0;
 uint32_t battery_voltage;
 
+// Code for voltage divider
 static void voltageDivider()
 {
-    //Configure ADC
+    //Configure ADC 2
     adc2_config_channel_atten((adc2_channel_t)channel_battery, atten_ultrasound);
 
     //Characterize ADC
     adc_chars_battery = calloc(1, sizeof(esp_adc_cal_characteristics_t));
     esp_adc_cal_value_t val_type = esp_adc_cal_characterize(unit2, atten_ultrasound, ADC_WIDTH_BIT_12, DEFAULT_VREF, adc_chars_battery);
-    //print_char_val_type(val_type);
 
     //Continuously sample ADC1
     while (1) {
@@ -55,14 +58,14 @@ static void voltageDivider()
             adc_reading += adc2_get_raw(channel_battery,ADC_WIDTH_BIT_12,&adc_reading);
         }
         adc_reading /= 10;
+
         //Convert adc_reading to voltage in mV
         battery_voltage = esp_adc_cal_raw_to_voltage(adc_reading, adc_chars_battery);
-        //battery_voltage_V = battery_voltage/1000.00;
-//        printf("Raw: %d\tVoltage: %dmV\n", adc_reading, battery_voltage);
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
+// Code for IR rangefinder
 static void rangefinder()
 {
     //Configure ADC
@@ -72,7 +75,6 @@ static void rangefinder()
     //Characterize ADC
     adc_chars_rangefinder = calloc(1, sizeof(esp_adc_cal_characteristics_t));
     esp_adc_cal_value_t val_type = esp_adc_cal_characterize(unit, atten_rangefinder, ADC_WIDTH_BIT_10, DEFAULT_VREF, adc_chars_rangefinder);
-
 
     //Continuously sample ADC1
     while (1) {
@@ -85,6 +87,8 @@ static void rangefinder()
 
         //Convert adc_reading to voltage in mV
         uint32_t voltage = esp_adc_cal_raw_to_voltage(adc_reading, adc_chars_rangefinder);
+
+        // formula for converting voltage to distance
         if(voltage <= 480) {
             rangefinder_distance = 49151.8275 * pow(voltage,-0.92265)/100;
         } else if(voltage <= 1495 && voltage > 480) {
@@ -92,14 +96,11 @@ static void rangefinder()
         } else if(voltage > 1495) {
             rangefinder_distance = (-0.02061 * voltage + 70.17877)/100;
         }
-
-        //rangefinder_distance = voltage;
-
-        //printf("rangefinder distance: %f m \n", distance);
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
+// Code for thermistor
 static void thermistor()
 {
     //Configure ADC
@@ -127,12 +128,12 @@ static void thermistor()
         uint32_t voltage = esp_adc_cal_raw_to_voltage(adc_reading, adc_chars_thermistor);
 
         thermometerResistance = a * c / (voltage/b) - c;
-        temperature = (t_zero * beta)/(t_zero * log(thermometerResistance/r_zero) + beta) - ktoc -4;
-        //printf("Temperature: %f degrees celcius\n", temp);
+        temperature = (t_zero * beta)/(t_zero * log(thermometerResistance/r_zero) + beta) - ktoc;
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
+// code for ultrasonic sensor
 static void ultrasound()
 {
     //Configure ADC
@@ -155,29 +156,27 @@ static void ultrasound()
 
         //Convert adc_reading to voltage in mV
         uint32_t voltage = esp_adc_cal_raw_to_voltage(adc_reading, adc_chars_ultrasound);
-        //ultrasound_distance = adc_reading/1024 * 5;
+
+        //converting voltage to distance in m
         ultrasound_distance =  voltage / 6.4 * 2.54 / 100;
-        //printf("Ultrasound distance: %f m \n", distance);
+
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
 void app_main(void)
 {
-
+// creating tasks for the sensors
     xTaskCreate(rangefinder,"rangefinder", 4096, NULL, configMAX_PRIORITIES, NULL);
     xTaskCreate(ultrasound,"ultrasound", 4096, NULL, configMAX_PRIORITIES-1, NULL);
     xTaskCreate(thermistor,"thermistor", 4096, NULL, configMAX_PRIORITIES-2, NULL);
     xTaskCreate(voltageDivider, "voltageDivider", 4096, NULL, configMAX_PRIORITIES-3, NULL);
-int count = 0;
+    int count = 0;
 
     while(1) {
+      // printing values to the serial monitor
         count++;
-        //printf("Rangefinder distance: %f\n", rangefinder_distance);
-      //  printf("Ultrasound distance: %f\n", sultrasound_distance);
-    //    printf("Thermistor: %f\n", temperature);
         printf(" %d,%f,%f,%d,%f\n",count,rangefinder_distance,ultrasound_distance,battery_voltage,temperature);
-
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
 
