@@ -4,7 +4,7 @@ Authors: Elizabeth Slade, Amy Dong, Quianna Mortimer
 2019-10-05
 
 ## Summary
-This quest required the periodic measuring of IR and ultrsonic sensor in meters and the measuring of thermistor in Celsius which were then plotted in real time on canvas.js
+This quest required the periodic measuring of IR and ultrsonic sensor in meters and the measuring of thermistor in Celsius which were then plotted in real time on canvas.js. 
 
 
 ## Evaluation Criteria
@@ -24,7 +24,7 @@ Sensors
   - We first changed the attentuation to 11, and the bit size to 10. We tested the IR with a distance trail and collected the raw and voltage outputs data for the corresponding distances. Using execl, we plotted the voltage versus the distance measure and created a function to fit the curve.Figure 1.1 shows the three graphs used to show the curve in three states: 1495-2680 mV , 480- 1495mV, and less than 480 mV. 
 3. Thermistor
   -The thermistor was one of the two sensors that required a voltage divider with a 220ohm resistor and the thermistor itself acting as a resistor - a capacitor was used to stabalize the voltage. 
-4. Battery monitor
+4. Battery monitor(Bonus,plotting)
   -The battery monitor was a matter measuring the volatge divider with two resistors, one 16k ohms and the other 220 ohms. 
   
  ESP32 
@@ -36,11 +36,16 @@ Sensors
  Real Time Updating
  - in order to have real time updating, we used the NodeJS library called Socket.io. Using Socket.IO, we create a socket, or a connection between the server and the client, where the server sends the chart options to the client every time more data is added to the chart. As a result, our chart updates in real time. We have a time interval where the chart updates everty 2 seconds. We divide our data into two graphs, the range data and the temperature/battery voltage data.
  
+ Investigative Questions: 
+ 
  
 
 ## Sketches and Photos
 Figure 1.1
-![IMG_1536](https://user-images.githubusercontent.com/24261732/66436534-48412900-e9f5-11e9-8ef5-5237cc8e8bb1.JPG)
+![IMG_1538](https://user-images.githubusercontent.com/24261732/66439077-8d1c8e00-e9fc-11e9-8a9c-28e2132ffe22.JPG)
+
+Figure 1.2
+
 
 (see photos)
 
