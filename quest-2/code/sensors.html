@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+     <script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <div id="chartContainer" style="height: 360px; width: 100%;"></div>
+    <div id="chartContainer2" style="height: 360px; width: 100%;"></div>
+    <script>
+      $(function () {
+      var socket = io();
+      socket.on('dataMsg', function(chartOptions){
+        var chart = new CanvasJS.Chart("chartContainer", chartOptions);
+        chart.render();
+      });
+      socket.on('dataMsg2', function(chartOptions2){
+        var chart2 = new CanvasJS.Chart("chartContainer2", chartOptions2);
+        chart2.render();
+      });
+    });
+    </script>
+  </body>
+</html>
