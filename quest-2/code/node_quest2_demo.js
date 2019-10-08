@@ -1,6 +1,6 @@
 // Author: Amy Dong, Elizabeth Slade, Quianna Mortimer
 // Date: 2019/10/08
-
+// include necessary libraries to start uo nodejs app
 var app = require('express')();
 var http = require('http').Server(app);
 
@@ -12,12 +12,13 @@ function toogleDataSeries(e){
 	}
 	chart.render();
 }
-
+// arrays for the graphs
 var ir = [];
 var ultra = [];
 var battery = [];
 var therm = [];
 
+//first chart for distances 
 var chartOptions = {
 	title: {
 		text: "Sensor Central"
@@ -63,7 +64,7 @@ var chartOptions = {
 	}]
 };
 
-
+// second chart options with temperature and voltage
 var chartOptions2 = {
 	axisX: {
 		ValueFormatString: "#####",
@@ -111,9 +112,10 @@ var chartOptions2 = {
 		dataPoints: therm
 	}]
 };
-
+//using socket io to update the graphs in real time
 var io = require('socket.io')(http);
 
+// route for the homepage
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/sensors.html');
   app.get('/data', function(req, res) {
@@ -121,11 +123,13 @@ app.get('/', function(req, res){
   });
 });
 
+//update the graphs every second
 setInterval(function(){
     io.emit('dataMsg', chartOptions);
     io.emit('dataMsg2', chartOptions2);
 }, 1000);
 
+// sending chartoptions over
 io.on('connection', function(socket){
   io.emit('dataMsg', chartOptions);
   io.emit('dataMsg2', chartOptions2);
@@ -135,12 +139,16 @@ io.on('connection', function(socket){
   });
 });
 
+
+// reading from the serial port
 const SerialPort = require('serialport')
 const Readline = require('@serialport/parser-readline')
 const port = new SerialPort('/dev/cu.SLAB_USBtoUART', {
   baudRate: 115200
 });
 
+
+//parsing through the input
 const parser = port.pipe(new Readline({ delimiter: '\r\n' }))
 parser.on('data', readSerialData)
 
