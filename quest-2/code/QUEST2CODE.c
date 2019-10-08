@@ -8,9 +8,8 @@
 #include <math.h>
 
 #define DEFAULT_VREF    1100        //Use adc2_vref_to_gpio() to obtain a better estimate
-#define NO_OF_SAMPLES   64          //Multisampling
-#define FILE_NAME "data.txt"
-#define FILE_NAME2  "file_1"
+#define NO_OF_SAMPLES   10          //Multisampling
+
 
 static esp_adc_cal_characteristics_t *adc_chars_rangefinder;
 static esp_adc_cal_characteristics_t *adc_chars_ultrasound;
@@ -83,16 +82,16 @@ static void thermistor()
     while (1) {
         uint32_t adc_reading = 0;
         //Multisampling
-        for (int i = 0; i < NO_OF_SAMPLES; i++) {
+        for (int i = 0; i < 1; i++) {
             adc_reading += adc1_get_raw((adc1_channel_t)channel_thermistor);
         }
-        adc_reading /= NO_OF_SAMPLES;
+        adc_reading /= 1;
 
         //Convert adc_reading to voltage in mV
         uint32_t voltage = esp_adc_cal_raw_to_voltage(adc_reading, adc_chars_thermistor);
 
         thermometerResistance = a * c / (voltage/b) - c;
-        temperature = (t_zero * beta)/(t_zero * log(thermometerResistance/r_zero) + beta) - ktoc;
+        temperature = (t_zero * beta)/(t_zero * log(thermometerResistance/r_zero) + beta) - ktoc - 5;
         //printf("Temperature: %f degrees celcius\n", temp);
         vTaskDelay(pdMS_TO_TICKS(10));
     }
@@ -120,6 +119,7 @@ static void ultrasound()
 
         //Convert adc_reading to voltage in mV
         uint32_t voltage = esp_adc_cal_raw_to_voltage(adc_reading, adc_chars_ultrasound);
+        //ultrasound_distance = adc_reading/1024 * 5;
         ultrasound_distance =  voltage / 6.4 * 2.54 / 100;
         //printf("Ultrasound distance: %f m \n", distance);
         vTaskDelay(pdMS_TO_TICKS(10));
@@ -128,26 +128,18 @@ static void ultrasound()
 
 void app_main(void)
 {
-    FILE *file_p; 
-    file_p = fopen(FILE_NAME, "w+");
-    if (!file_p){
-        printf("Failure to open file\n");
-        //exit(EXIT_FAILURE); 
-    }
-    //fclose(file_p); 
+
 
     xTaskCreate(rangefinder,"rangefinder", 4096, NULL, configMAX_PRIORITIES, NULL);
     xTaskCreate(ultrasound,"ultrasound", 4096, NULL, configMAX_PRIORITIES-1, NULL);
     xTaskCreate(thermistor,"thermistor", 4096, NULL, configMAX_PRIORITIES-2, NULL);
 
     while(1) {
-        printf("Rangefinder distance: %f\n", rangefinder_distance);
-        printf("Ultrasound distance: %f\n", ultrasound_distance);
-        printf("Thermistor: %f\n", temperature);
-        if (file_p !=NULL){ 
-            fprintf(file_p,"%f, %f, %f\n", rangefinder_distance, ultrasound_distance, temperature);
-        }
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        //printf("Rangefinder distance: %f\n", rangefinder_distance);
+      //  printf("Ultrasound distance: %f\n", ultrasound_distance);
+    //    printf("Thermistor: %f\n", temperature);
+        printf("%f,%f,%f\n",rangefinder_distance,ultrasound_distance,temperature);
+        vTaskDelay(pdMS_TO_TICKS(2000));
     }
-    
+
 }
