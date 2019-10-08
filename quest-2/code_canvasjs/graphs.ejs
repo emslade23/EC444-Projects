@@ -1,0 +1,162 @@
+
+
+<!DOCTYPE HTML>
+<html>
+    <script>
+        var time = new Date;
+        window.onload = function () {
+        var rangeFinderDataPts = [];
+        var ultrasonicDataPts = [];
+        var temperatureDataPts = [];
+
+        var chart = new CanvasJS.Chart("chartContainer", {
+                    title: {
+                        text: "Range vs. Time"
+                    },
+                    axisX: {
+                        title: "Time (seconds)"
+                    },
+                    axisY: {
+                        title: "Range",
+                        suffix: "m"
+                    },
+                    toolTip: {
+                        shared: true
+                    },
+                    legend: {
+                        cursor:"pointer",
+                        verticalAlign: "top",
+                        fontSize: 16,
+                        fontColor: "dimGrey",
+                        itemclick : toggleDataSeries
+                    },
+                    data: [{
+                        type:"line",
+                        name: "Rangefinder",
+                        showInLegend: true,
+                        markerSize: 0,
+                        yValueFormatString: "#m",
+                        dataPoints: rangeFinderDataPts
+                    },
+                    {
+                        type: "line",
+                        name: "Ultrasonic",
+                        showInLegend: true,
+                        markerSize: 0,
+                        yValueFormatString: "#m",
+                        dataPoints: ultrasonicDataPts
+                    }
+                    ]
+                });
+
+            function toogleDataSeries(e){
+                    if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                        e.dataSeries.visible = false;
+                    } else{
+                        e.dataSeries.visible = true;
+                    }
+                    chart.render();
+                }
+
+
+
+
+        //  // add ultrasonic data
+         var ultrasonicData =  [<%= ultrasonicData %>] ;
+
+        for (var i = 0; i < ultrasonicData.length; i++)
+        {
+            ultrasonicDataPts.push({ x: i, y: ultrasonicData[i]});
+        }
+
+        // add range Finder data
+        var rangeFinderData =  [<%= rangeFinderData %>] ;
+
+        for (var i = 0; i < rangeFinderData.length; i++)
+        {
+            rangeFinderDataPts.push({ x: i, y: rangeFinderData[i]});
+        }
+        chart.render();
+
+
+
+//**********************************************************************************
+        var temperatureDataPts  = [];
+
+
+        var chart2 = new CanvasJS.Chart("chartContainer2", {
+            zoomEnabled: true,
+            title: {
+                text: "Temperature over Time"
+            },
+            axisX: {
+                title: "Time (seconds)"
+            },
+            axisY:{
+                suffix: " deg F",
+                includeZero: false
+            },
+            toolTip: {
+                shared: true
+            },
+            legend: {
+                cursor:"pointer",
+                verticalAlign: "top",
+                fontSize: 16,
+                fontColor: "dimGrey",
+                itemclick : toggleDataSeries
+            },
+            data: [{
+                type: "line",
+                showInLegend: true,
+                name: "Temperature (deg F)",
+                dataPoints: temperatureDataPts
+                }]
+        });
+
+        function toggleDataSeries(e) {
+            if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+            }
+            else {
+                e.dataSeries.visible = true;
+            }
+            chart2.render();
+        }
+
+       //  // add ultrasonic data
+       var temperatureData =  [<%= temperatureData %>] ;
+
+        for (var i = 0; i < temperatureData.length; i++)
+        {
+            temperatureDataPts.push({ x: i, y: temperatureData[i]});
+        }
+        chart2.render();
+
+        }
+
+    </script>
+
+
+<head>
+<title><%= title %></title>
+<meta http-equiv="refresh" content="5" >
+
+  <body>
+      <h1>Stock Graph </h1>
+      <h3> Data is pulled from a stock data csv file. </h3>
+        <h4>welcome <%= user%>!</h4>
+
+    <a href="/dummygraphs">See the example graph 1 here.</a>
+    <br>
+    <a href="/dummygraphs2">See the example graph 2 here.</a>
+
+    <!-- <div id="chartContainer" style="height: 300px; width: 100%;"></div> -->
+    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+    <br>
+
+    <div id="chartContainer2" style="height: 300px; width: 100%;"></div>
+
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  </body>
+</html>
