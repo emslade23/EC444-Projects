@@ -9,6 +9,8 @@
 
 #define DEFAULT_VREF    1100        //Use adc2_vref_to_gpio() to obtain a better estimate
 #define NO_OF_SAMPLES   64          //Multisampling
+#define FILE_NAME "data.txt"
+#define FILE_NAME2  "file_1"
 
 static esp_adc_cal_characteristics_t *adc_chars_rangefinder;
 static esp_adc_cal_characteristics_t *adc_chars_ultrasound;
@@ -24,6 +26,7 @@ static const adc_unit_t unit = ADC_UNIT_1;
 float rangefinder_distance = 0;
 float ultrasound_distance = 0;
 float temperature = 0;
+
 
 static void rangefinder()
 {
@@ -125,6 +128,13 @@ static void ultrasound()
 
 void app_main(void)
 {
+    FILE *file_p; 
+    file_p = fopen(FILE_NAME, "w+");
+    if (!file_p){
+        printf("Failure to open file\n");
+        //exit(EXIT_FAILURE); 
+    }
+    //fclose(file_p); 
 
     xTaskCreate(rangefinder,"rangefinder", 4096, NULL, configMAX_PRIORITIES, NULL);
     xTaskCreate(ultrasound,"ultrasound", 4096, NULL, configMAX_PRIORITIES-1, NULL);
@@ -134,6 +144,10 @@ void app_main(void)
         printf("Rangefinder distance: %f\n", rangefinder_distance);
         printf("Ultrasound distance: %f\n", ultrasound_distance);
         printf("Thermistor: %f\n", temperature);
+        if (file_p !=NULL){ 
+            fprintf(file_p,"%f, %f, %f\n", rangefinder_distance, ultrasound_distance, temperature);
+        }
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
+    
 }
