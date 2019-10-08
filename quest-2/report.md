@@ -1,4 +1,4 @@
-# Quest 2: Sensor Central
+# Quest 2: Sensor Central 
 Authors: Elizabeth Slade, Amy Dong, Quianna Mortimer
 
 2019-10-05
@@ -17,22 +17,29 @@ This quest required the periodic measuring of IR and ultrsonic sensor in meters 
 
 
 ## Solution Design
+Sensors
 1. Ultrasonic Range Sensor
   -We first changed the ADC width bit size to 10
 2. IR range finder
-  - We first changed the attentuation to 11, and the bit size to 10. We tested the IR with a distance trail and collected the raw and voltage outputs data for the corresponding distances. Using execl, we plotted the voltage versus the distance measure and created a function to fit the curve.
+  - We first changed the attentuation to 11, and the bit size to 10. We tested the IR with a distance trail and collected the raw and voltage outputs data for the corresponding distances. Using execl, we plotted the voltage versus the distance measure and created a function to fit the curve.Figure 1.1 shows the three graphs used to show the curve in three states: 1495-2680 mV , 480- 1495mV, and less than 480 mV. 
 3. Thermistor
-4.
+  -The thermistor was one of the two sensors that required a voltage divider with a 220ohm resistor and the thermistor itself acting as a resistor - a capacitor was used to stabalize the voltage. 
+4.Battery monitor
+  -The battery monitor was a matter measuring the volatge divider with two resistors, one 16k ohms and the other 220 ohms. 
+  
+ ESP32 
+ 
+ 
 
 ## Sketches and Photos
+Figure 1.1
+![IMG_1536](https://user-images.githubusercontent.com/24261732/66436534-48412900-e9f5-11e9-8ef5-5237cc8e8bb1.JPG)
 
-<center><img src="./images/IMG_1536.jpg" width="70%" /></center>
-<center> </center>
 
 
 ## Supporting Artifacts
 - [Link to repo]()
-- [![Watch the video](https://img.youtube.com/vi/vtBfmNzGsuc/maxresdefault.jpg)](https://youtu.be/vtBfmNzGsuc)
+- [Link to video demo]()
 
 
 ## References
