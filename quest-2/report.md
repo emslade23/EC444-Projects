@@ -30,6 +30,12 @@ Sensors
  ESP32 
  - All of the sensors were read using our microprocessor, ESP32. After the ESP32 read the sensors using ADC, the data was then written to the serial port.
  
+ NodeJS Application
+ - in the NodeJS application, we use the serial port library to read in the sensor data from the serial port. Then, we parse this data, and store it into the associated sensor data arrays. Afterwards, we set up chart options using CanvasJS where we specify the structure and axis and labeling for the graph. We then pass in these chart options into the html page where the charts are rendered and displayed to the client.
+ 
+ Real Time Updating
+ - in order to have real time updating, we used the NodeJS library called Socket.io. Using Socket.IO, we create a socket, or a connection between the server and the client, where the server sends the chart options to the client every time more data is added to the chart. As a result, our chart updates in real time. We have a time interval where the chart updates everty 2 seconds. We divide our data into two graphs, the range data and the temperature/battery voltage data.
+ 
  
 
 ## Sketches and Photos
