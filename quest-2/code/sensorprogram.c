@@ -1,3 +1,6 @@
+// Author: Amy Dong, Elizabeth Slade, Quianna Mortimer
+// Date: 2019/10/08
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "freertos/FreeRTOS.h"

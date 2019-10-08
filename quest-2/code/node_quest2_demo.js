@@ -1,3 +1,6 @@
+// Author: Amy Dong, Elizabeth Slade, Quianna Mortimer
+// Date: 2019/10/08
+
 var app = require('express')();
 var http = require('http').Server(app);
 
