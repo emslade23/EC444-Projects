@@ -28,6 +28,7 @@ Sensors
   -The battery monitor was a matter measuring the volatge divider with two resistors, one 16k ohms and the other 220 ohms. 
   
  ESP32 
+ - All of the sensors were read using our microprocessor, ESP32. After the ESP32 read the sensors using ADC, the data was then written to the serial port.
  
  
 
@@ -35,7 +36,7 @@ Sensors
 Figure 1.1
 ![IMG_1536](https://user-images.githubusercontent.com/24261732/66436534-48412900-e9f5-11e9-8ef5-5237cc8e8bb1.JPG)
 
-Figure 1.2
+
 
 
 ## Supporting Artifacts
