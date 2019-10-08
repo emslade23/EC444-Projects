@@ -8,7 +8,7 @@
 #include <math.h>
 
 #define DEFAULT_VREF    1100        //Use adc2_vref_to_gpio() to obtain a better estimate
-#define NO_OF_SAMPLES   10          //Multisampling
+#define NO_OF_SAMPLES   64          //Multisampling
 
 
 static esp_adc_cal_characteristics_t *adc_chars_rangefinder;
@@ -136,9 +136,9 @@ void app_main(void)
 
     while(1) {
         //printf("Rangefinder distance: %f\n", rangefinder_distance);
-      //  printf("Ultrasound distance: %f\n", ultrasound_distance);
+      //  printf("Ultrasound distance: %f\n", sultrasound_distance);
     //    printf("Thermistor: %f\n", temperature);
-        printf("%f,%f,%f\n",rangefinder_distance,ultrasound_distance,temperature);
+        printf(" %f,%f,%f\n",rangefinder_distance,ultrasound_distance,temperature);
         vTaskDelay(pdMS_TO_TICKS(2000));
     }
 
