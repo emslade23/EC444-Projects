@@ -1,0 +1,132 @@
+
+
+<!DOCTYPE HTML>
+<html>
+    <script>
+                window.onload = function () {
+                var googleData = [];
+                var microsoftData = [];
+                var facebookData = [];
+                var amazonData = [];
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    title: {
+                        text: "Stocks and Price per Share at Closing over Time"
+                    },
+                    axisX: {
+                        title: "Day"
+                    },
+                    axisY2: {
+                        title: "Stock Price",
+                        prefix: "$"
+                    },
+                    toolTip: {
+                        shared: true
+                    },
+                    legend: {
+                        cursor: "pointer",
+                        verticalAlign: "top",
+                        horizontalAlign: "center",
+                        dockInsidePlotArea: true,
+                        itemclick: toogleDataSeries
+                    },
+                    data: [{
+                        type:"line",
+                        axisYType: "secondary",
+                        name: "Google",
+                        showInLegend: true,
+                        markerSize: 0,
+                        yValueFormatString: "$#",
+                        dataPoints: googleData
+                    },
+                    {
+                        type: "line",
+                        axisYType: "secondary",
+                        name: "Microsoft",
+                        showInLegend: true,
+                        markerSize: 0,
+                        yValueFormatString: "$#",
+                        dataPoints: microsoftData
+                    },
+                    {
+                        type: "line",
+                        axisYType: "secondary",
+                        name: "Facebook",
+                        showInLegend: true,
+                        markerSize: 0,
+                        yValueFormatString: "$#",
+                        dataPoints: facebookData
+                    },
+                    {
+                        type: "line",
+                        axisYType: "secondary",
+                        name: "Amazon",
+                        showInLegend: true,
+                        markerSize: 0,
+                        yValueFormatString: "$#",
+                        dataPoints: amazonData
+                    }]
+                });
+                // add google data
+                var googlePrices =  [<%= googlePrices %>] ;
+
+                for (var i = 0; i < googlePrices.length; i++)
+                {
+                    googleData.push({ x: i+1, y: googlePrices[i]});
+                }
+
+                // add microsoft data
+                var microsoftPrices =  [<%= microsoftPrices %>] ;
+
+                for (var i = 0; i < microsoftPrices.length; i++)
+                {
+                    microsoftData.push({ x: i+1, y: microsoftPrices[i]});
+                }
+
+                // add facebook data
+                var facebookPrices =  [<%= facebookPrices %>] ;
+
+                for (var i = 0; i < facebookPrices.length; i++)
+                {
+                    facebookData.push({ x: i+1, y: facebookPrices[i]});
+                }
+
+                // add amazon data 
+                var amazonPrices =  [<%= amazonPrices %>] ;
+
+                for (var i = 0; i < amazonPrices.length; i++)
+                {
+                    amazonData.push({ x: i+1, y: amazonPrices[i]});
+                }
+               // chart.options.data[0].dataPoints.push({ y: 55, label: "AZN"});
+                chart.render();
+                
+                function toogleDataSeries(e){
+                    if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                        e.dataSeries.visible = false;
+                    } else{
+                        e.dataSeries.visible = true;
+                    }
+                    chart.render();
+                }
+                
+                }
+    </script>
+                
+<head>  
+<title><%= title %></title>
+
+  <body>
+      <h1>Stock Graph </h1>
+      <h3> Data is pulled from a stock data csv file. </h3>
+        <h4>welcome <%= user%>!</h4>
+
+    <a href="/dummygraphs">See the example graph 1 here.</a>
+    <br>
+    <a href="/dummygraphs2">See the example graph 2 here.</a>
+
+    <!-- <div id="chartContainer" style="height: 300px; width: 100%;"></div> -->
+    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  </body>
+</html>
