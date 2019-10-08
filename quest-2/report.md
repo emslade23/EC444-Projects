@@ -42,7 +42,7 @@ Sensors
 Figure 1.1
 ![IMG_1536](https://user-images.githubusercontent.com/24261732/66436534-48412900-e9f5-11e9-8ef5-5237cc8e8bb1.JPG)
 
-
+(see photos)
 
 
 ## Supporting Artifacts
