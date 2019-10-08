@@ -1,4 +1,4 @@
-# Quest 2: Sensor Central 
+# Quest 2: Sensor Central
 Authors: Elizabeth Slade, Amy Dong, Quianna Mortimer
 
 2019-10-05
@@ -32,7 +32,7 @@ This quest required the periodic measuring of IR and ultrsonic sensor in meters 
 
 ## Supporting Artifacts
 - [Link to repo]()
-- [Link to video demo]()
+- [![Watch the video](https://img.youtube.com/vi/vtBfmNzGsuc/maxresdefault.jpg)](https://youtu.be/vtBfmNzGsuc)
 
 
 ## References
