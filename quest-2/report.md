@@ -52,7 +52,8 @@ Figure 1.2
 
 ## Supporting Artifacts
 - [Link to repo]()
-- [Link to video demo]()
+- [![Watch the video](https://img.youtube.com/vi/vtBfmNzGsuc/maxresdefault.jpg)](https://youtu.be/vtBfmNzGsuc)
+
 
 
 ## References
