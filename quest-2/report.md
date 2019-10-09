@@ -37,7 +37,14 @@ Sensors
  - in order to have real time updating, we used the NodeJS library called Socket.io. Using Socket.IO, we create a socket, or a connection between the server and the client, where the server sends the chart options to the client every time more data is added to the chart. As a result, our chart updates in real time. We have a time interval where the chart updates everty 2 seconds. We divide our data into two graphs, the range data and the temperature/battery voltage data.
  
  Investigative Questions: 
+ The IR range finder can be sampled in 0.04s- a 25 Hz rate. 
+ The voltage ranges from 2.5v to 5.5v and the bit width is 10, so the steps are 2^10= 1024.By dividing the the voltage by the steps we get the resolution range :0.0024 to 0.0054v.  
  
+ The ultrasound can be sampled in 0.1s - a 10 Hz rate. 
+ Given the 3.3v and the 10 bit width, we have 1024 steps, thus the resolution is 0.0032v. 
+ 
+ The thermistor can be sampled in 4 s - a .25 Hz rate. 
+ With the 5v and the 10 bits, the resolution is a same as ultrasound 0.0032v. 
  
 
 ## Sketches and Photos
@@ -64,6 +71,9 @@ Figure 1.4
 
 
 ## References
+//used these referenced to calculate the resolution 
+https://www.vernier.com/til/2807/
+https://www.mccdaq.com/TechTips/TechTip-1.aspx
 
 -----
 
