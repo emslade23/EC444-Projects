@@ -28,10 +28,10 @@ Sensors
   -The battery monitor was a matter measuring the volatge divider with two resistors, one 16k ohms and the other 220 ohms. 
   
  ESP32 
- - All of the sensors were read using our microprocessor, ESP32. After the ESP32 read the sensors using ADC, the data was then written to the serial port.
+ - All of the sensors were read using our microprocessor, ESP32. After the ESP32 read the sensors using ADC, the data was then written to the serial port.The sensors can be seen in Figure 1.2. 
  
  NodeJS Application
- - in the NodeJS application, we use the serial port library to read in the sensor data from the serial port. Then, we parse this data, and store it into the associated sensor data arrays. Afterwards, we set up chart options using CanvasJS where we specify the structure and axis and labeling for the graph. We then pass in these chart options into the html page where the charts are rendered and displayed to the client.
+ - in the NodeJS application, we use the serial port library to read in the sensor data from the serial port. Then, we parse this data, and store it into the associated sensor data arrays. Afterwards, we set up chart options using CanvasJS where we specify the structure and axis and labeling for the graph. We then pass in these chart options into the html page where the charts are rendered and displayed to the client. Figures 1.3 and 1.4 show the two graphs. Figure 1.3 holds the ultrasensor and IR range finder in on  a distance(m) vs time graph. Figure 1.4 had both the thermistor(C) and the battery monitor(mV). 
  
  Real Time Updating
  - in order to have real time updating, we used the NodeJS library called Socket.io. Using Socket.IO, we create a socket, or a connection between the server and the client, where the server sends the chart options to the client every time more data is added to the chart. As a result, our chart updates in real time. We have a time interval where the chart updates everty 2 seconds. We divide our data into two graphs, the range data and the temperature/battery voltage data.
@@ -47,10 +47,10 @@ Figure 1.1
 Figure 1.2
 ![IMG_0650](https://user-images.githubusercontent.com/24261732/66446197-97985100-ea17-11e9-818b-8c9f1179dea3.JPG)
 
-Figure
+Figure 1.3
 ![canvas1](https://user-images.githubusercontent.com/24261732/66446224-aa128a80-ea17-11e9-9869-64b699f1d9b9.jpg)
 
-Figure
+Figure 1.4
 ![canvas2](https://user-images.githubusercontent.com/24261732/66446233-b696e300-ea17-11e9-92ee-c1f915ddcae0.jpg)
 
 
