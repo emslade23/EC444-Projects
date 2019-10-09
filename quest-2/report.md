@@ -45,6 +45,13 @@ Figure 1.1
 ![IMG_1538](https://user-images.githubusercontent.com/24261732/66439077-8d1c8e00-e9fc-11e9-8a9c-28e2132ffe22.JPG)
 
 Figure 1.2
+![IMG_0650](https://user-images.githubusercontent.com/24261732/66446197-97985100-ea17-11e9-818b-8c9f1179dea3.JPG)
+
+Figure
+![canvas1](https://user-images.githubusercontent.com/24261732/66446224-aa128a80-ea17-11e9-9869-64b699f1d9b9.jpg)
+
+Figure
+![canvas2](https://user-images.githubusercontent.com/24261732/66446233-b696e300-ea17-11e9-92ee-c1f915ddcae0.jpg)
 
 
 (see photos)
