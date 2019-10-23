@@ -27,8 +27,9 @@ Qualitative Criteria
 
 
 ## Sketches and Photos
-<center><img src="./images/example.png" width="70%" /></center>  
-<center> </center>
+Figure 1.1
+![IMG_E1546](https://user-images.githubusercontent.com/24261732/67358530-ba098e80-f52e-11e9-9bd0-a8e4fe50c8c9.JPG)
+
 
 
 ## Supporting Artifacts
