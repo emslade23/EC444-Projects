@@ -50,14 +50,14 @@ server.on('message', function (message, remote) {
     // Send Ok acknowledgement
     //if (answer !== undefined) {
       //console.log("sending");
-      server.send("water",remote.port,remote.address,function(error){
+      //server.send("water",remote.port,remote.address,function(error){
       //if(error){
       //  console.log('MEH!');
       //}
       //else{
-        console.log('Sent: Ok!');
+        //console.log('Sent: Ok!');
       //}
-      });
+      //});
     //};
 
 });
