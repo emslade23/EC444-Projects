@@ -1,0 +1,230 @@
+
+
+<!DOCTYPE HTML>
+<html>
+        <head>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                </head>
+    <script>
+
+        window.onload = function () {
+        var temperature = [];
+        var steps = [];
+        var battery = [];
+                
+        var chart = new CanvasJS.Chart("chartContainer", {
+                    title: {
+                        text: "Temperature vs. Time"
+                    },
+                    axisX: {
+                        title: "Time (seconds)"
+                    },
+                    axisY: {
+                        title: "Temperature",
+                        suffix: "deg C"
+                    },
+                    toolTip: {
+                        shared: true
+                    },
+                    legend: {
+                        cursor:"pointer",
+                        verticalAlign: "top",
+                        fontSize: 16,
+                        fontColor: "dimGrey",
+                    },
+                    data: [{
+                        type:"line",
+                        name: "Temperature",
+                        showInLegend: true,
+                        markerSize: 0,
+                        yValueFormatString: "#.## deg C",
+                        xValueType: "dateTime",
+                        xValueFormatString: "hh:mm:ss TT",
+                        dataPoints: temperature
+                    }]
+                });
+        var chart2 = new CanvasJS.Chart("chartContainer2", {
+            title: {
+                text: "Steps vs. Time"
+            },
+            axisX: {
+                title: "Time (seconds)"
+            },
+            axisY: {
+                title: "Steps",
+            },
+            toolTip: {
+                shared: true
+            },
+            legend: {
+                cursor:"pointer",
+                verticalAlign: "top",
+                fontSize: 16,
+                fontColor: "dimGrey",
+            },
+            data: [
+            {
+                type: "line",
+                name: "Steps",
+                showInLegend: true,
+                markerSize: 0,
+                yValueFormatString: "#.## steps",
+                xValueType: "dateTime",
+                xValueFormatString: "hh:mm:ss TT",
+                dataPoints: steps
+            },
+
+            ]
+        });
+        var chart3 = new CanvasJS.Chart("chartContainer3", {
+            title: {
+                text: "Battery Voltage vs. Time"
+            },
+            axisX: {
+                title: "Time (seconds)"
+            },
+            axisY: {
+                title: "Battery Voltage",
+                suffix: "mV"
+            },
+            toolTip: {
+                shared: true
+            },
+            legend: {
+                cursor:"pointer",
+                verticalAlign: "top",
+                fontSize: 16,
+                fontColor: "dimGrey",
+            },
+            data: [
+            {
+                type: "line",
+                name: "Battery",
+                showInLegend: true,
+                markerSize: 0,
+                yValueFormatString: "###0.00mV",
+                xValueType: "dateTime",
+                xValueFormatString: "hh:mm:ss TT",
+                dataPoints: battery
+            }
+            ]
+        });
+
+
+        var updateInterval = 1000;
+        // initial value
+        var yValue1 = 3.12; 
+        var yValue2 = 2.55;
+        var yValue3 = 2.34;
+
+        var time = new Date;
+        // starting at 9.30 am
+        time.setHours(9);
+        time.setMinutes(30);
+        time.setSeconds(00);
+        time.setMilliseconds(00);
+
+        function updateChartDist(count) {
+                count = count || 1;
+                var deltaY1, deltaY2, deltaY3;
+                for (var i = 0; i < count; i++) {
+                    time.setTime(time.getTime()+ updateInterval);
+                    deltaY1 = .5 + Math.random() *(-.5-.5);
+                    deltaY2 = .5 + Math.random() *(-.5-.5);
+                    deltaY3 = .5 + Math.random() *(-.5-.5);
+
+                // adding random value and rounding it to two digits. 
+                yValue1 = Math.round((yValue1 + deltaY1)*100)/100;
+                yValue2 = Math.round((yValue2 + deltaY2)*100)/100;
+                yValue3 = Math.round((yValue3 + deltaY3)*100)/100;
+                // pushing the new values
+                temperature.push({
+                    x: time.getTime(),
+                    y: yValue1
+                });
+                steps.push({
+                    x: time.getTime(),
+                    y: yValue2
+                });
+                battery.push({
+                    x: time.getTime(),
+                    y: yValue3
+                });
+                }
+
+                // updating legend text with  updated with y Value 
+                chart.options.data[0].legendText = " Temperature: " + yValue1 + " deg C";
+                chart2.options.data[0].legendText = " Steps: " + yValue2 + " steps"; 
+                chart3.options.data[0].legendText = " Battery: " + yValue3 + " mV"; 
+                chart.render();
+                chart2.render();
+                chart3.render();
+        }
+
+
+        // generates first set of dataPoints 
+        updateChartDist(100);	
+        setInterval(function(){updateChartDist()}, updateInterval);
+        	// update chart after specified time. 
+        updatedInterval = setInterval(function () { updateChartDist() }, updateInterval);               
+        
+        
+    }      
+
+            $(function () {
+             $("#tempdata").click(function () {
+                 if ($(this).is(":checked")) {
+                     $("#chartContainer").hide();
+                 } else {
+                     $("#chartContainer").show();
+                 }
+             });
+            });
+
+            $(function () {
+             $("#stepsdata").click(function () {
+                 if ($(this).is(":checked")) {
+                     $("#chartContainer2").hide();
+                 } else {
+                     $("#chartContainer2").show();
+                 }
+             });
+            });
+
+            $(function () {
+             $("#batterydata").click(function () {
+                 if ($(this).is(":checked")) {
+                     $("#chartContainer3").hide();
+                 } else {
+                     $("#chartContainer3").show();
+                 }
+             });
+            });
+
+
+
+
+    </script>
+
+    
+
+
+    <body>
+      <h1>ALL MY GRAPHS</h1>
+
+        <input type="checkbox" id="tempdata"> Hide temperature data? <br>
+
+
+    <!-- <div id="chartContainer" style="height: 300px; width: 100%;"></div> -->
+     <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+    <br>
+    <input type="checkbox" id="stepsdata"> Hide steps data? <br>
+    <div id="chartContainer2" style="height: 300px; width: 100%;"></div>
+
+    <input type="checkbox" id="batterydata"> Hide battery data? <br>
+    <div id="chartContainer3" style="height: 300px; width: 100%;"></div>
+    <br>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  </body>
+</html>
+
