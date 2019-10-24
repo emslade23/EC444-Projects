@@ -25,7 +25,7 @@ If the user inputs "find device" then that signal is sent to the ESP32 which int
 When a user checks the disable battery, temperature or steps data, in each case, that respective data will go to zero to indicate that the data has been disabled. If the user unchecks that checkbox, then the data collection will be enabled again, and the web application will start reading from the ESP32 once more. 
 
 
-Furthermore, we have integrated port forwarding such that the user can
+Furthermore, we have integrated port forwarding such that the user can view our web application from any device connected to the internet.
 ## Evaluation Criteria
 
 
