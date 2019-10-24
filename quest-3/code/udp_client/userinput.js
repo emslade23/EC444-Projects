@@ -10,6 +10,7 @@ var temperature =  new Array();
 var command = "none";
 var zero_num = 0;
 
+// check box for turning the features on and off
 var temp_checkbox = false;
 var battery_checkbox = false;
 var step_checkbox = false;
@@ -138,7 +139,6 @@ app.get('/', function(req, res){
 app.post('/', function(req, res){
 	command = req.body.command;
 	console.log(req.body.command);
-	//res.render('/sensors.html',{ waterAlert: waterAlert});
 	res.sendFile(__dirname + '/sensors.html');
 })
 
@@ -148,12 +148,9 @@ setInterval(function(){
 
 io.on('connection', function(socket){
   io.emit('dataMsg', chartOptions);
-  //socket.on('disconnect', function() {
-    //console.log('user disconnected');
-  //});
+
   socket.on('temp check', function(msg){
   temp_checkbox = msg;
-  //console.log(typeof msg);
   });
   socket.on('battery check', function(msg){
   battery_checkbox = msg;

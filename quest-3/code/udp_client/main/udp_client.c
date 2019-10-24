@@ -1,5 +1,6 @@
 //Author: Amy Dong, Quianna Mortimer, Elizabeth Slade
 
+//library includes
 #include <string.h>
 #include <sys/param.h>
 #include <stdlib.h>
@@ -28,23 +29,23 @@
 #include "lwip/sys.h"
 #include <lwip/netdb.h>
 
-#define GPIO_INPUT_IO_0     4 //input
+#define GPIO_INPUT_IO_0     4 //GPIO input for vibration sensor
 #define GPIO_INPUT_IO_1     5
 #define GPIO_INPUT_PIN_SEL  ((1ULL<<GPIO_INPUT_IO_0) | (1ULL<<GPIO_INPUT_IO_1))
 #define ESP_INTR_FLAG_DEFAULT 0
-#define WATER_GPIO 26 //A0
-#define FINDDEVICE_GPIO 25 //A1
+#define WATER_GPIO 26 //A0  //Blue led that blinks when water reminder is triggered
+#define FINDDEVICE_GPIO 25 //A1 //Red led that blinks when find device is on
 
 #define DEFAULT_VREF    1100
 
-#define HOST_IP_ADDR "192.168.1.146"
+#define HOST_IP_ADDR "192.168.1.146" //ip address for communicating with the node.js server
 #define PORT 3030
 
 static const char *TAG = "example";
-char *payload;
+char *payload; //message being sent from the ESP32 to the server
 size_t payloadSize;
 
-
+//Setting up ADCs for thermistor and battery
 static esp_adc_cal_characteristics_t *adc_chars_thermistor;
 static esp_adc_cal_characteristics_t *adc_chars_battery;
 static const adc_channel_t channel_thermistor = ADC_CHANNEL_6; //A2
@@ -54,19 +55,22 @@ static const adc_atten_t atten_battery = ADC_ATTEN_DB_0;
 static const adc_unit_t unit = ADC_UNIT_1;
 static const adc_unit_t unit2 = ADC_UNIT_2;
 
+//Global variables
 float temperature = 0;
 uint32_t battery_voltage;
 
-int timePassed = 0;
-int flag = 0;
-int stepCount = 0;
-int waterCount = 10;
+int timePassed = 0; //time elapsed
+int flag = 0; //interrupt for the vibration sensor
+int stepCount = 0; // number of steps
+int waterCount = 10; // the number of seconds thats scheduled for the water reminder to be triggered. Default is 10 seconds.
 
+//Turning on and off functions
 int thermistorOn = 1;
 int batteryOn = 1;
 int waterOn = 0;
 int locateDeviceOn = 0;
 
+//establishing udp socket between the ESP32 and the node.js server
 static void udp_client_task(void *pvParameters)
 {
     char command[128];
@@ -77,7 +81,7 @@ static void udp_client_task(void *pvParameters)
     int ip_protocol;
 
     while (1) {
-
+      //configuring socket
         struct sockaddr_in dest_addr;
         dest_addr.sin_addr.s_addr = inet_addr(HOST_IP_ADDR);
         dest_addr.sin_family = AF_INET;
@@ -86,6 +90,7 @@ static void udp_client_task(void *pvParameters)
         ip_protocol = IPPROTO_IP;
         inet_ntoa_r(dest_addr.sin_addr, addr_str, sizeof(addr_str) - 1);
 
+        // establishing socket
         int sock = socket(addr_family, SOCK_DGRAM, ip_protocol);
         if (sock < 0) {
             ESP_LOGE(TAG, "Unable to create socket: errno %d", errno);
@@ -95,7 +100,7 @@ static void udp_client_task(void *pvParameters)
 
         while (1) {
 
-            //Sending esp data to node.js
+            //Sending ESP32 data to node.js
             asprintf(&payload,"%f,%d,%d,%d",temperature, battery_voltage, stepCount,timePassed);
 
             int err = sendto(sock, payload, strlen(payload), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
@@ -104,6 +109,7 @@ static void udp_client_task(void *pvParameters)
                 break;
             }
 
+            //Recieveing data from node.js
             struct sockaddr_in source_addr; // Large enough for both IPv4 or IPv6
             socklen_t socklen = sizeof(source_addr);
             int len = recvfrom(sock, command, sizeof(command) - 1, 0, (struct sockaddr *)&source_addr, &socklen);
@@ -115,22 +121,17 @@ static void udp_client_task(void *pvParameters)
             }
             // Data received
             else {
-                //printf("im here");
                 command[len] = 0; // Null-terminate whatever we received and treat like a string
-                //printf("Message: %s\n", command);
 
+                //Making changes to the states of the functions depending on the command
                 if(strcmp(previousCommand,command) == 0) {
                     strcpy(command,"none");
                 } else {
-                    //newCommand == 1;
                     strcpy(previousCommand,command);
                 }
                 if(newCommand == 1) {
-                    //printf("hi");
-                    //isFirstCommand++;
                     strcpy(previousCommand,command);
                     newCommand = 0;
-                    //strcpy(command,"none");
                 }
                 if (strncmp(command,"water on",8) == 0) { //
                     waterOn = 1;
@@ -160,9 +161,6 @@ static void udp_client_task(void *pvParameters)
                 }
             }
 
-           //printf("previous: %s\n",previousCommand);
-            //printf("current: %s\n",command);
-
             vTaskDelay(1000 / portTICK_PERIOD_MS);
         }
 
@@ -172,9 +170,9 @@ static void udp_client_task(void *pvParameters)
             close(sock);
         }
     }
-    //vTaskDelete(NULL);
 }
 
+// Task for reading the thermistor at ADC1
 static void thermistor()
 {
     //Configure ADC
@@ -211,6 +209,7 @@ static void thermistor()
     }
 }
 
+// Task for reading the battery at ADC2
 static void voltageDivider()
 {
     //Configure ADC 2
@@ -236,27 +235,27 @@ static void voltageDivider()
     }
 }
 
+//Interrupt for the vibration sensor
 static void IRAM_ATTR gpio_isr_handler(void* arg)
 {
     flag ^= 1;
 }
 
+//Records number of steps taken by the user
 static void stepCounter(void* arg)
 {
     while(1) {
         if (flag == 1) {
             stepCount++;
-            //printf("%d tap\n", stepCount);
             flag = 0;
-           // gpio_set_level(BLINK_GPIO, 1);
             vTaskDelay(300 / portTICK_RATE_MS);
         }
         flag = 0;
         vTaskDelay(10 / portTICK_RATE_MS);
-       // gpio_set_level(BLINK_GPIO, 0);
     }
 }
 
+//initializing the vibration sensor
 static void initializeVibrationSensor() {
     gpio_config_t io_conf;
     //disable pull-down mode
@@ -282,17 +281,17 @@ static void initializeVibrationSensor() {
     gpio_isr_handler_add(GPIO_INPUT_IO_1, gpio_isr_handler, (void*) GPIO_INPUT_IO_1);
 }
 
+// task for setting the water reminder
 static void waterReminder() {
     gpio_pad_select_gpio(WATER_GPIO);
     gpio_set_direction(WATER_GPIO, GPIO_MODE_OUTPUT);
     int cnt = 0;
 
     while (1){
-        if (waterOn == 1) {
+        if (waterOn == 1) { //water on command
             cnt++;
-            //printf("water: %d\n",waterCount);
             if (cnt == waterCount) {
-                cnt = 4;
+                cnt = 4; // when the reminder is triggered, the blue LED blinks three times
                 gpio_set_level(WATER_GPIO, 1);
                 vTaskDelay(1000 / portTICK_RATE_MS);
                 gpio_set_level(WATER_GPIO, 0);
@@ -305,24 +304,25 @@ static void waterReminder() {
             }
             vTaskDelay(1000 / portTICK_RATE_MS);
             gpio_set_level(WATER_GPIO, 0);
-        } else if(waterOn == 0){
+        } else if(waterOn == 0){ // LED is off if water off command is receieved
             gpio_set_level(WATER_GPIO, 0);
             vTaskDelay(1000 / portTICK_RATE_MS);
         }
     }
 }
 
+// task for finding the device, turns the red led on and off
 static void findDevice() {
     gpio_pad_select_gpio(FINDDEVICE_GPIO);
     gpio_set_direction(FINDDEVICE_GPIO, GPIO_MODE_OUTPUT);
 
     while (1) {
-        if (locateDeviceOn == 1) {
+        if (locateDeviceOn == 1) { // find device on command makes the red LED blink
             gpio_set_level(FINDDEVICE_GPIO, 1);
             vTaskDelay(1000 / portTICK_RATE_MS);
             gpio_set_level(FINDDEVICE_GPIO, 0);
             vTaskDelay(1000 / portTICK_RATE_MS);
-        } else if(locateDeviceOn == 0) {
+        } else if(locateDeviceOn == 0) { // find device off command turns off the red LED
             gpio_set_level(FINDDEVICE_GPIO, 0);
             vTaskDelay(1000 / portTICK_RATE_MS);
         }
@@ -331,13 +331,13 @@ static void findDevice() {
 
 void app_main(void)
 {
+  //initializing
     ESP_ERROR_CHECK(nvs_flash_init());
     tcpip_adapter_init();
     ESP_ERROR_CHECK(esp_event_loop_create_default());
     ESP_ERROR_CHECK(example_connect());
-
     initializeVibrationSensor();
-
+//creating tasks
     xTaskCreate(udp_client_task, "udp_client", 4096, NULL, configMAX_PRIORITIES, NULL);
     xTaskCreate(voltageDivider, "voltageDivider", 4096, NULL, configMAX_PRIORITIES-1, NULL);
     xTaskCreate(stepCounter, "stepCounter", 2048, NULL, configMAX_PRIORITIES-1, NULL);
@@ -345,7 +345,7 @@ void app_main(void)
     xTaskCreate(waterReminder, "waterReminder", 4096, NULL, configMAX_PRIORITIES-3, NULL);
     xTaskCreate(findDevice, "findDevice", 4096, NULL, configMAX_PRIORITIES-4, NULL);
 
-
+//saving elapsed time
     while(1) {
         timePassed++;
         vTaskDelay(1000 / portTICK_RATE_MS);
