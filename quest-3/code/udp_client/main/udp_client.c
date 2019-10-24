@@ -1,4 +1,5 @@
-#include <stdio.h>
+//Author: Amy Dong, Quianna Mortimer, Elizabeth Slade
+
 #include <string.h>
 #include <sys/param.h>
 #include <stdlib.h>
@@ -93,22 +94,20 @@ static void udp_client_task(void *pvParameters)
         ESP_LOGI(TAG, "Socket created, sending to %s:%d", HOST_IP_ADDR, PORT);
 
         while (1) {
-            
+
             //Sending esp data to node.js
             asprintf(&payload,"%f,%d,%d,%d",temperature, battery_voltage, stepCount,timePassed);
-            
+
             int err = sendto(sock, payload, strlen(payload), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
             if (err < 0) {
                 ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
                 break;
             }
-            
-            //////////////////////////////This block fucks up the reading//////////////////////////
-            //ESP32 recieveing command
+
             struct sockaddr_in source_addr; // Large enough for both IPv4 or IPv6
             socklen_t socklen = sizeof(source_addr);
             int len = recvfrom(sock, command, sizeof(command) - 1, 0, (struct sockaddr *)&source_addr, &socklen);
-            
+
             // Error occurred during receiving
             if (len < 0) {
                 ESP_LOGE(TAG, "recvfrom failed: errno %d", errno);
@@ -119,7 +118,7 @@ static void udp_client_task(void *pvParameters)
                 //printf("im here");
                 command[len] = 0; // Null-terminate whatever we received and treat like a string
                 //printf("Message: %s\n", command);
-                
+
                 if(strcmp(previousCommand,command) == 0) {
                     strcpy(command,"none");
                 } else {
@@ -160,10 +159,10 @@ static void udp_client_task(void *pvParameters)
                     printf("command processing...\n");
                 }
             }
-            
+
            //printf("previous: %s\n",previousCommand);
             //printf("current: %s\n",command);
-            
+
             vTaskDelay(1000 / portTICK_PERIOD_MS);
         }
 
@@ -287,7 +286,7 @@ static void waterReminder() {
     gpio_pad_select_gpio(WATER_GPIO);
     gpio_set_direction(WATER_GPIO, GPIO_MODE_OUTPUT);
     int cnt = 0;
-    
+
     while (1){
         if (waterOn == 1) {
             cnt++;
@@ -316,7 +315,7 @@ static void waterReminder() {
 static void findDevice() {
     gpio_pad_select_gpio(FINDDEVICE_GPIO);
     gpio_set_direction(FINDDEVICE_GPIO, GPIO_MODE_OUTPUT);
-    
+
     while (1) {
         if (locateDeviceOn == 1) {
             gpio_set_level(FINDDEVICE_GPIO, 1);
@@ -336,20 +335,19 @@ void app_main(void)
     tcpip_adapter_init();
     ESP_ERROR_CHECK(esp_event_loop_create_default());
     ESP_ERROR_CHECK(example_connect());
-    
+
     initializeVibrationSensor();
-    
+
     xTaskCreate(udp_client_task, "udp_client", 4096, NULL, configMAX_PRIORITIES, NULL);
     xTaskCreate(voltageDivider, "voltageDivider", 4096, NULL, configMAX_PRIORITIES-1, NULL);
     xTaskCreate(stepCounter, "stepCounter", 2048, NULL, configMAX_PRIORITIES-1, NULL);
     xTaskCreate(thermistor,"thermistor", 4096, NULL, configMAX_PRIORITIES-1, NULL);
     xTaskCreate(waterReminder, "waterReminder", 4096, NULL, configMAX_PRIORITIES-3, NULL);
     xTaskCreate(findDevice, "findDevice", 4096, NULL, configMAX_PRIORITIES-4, NULL);
-    
-    
+
+
     while(1) {
         timePassed++;
         vTaskDelay(1000 / portTICK_RATE_MS);
     }
 }
-
