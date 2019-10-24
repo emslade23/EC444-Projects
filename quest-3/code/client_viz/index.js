@@ -13,7 +13,9 @@ function toogleDataSeries(e){
 	}
 	chart.render();
 }
-
+var temp_checkbox = false;
+var battery_checkbox = false; 
+var step_checkbox = false; 
 var temperature = [];
 var battery = [];
 var steps = [];
@@ -37,7 +39,7 @@ var chartOptions = {
 			title: "Temperature",
 			suffix: "ºC"
 		},
-	axisY3: [{
+	axisY: [{
 			title: "Voltage",
 			suffix: "mV"
 		}],
@@ -90,30 +92,43 @@ var io = require('socket.io')(http);
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/sensors.html');
-//   app.get('/data', function(req, res) {
-//     res.sendFile(__dirname + '/sensors.txt');
-//   });
-});
 
+});
+var command = "you haven't entered a command yet";
 app.post('/', function(req, res){
-	var command = req.body.waterAlert;
-	console.log(req.body.waterAlert)
-	//res.render('/sensors.html',{ waterAlert: waterAlert});
-	res.send(req.body.waterAlert);
+	var command = req.body.command;
+	console.log(req.body.command)
+	res.sendFile(__dirname + '/sensors.html', {command:command});
 })
 
 setInterval(function(){
-    io.emit('dataMsg', chartOptions);
+	io.emit('dataMsg', chartOptions);
 }, 1000);
 
 io.on('connection', function(socket){
-  io.emit('dataMsg', chartOptions);
+	io.emit('dataMsg', chartOptions);
+	socket.on('disconnect', function(){
+		console.log('user disconnected');
+	});
 
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
-  });
 });
 
+//get data
+io.on('connection', function(socket){
+  socket.on('temp check', function(msg){
+	  temp_checkbox = msg;
+  //console.log(typeof msg);
+  });
+  socket.on('battery check', function(msg){
+	  battery_checkbox = msg; 
+  }); 
+  socket.on('step check', function(msg){
+		step_checkbox = msg; 
+  })
+});
+
+
+//serial port
 const SerialPort = require('serialport')
 const Readline = require('@serialport/parser-readline')
 const port = new SerialPort('/dev/cu.SLAB_USBtoUART', {
@@ -124,6 +139,7 @@ const parser = port.pipe(new Readline({ delimiter: '\r\n' }))
 parser.on('data', readSerialData)
 
 var starttime = null;
+var zero_num = 0; 
 
 function readSerialData(data) {
 	data = data.split(",");
@@ -133,18 +149,41 @@ function readSerialData(data) {
 	}
 	time -= starttime;
 
-	steps.push({
-		x: time,
-		y: parseFloat(data[2])
-	});
-	battery.push({
-		x: time,
-		y: parseFloat(data[3])
-	});
-	temperature.push({
-		x: time,
-		y: parseFloat(data[4])
-	});
+	if(step_checkbox == false){  
+		steps.push({
+			x: time,
+			y: parseFloat(data[2])
+		});
+	}else{
+		steps.push({
+			x: time,
+			y: zero_num
+		});	
+	}
+
+	if(battery_checkbox == false){  
+		battery.push({
+			x: time,
+			y: parseFloat(data[3])
+		});
+	}else{
+		battery.push({
+			x: time,
+			y: zero_num
+		});
+	}
+
+	if(temp_checkbox == false){  
+		temperature.push({
+			x: time,
+			y: parseFloat(data[4])
+		});
+	}else{
+		temperature.push({
+			x: time,
+			y: zero_num
+		});
+	}
 	empty.push({
 		x:time, 
 		y: parseFloat(data[4])
