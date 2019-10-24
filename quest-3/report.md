@@ -24,10 +24,11 @@ Qualitative Criteria
 
 ## Solution Design
 
+The ESP32 board is wired to the thermistor, the voltage divider, the LEDs, and the vibration. Figure 1.1 below, is a system diagram of how our device works. 
 
 
 ## Sketches and Photos
-Figure 1.1
+Figure 1.1 General system diagram 
 ![IMG_E1546](https://user-images.githubusercontent.com/24261732/67358530-ba098e80-f52e-11e9-9bd0-a8e4fe50c8c9.JPG)
 
 
