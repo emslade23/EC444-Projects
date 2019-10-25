@@ -27,16 +27,30 @@ When a user checks the disable battery, temperature or steps data, in each case,
 
 Furthermore, we have integrated port forwarding such that the user can view our web application from any device connected to the internet.
 ## Evaluation Criteria
+Objective Criteria
+1. Send data across seperate IP network to control remote device through web client- complete
+2. Recieve data across seperate IP network from remote sensors into web client- complete
+3. Incoporate time and alert scheduling via web client- complete
+4. Trigger an immediate alert - complete
+5. Web client displays biometric in real time - complete
+6. Investigative question reponse: What are steps you can take to make your device and system lower power? 
 
 
+Bonus: Added an additional command to reset step count. 
+ 
+Qualitative Criteria 
+1. Quality of Solution
+2. Quality of report.md inlcuding use graphics
+3. Quality of code reporting
+4. Quality of video presentation
 
 ## Solution Design
 
 
 
 ## Sketches and Photos
-<center><img src="./images/example.png" width="70%" /></center>  
-<center> </center>
+Figure 1.1
+![IMG_0666](https://user-images.githubusercontent.com/24261732/67536273-5ef9a800-f6a4-11e9-8d0a-62ebcdadb924.JPG)
 
 
 ## Supporting Artifacts
