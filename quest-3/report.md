@@ -54,7 +54,7 @@ Figure 1.1
 
 
 ## Supporting Artifacts
-- [Link to repo]()
+- [Link to repo](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade)
 - [Link to video demo](https://youtu.be/s8XyCHvXPtk)
 
 
