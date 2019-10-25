@@ -39,6 +39,8 @@ The major step we can take to make our device and system lower power is to allow
 
 If the user were to disable temperature, we are preventing the esp32 from having to read from a particular gpio pin which would conserve on energy. Furthermore, in order to send the data from esp32 to the server over wifi, this requires a particular power consumption, as high as "Up to 20.5 dBm of transmitting power" (https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf), which we would be saving by disabling reading thermistor data. 
 
+An alternative option is to keep the esp32 in sleep mode until the runner's steps are greater than zero. This would mean that the runner has started moving, and since we are not interested in when the runner hasnt started the race yet, this would be an effective way to conserve power. According to https://lastminuteengineers.com/esp32-sleep-modes-power-consumption/, esp32 active mode consumes 160-260mA, whereas esp32 in light sleep mode consumes 0.8mA. Light sleep mode disables wifi which would be desireable until the runner starts running, then the esp32 could switch to active mode and record the data. 
+
 
 Bonus: Added an additional command to reset step count. 
  
