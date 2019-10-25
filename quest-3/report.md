@@ -45,8 +45,8 @@ Qualitative Criteria
 4. Quality of video presentation
 
 ## Solution Design
-
-
+The Figure 1.1 below is a sketch of our system diagram. It shows the flow and method of communication between the ESP32 and the client. 
+The ESP32 chip is connected to the voltage divider, the vibration sensor,  and the the thermitor. 
 
 ## Sketches and Photos
 Figure 1.1
@@ -54,12 +54,12 @@ Figure 1.1
 
 
 ## Supporting Artifacts
-- [Link to repo](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade)
-- [Link to video demo](https://youtu.be/s8XyCHvXPtk)
-
+- [Link to repo]()
+- [Link to video demo]()
 
 
 ## References
+class resources: http://whizzer.bu.edu/quests/primary/wearable
 
 -----
 
