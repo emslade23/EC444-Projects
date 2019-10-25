@@ -55,7 +55,8 @@ Figure 1.1
 
 ## Supporting Artifacts
 - [Link to repo]()
-- [Link to video demo]()
+- [Link to video demo](https://youtu.be/s8XyCHvXPtk)
+
 
 
 ## References
