@@ -34,8 +34,10 @@ Objective Criteria
 4. Trigger an immediate alert - complete
 5. Web client displays biometric in real time - complete
 6. Investigative question reponse: What are steps you can take to make your device and system lower power? 
+
 The major step we can take to make our device and system lower power is to allow the user on the client side to be able to disable certain data collection not just on the graph, but also stop the esp32 from reading the particular sensor data. For example, if the user disables temperature, then the esp32 would stop reading from the thermistor. This would be an effective way to save battery in the long term for the device.
- If the user were to disable temperature, we are preventing the esp32 from having to read from a particular gpio pin which would conserve on energy. Furthermore, in order to send the data from esp32 to the server over wifi, this requires a particular power consumption, as high as "Up to 20.5 dBm of transmitting power" (https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf), which we would be saving by disabling reading thermistor data. 
+
+If the user were to disable temperature, we are preventing the esp32 from having to read from a particular gpio pin which would conserve on energy. Furthermore, in order to send the data from esp32 to the server over wifi, this requires a particular power consumption, as high as "Up to 20.5 dBm of transmitting power" (https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf), which we would be saving by disabling reading thermistor data. 
 
 
 Bonus: Added an additional command to reset step count. 
