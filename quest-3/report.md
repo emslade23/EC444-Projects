@@ -34,7 +34,7 @@ Objective Criteria
 4. Trigger an immediate alert - complete
 5. Web client displays biometric in real time - complete
 6. Investigative question reponse: What are steps you can take to make your device and system lower power? 
-
+The major step we can take to make our device and system lower power is to allow the user on the client side to be able to disable certain data collection not just on the graph, but also stop the esp32 from reading the particular sensor data. For example, if the user disables temperature, then the esp32 would stop reading from the thermistor. This would be an effective way to save battery in the long term for the device
 
 Bonus: Added an additional command to reset step count. 
  
