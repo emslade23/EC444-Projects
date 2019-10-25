@@ -66,7 +66,16 @@ Figure 1.1
 
 ## References
 class resources: http://whizzer.bu.edu/quests/primary/wearable
-
+class resources: http://whizzer.bu.edu/quests/primary/wearable
+http://whizzer.bu.edu/skills/router
+http://whizzer.bu.edu/skills/dyndns
+https://nodejs.org/api/dgram.html
+http://whizzer.bu.edu/skills/wifi
+https://en.wikipedia.org/wiki/Network_socket
+https://en.wikipedia.org/wiki/Dynamic_DNS
+https://nodejs.org/api/dgram.html
+https://en.wikipedia.org/wiki/Switch#Contact_bounce
+https://www.adafruit.com/product/1766
 -----
 
 ## Reminders
