@@ -47,6 +47,9 @@ Qualitative Criteria
 ## Solution Design
 The Figure 1.1 below is a sketch of our system diagram. It shows the flow and method of communication between the ESP32 and the client. 
 The ESP32 chip is connected to the voltage divider, the vibration sensor,  and the the thermitor. 
+The ESP32 communicates with through the Port 3030 using UDP. The Nodes.js in turn uses Port 8080 to communicate with the HTML at 192.168.131:8080. It also forwards to Port 5000 and remotely access the HTML using DDNS at 128.197.175.240:5000. 
+Figure 1._ is a depiction of the client side on canvas.js. The data for each sensor is displayed on one multi-axial graph. Underneath the graph are three checkboxes to allow the user to disable the display of any sensor. When checked, the selected sensor data goes to zero where it remains until the box is unchecked and the graph resumes with data display. Disabling the data does not stop the graph from gathering real time information. 
+A textbox and button can also be found on the graph which is used to user commands. Here is where the graph communicates with the ESP32 to carry out specific executions. The first command is a immediate alert called "Find my device". It turns on the red LED on the board to help users better see where the device should it ever be lost. There is also a command to stop the alert. Next, there is a water command that activates the blue LED and  allows users is also enter a number to dictate the length of the intervals(in secs) between each flash. This serves as a constant reminder to drink water. 
 
 ## Sketches and Photos
 Figure 1.1
