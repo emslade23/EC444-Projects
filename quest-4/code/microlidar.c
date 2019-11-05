@@ -24,8 +24,8 @@
  * - Pin assignment: see defines below
  */
 
-#define ECHO_TEST_TXD  17//(GPIO_NUM_4) green
-#define ECHO_TEST_RXD  16//(GPIO_NUM_5) white
+#define ECHO_TEST_TXD  16//(GPIO_NUM_4) white in RX
+#define ECHO_TEST_RXD  17//(GPIO_NUM_5) green in TX
 #define ECHO_TEST_RTS  (UART_PIN_NO_CHANGE)
 #define ECHO_TEST_CTS  (UART_PIN_NO_CHANGE)
 
@@ -47,7 +47,7 @@ static void echo_task(void *arg)
     uart_driver_install(UART_NUM_1, BUF_SIZE * 2, 0, 0, NULL, 0);
 
     // Configure a temporary buffer for the incoming data
-    uint8_t *data = (uint8_t *) malloc(BUF_SIZE);
+    uint8_t *data = (uint8_t *) malloc(11);
     uint16_t val = 0;
 
     while (1) {
