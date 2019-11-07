@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+     <script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <h1>Our fancy app to turn the car on and off remotely</h1>
+    <input type="checkbox" id="StartStopToggler"> Check this to turn the vehicle on, uncheck this 
+to turn the vehicle off <br>
+
+     <script>
+      $(function () {
+      var socket = io();
+
+      $("#StartStopToggler").on('change', function(){
+      if($("#StartStopToggler").is(':checked'))
+        socket.emit('Start', true);
+        else{
+          socket.emit('Start', false);
+        }
+      });
+
+
+    });
+    </script>
+
+
+  </body>
+</html>
