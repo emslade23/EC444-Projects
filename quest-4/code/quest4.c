@@ -170,14 +170,14 @@ int collision = 0;
 void read_lidar() {
   while (1){
     writeRegister(REG1, VAL1);
-
     frontDistance = read16(REG2);
-    if (frontDistance < 19) {
+
+    if (frontDistance <= 20) {
       collision = 1;
-    } else {
+    } else if (frontDistance > 20) {
       collision = 0;
     }
-    vTaskDelay(200 / portTICK_RATE_MS);
+    vTaskDelay(20 / portTICK_RATE_MS);
   }
 }
 
@@ -325,6 +325,7 @@ static void straightLineError() {
 
 static void setSpeedController() {
   mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, setspeed);
+
   while (1) {
     if (collision == 0) {
       if(speed > 0.413328) {
@@ -334,11 +335,11 @@ static void setSpeedController() {
       } else {
         setspeed = setspeed;
       }
+      mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, setspeed);
     } else if (collision == 1) {
       //mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1400);
       vTaskDelay(pdMS_TO_TICKS(1000));
     }
-    mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, setspeed);
     vTaskDelay(pdMS_TO_TICKS(1000));
   }
 }
