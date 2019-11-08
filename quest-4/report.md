@@ -58,8 +58,14 @@ Figure 1.2
 
 
 ## References
-
------
+class resources: http://whizzer.bu.edu/skills/lidar-LED
+https://cdn.sparkfun.com/assets/5/e/4/7/b/benewake-tfmini-datasheet.pdf
+https://docs.espressif.com/projects/esp-idf/en/latest/api-reference/peripherals/uart.html
+https://github.com/PulsedLight3D
+http://static.garmin.com/pumac/LIDAR_Lite_v3_Operation_Manual_and_Technical_Specifications.pdf
+https://learn.sparkfun.com/tutorials/qrd1114-optical-detector-hookup-guide#example-circuit
+https://docs.espressif.com/projects/esp-idf/en/latest/api-reference/peripherals/pcnt.html
+https://docs.espressif.com/projects/esp-idf/en/latest/api-reference/peripherals/timer.html
 
 ## Reminders
 
