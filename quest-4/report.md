@@ -4,24 +4,18 @@ Authors: Elizabeth Slade, Amy Dong, Quianna Mortimer
 2019-11-08
 
 ## Summary
-This Quest tasks us with converting a remote controled crawler into an autonomous device that can drive between two endpoints on a road segment. Certain requirements included: 
-
-    1) Preventing collisions
-    2) maintaining driving in the center of the track
-    3) maintaining a speed of 0.1 m/s, 
-    4) wireless commands to start and stop the crawler
-    5) Using an alphanumeric display to show current speed
+This Quest tasks us with converting a remote controled crawler into an autonomous device that can drive between two endpoints on a road segment. Certain requirements included: Preventing collisions, maintaining driving in the center of the track, maintaining a speed of 0.1 m/s, wireless commands to start and stop the crawler, Using an alphanumeric display to show current speed
     
 
 
 ## Evaluation Criteria 
-1. Use PID for speed control at 0.1 m/s
-2. Stops within 10 cm of end
-3. Uses PID for holding center of track 
-4. Successfully traversesA_B in one position or speed
-5. Uses alpha display to show current position or speed
-6. Controlled remotely, start and stop 
-7. Investigative Question: Define what you would want in a better sensor for the vehicle. Be very specific in quantifying it’s performance. Please cite materials found on the web to support your response.
+    1. Use PID for speed control at 0.1 m/s
+    2. Stops within 10 cm of end
+    3. Uses PID for holding center of track 
+    4. Successfully traversesA_B in one position or speed
+    5. Uses alpha display to show current position or speed
+    6. Controlled remotely, start and stop 
+    7. Investigative Question: Define what you would want in a better sensor for the vehicle. Be very specific in quantifying it’s performance. Please cite materials found on the web to support your response.
 
 
 ## Solution Design
