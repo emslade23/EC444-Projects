@@ -1,3 +1,6 @@
+//Author: Amy Dong, Quianna Mortimer, Elizabeth Slade
+//Date: 11/08/2019
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "freertos/FreeRTOS.h"
@@ -36,23 +39,14 @@
 #include "driver/timer.h"
 #include "esp_types.h"
 
+//Defines for the timer
 #define TIMER_DIVIDER         16  //  Hardware timer clock divider
 #define TIMER_SCALE           (TIMER_BASE_CLK / TIMER_DIVIDER)  // convert counter value to seconds
 #define TEST_WITH_RELOAD      1        // testing will be done with auto reload
 
-// Flag for dt
-int dt_complete = 0;
-
-
 // Master I2C
 #define I2C_EXAMPLE_MASTER_SCL_IO          22   // gpio number for i2c clk
 #define I2C_EXAMPLE_MASTER_SDA_IO          23   // gpio number for i2c data
-
-////Display
-//#define I2C_EXAMPLE_MASTER_SCL_IO_DISPLAY          15
-//#define I2C_EXAMPLE_MASTER_SDA_IO_DISPLAY         32
-
-
 #define I2C_EXAMPLE_MASTER_NUM             I2C_NUM_0  // i2c port
 #define I2C_EXAMPLE_MASTER_TX_BUF_DISABLE  0    // i2c master no buffer needed
 #define I2C_EXAMPLE_MASTER_RX_BUF_DISABLE  0    // i2c master no buffer needed
@@ -64,7 +58,7 @@ int dt_complete = 0;
 #define ACK_VAL                            0x00 // i2c ack value
 #define NACK_VAL                           0xFF // i2c nack value
 
-//display stuff
+//  Defines for alphanumeric display
 #define SLAVE_ADDR_2                       0x70 // alphanumeric address
 #define OSC                                0x21 // oscillator cmd
 #define HT16K33_BLINK_DISPLAYON            0x01 // Display on cmd
@@ -72,15 +66,14 @@ int dt_complete = 0;
 #define HT16K33_BLINK_CMD                  0x80 // Blink cmd
 #define HT16K33_CMD_BRIGHTNESS             0xE0 // Brightness cmd
 
-// ADXL343
+// Defines for Lidar
 #define SLAVE_ADDR                         0x62  //default value of slave address 0x62
-
 #define REG1                               0x00 //initiate ranging Register
 #define VAL1                               0x04 //intiate range value
 #define REG2                               0x8f //register to read for high and low
 #define REG3                               0x01 //register to repeatedly read for LSB
 
-//microlidar defines
+// Defines for microlidar
 #define ECHO_TEST_TXD  16//(GPIO_NUM_4) white in RX
 #define ECHO_TEST_RXD  17//(GPIO_NUM_5) green in TX
 #define ECHO_TEST_RTS  (UART_PIN_NO_CHANGE)
@@ -90,36 +83,32 @@ int dt_complete = 0;
 #define LEFT_LIDAR_TWO_TXD  12//(GPIO_NUM_4) white in RX
 #define LEFT_LIDAR_TWO_RXD  27//(GPIO_NUM_5) green in TX
 #define LEFT_LIDAR_TWO_RTS  (UART_PIN_NO_CHANGE)
-#define LEFT_LIDAR_TWO_CTS  (UART_PIN_NO_CHANGE)
+#define LEFT_LIDAR_TWO
 
+// Defines for client communication
 #define HOST_IP_ADDR "192.168.1.131" //ip address for communicating with the node.js server
 #define PORT 3030
-
 static const char *TAG = "example";
-//char *payload = "Message from ESP32 "; //message being sent from the ESP32 to the server
-//size_t payloadSize;
 
+// Encoder defines and constants
 #define DEFAULT_VREF    1100        //Use adc2_vref_to_gpio() to obtain a better estimate
 #define NO_OF_SAMPLES   1          //Multisampling
-
 static esp_adc_cal_characteristics_t *adc_chars;
-//static esp_adc_cal_characteristics_t *adc_chars_ultrasound;
-static const adc_channel_t channel = ADC_CHANNEL_6;     //GPIO34(A2) if ADC1, GPIO14 if ADC2
-//static const adc_channel_t channel_ultrasound = ADC_CHANNEL_7; //A10
+static const adc_channel_t channel = ADC_CHANNEL_6;
 static const adc_atten_t atten = ADC_ATTEN_DB_0;
 static const adc_unit_t unit = ADC_UNIT_1;
-//static const adc_unit_t unit2 = ADC_UNIT_2;
+
+//  Global variables
 uint32_t voltage;
-
-double rpm = 0;
 double speed = 0;
-
 int leftDistanceOne = 0;
 int leftDistanceTwo = 0;
 int16_t frontDistance = 0;
-int collision = 0;
 
-int commandStop = 0;
+// Flags
+int collision = 0; // Collision Flag
+int commandStop = 0; // Command Stop Flag
+int dt_complete = 0; // Timer Flag
 
 //Define timer interrupt handler
 void IRAM_ATTR timer_isr(void* arg)
@@ -128,14 +117,13 @@ void IRAM_ATTR timer_isr(void* arg)
     TIMERG0.int_clr_timers.t0 = 1;
     // Indicate timer has fired
     dt_complete = 1;
-    //printf("timer is triggered\n");
 }
 
+// Timer initializaton
 static void periodic_timer_init()
 {
     // Basic parameters of the timer
     timer_config_t config;
-    //...
     config.divider = TIMER_DIVIDER;
     config.counter_dir = TIMER_COUNT_UP;
     config.counter_en = TIMER_PAUSE;
@@ -157,7 +145,7 @@ static void periodic_timer_init()
     timer_start(TIMER_GROUP_0, TIMER_0);
 }
 
-
+// Font table for alpha displays
 uint16_t font_table(int num) {
     uint16_t fonttable[58];
     fonttable[0] = 0b0000000000000001;
@@ -221,39 +209,11 @@ uint16_t font_table(int num) {
     return fonttable[num];
 }
 
-//static void ultrasound()
-//{
-//    //Configure ADC 2
-//    adc2_config_channel_atten((adc2_channel_t)channel_ultrasound, atten);
-//
-//    //Characterize ADC
-//    adc_chars_ultrasound = calloc(1, sizeof(esp_adc_cal_characteristics_t));
-//    esp_adc_cal_value_t val_type = esp_adc_cal_characterize(unit2, atten, ADC_WIDTH_BIT_10, DEFAULT_VREF, adc_chars_ultrasound);
-//
-//    uint32_t voltage = 0;
-//    //Continuously sample ADC1
-//    while (1) {
-//        int adc_reading = 0;
-//        //Multisampling
-//        for (int i = 0; i < 5; i++) {
-//            adc_reading += adc2_get_raw(channel_ultrasound,ADC_WIDTH_BIT_10,&adc_reading);
-//        }
-//        adc_reading /= 5;
-//
-//        //Convert adc_reading to voltage in mV
-//        voltage = esp_adc_cal_raw_to_voltage(adc_reading, adc_chars_ultrasound);
-//        //printf("%d\n",voltage);
-//        leftDistanceTwo =  voltage / 6.4 * 2.54; //check chat with leila
-//
-//        vTaskDelay(pdMS_TO_TICKS(20));
-//    }
-//}
-
+// Task for remotely starting and stopping the crawler
 static void udp_client_task(void *pvParameters)
 {
     char rx_buffer[128];
     char addr_str[128];
-    //char previousCommand[128];
     int addr_family;
     int ip_protocol;
 
@@ -261,7 +221,6 @@ static void udp_client_task(void *pvParameters)
       //configuring socket
         struct sockaddr_in dest_addr;
         dest_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-        //dest_addr.sin_addr.s_addr = inet_addr(HOST_IP_ADDR);
         dest_addr.sin_family = AF_INET;
         dest_addr.sin_port = htons(PORT);
         addr_family = AF_INET;
@@ -303,13 +262,15 @@ static void udp_client_task(void *pvParameters)
                     inet6_ntoa_r(source_addr.sin6_addr, addr_str, sizeof(addr_str) - 1);
                 }
 
-                rx_buffer[len] = 0; // Null-terminate whatever we received and treat like a string...
+                rx_buffer[len] = 0; // Null-terminate whatever we received and treat like a string.
                 ESP_LOGI(TAG, "Received %d bytes from %s:", len, addr_str);
                 ESP_LOGI(TAG, "%s", rx_buffer);
 
                 printf("%s", rx_buffer);
                 char* result = rx_buffer;
                 printf("Message! %s ", result);
+
+                // Recieved command handling
                 if (strcmp(result, "Stop\n") == 0){
                     printf("STOPPPP!\n");
                     commandStop = 1;
@@ -322,9 +283,8 @@ static void udp_client_task(void *pvParameters)
                 {
                     printf("Waiting for valid command...\n");
                 }
-                
 
-                //do something with the output
+
                 int err = sendto(sock, rx_buffer, len, 0, (struct sockaddr *)&source_addr, sizeof(source_addr));
                 if (err < 0) {
                     ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
@@ -341,7 +301,7 @@ static void udp_client_task(void *pvParameters)
     }
 }
 
- //Function to initiate i2c -- note the MSB declaration!
+ //Function to initiate i2c components
 static void i2c_master_init(){
   // Debug
   printf("\n>> i2c Config\n");
@@ -414,14 +374,12 @@ int set_brightness_max(uint8_t val) {
     return ret;
 }
 
+// Function that sends information to the display and makes it display the wheel speed
 static void alpha_display(char buffer[5]) {
-    
-    int currenttime[] = {0,0,0,0};
 
+    int currenttime[] = {0,0,0,0};
     uint16_t displaybuffer[8];
 
-   // while(1) {
- 
             currenttime[0] = buffer[0];
             currenttime[1] = buffer[1];
             currenttime[2] = buffer[2];
@@ -445,77 +403,71 @@ static void alpha_display(char buffer[5]) {
             i2c_master_cmd_begin(I2C_EXAMPLE_MASTER_NUM, cmd4, 1000 / portTICK_RATE_MS);
             i2c_cmd_link_delete(cmd4);
             vTaskDelay(1000 / portTICK_RATE_MS);
-   // }
 }
 
-// Write one byte to register
+// Write one byte to register of Lidar
 int writeRegister(uint8_t reg, uint8_t data) {
-
-i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-i2c_master_start(cmd);
-i2c_master_write_byte(cmd, (SLAVE_ADDR<< 1)| WRITE_BIT, ACK_CHECK_EN);
-i2c_master_write_byte(cmd, reg, ACK_CHECK_EN);
-i2c_master_write_byte(cmd, data, ACK_CHECK_EN);
-i2c_master_stop(cmd);
-int ret = i2c_master_cmd_begin(I2C_EXAMPLE_MASTER_NUM, cmd, 100 / portTICK_RATE_MS);
-i2c_cmd_link_delete(cmd);
-return ret;
+  i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+  i2c_master_start(cmd);
+  i2c_master_write_byte(cmd, (SLAVE_ADDR<< 1)| WRITE_BIT, ACK_CHECK_EN);
+  i2c_master_write_byte(cmd, reg, ACK_CHECK_EN);
+  i2c_master_write_byte(cmd, data, ACK_CHECK_EN);
+  i2c_master_stop(cmd);
+  int ret = i2c_master_cmd_begin(I2C_EXAMPLE_MASTER_NUM, cmd, 100 / portTICK_RATE_MS);
+  i2c_cmd_link_delete(cmd);
+  return ret;
 }
 
-// Read register
+// Read register of Lidar
 uint8_t readRegister(uint8_t reg) {
-// YOUR CODE HERE
-uint8_t data;
-i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-i2c_master_start(cmd);
-i2c_master_write_byte(cmd, (SLAVE_ADDR << 1)| WRITE_BIT, ACK_CHECK_EN);
-i2c_master_write_byte(cmd, reg, ACK_CHECK_EN);
-i2c_master_start(cmd);
-i2c_master_write_byte(cmd, (SLAVE_ADDR << 1)| READ_BIT, ACK_CHECK_EN);
-i2c_master_read_byte(cmd, &data, ACK_CHECK_DIS);
-//i2c_master_write_byte(cmd, reg, NACK_VAL);
-i2c_master_stop(cmd);
-i2c_master_cmd_begin(I2C_EXAMPLE_MASTER_NUM, cmd, 100 / portTICK_RATE_MS);
-i2c_cmd_link_delete(cmd);
-return data;
+  uint8_t data;
+  i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+  i2c_master_start(cmd);
+  i2c_master_write_byte(cmd, (SLAVE_ADDR << 1)| WRITE_BIT, ACK_CHECK_EN);
+  i2c_master_write_byte(cmd, reg, ACK_CHECK_EN);
+  i2c_master_start(cmd);
+  i2c_master_write_byte(cmd, (SLAVE_ADDR << 1)| READ_BIT, ACK_CHECK_EN);
+  i2c_master_read_byte(cmd, &data, ACK_CHECK_DIS);
+  //i2c_master_write_byte(cmd, reg, NACK_VAL);
+  i2c_master_stop(cmd);
+  i2c_master_cmd_begin(I2C_EXAMPLE_MASTER_NUM, cmd, 100 / portTICK_RATE_MS);
+  i2c_cmd_link_delete(cmd);
+  return data;
 }
 
-// read 16 bits (2 bytes)
+// read 16 bits (2 bytes) of Lidar
 int16_t read16(uint8_t reg) {
-
-uint8_t d1, d2;
-
-i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-i2c_cmd_handle_t cmd2 = i2c_cmd_link_create();
-i2c_master_start(cmd);
-i2c_master_write_byte(cmd, (SLAVE_ADDR << 1)|WRITE_BIT, ACK_CHECK_EN);
-i2c_master_write_byte(cmd, reg, ACK_CHECK_EN);
-i2c_master_stop(cmd); //for this device, it myst first stop the condition before a new start condition
-i2c_master_cmd_begin(I2C_EXAMPLE_MASTER_NUM, cmd, 100 / portTICK_RATE_MS);
-i2c_master_start(cmd2);
-i2c_master_write_byte(cmd2, (SLAVE_ADDR << 1)| READ_BIT, ACK_CHECK_EN);
-i2c_master_read_byte(cmd2, &d1, ACK_VAL);
-i2c_master_read_byte(cmd2, &d2, ACK_VAL);
-i2c_master_stop(cmd2);
-i2c_master_cmd_begin(I2C_EXAMPLE_MASTER_NUM, cmd2, 100 / portTICK_RATE_MS);
-i2c_cmd_link_delete(cmd);
-i2c_cmd_link_delete(cmd2);
-int16_t dtemp = d1 << 8;
-int16_t data = dtemp| d2;
-return data;
+  uint8_t d1, d2;
+  i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+  i2c_cmd_handle_t cmd2 = i2c_cmd_link_create();
+  i2c_master_start(cmd);
+  i2c_master_write_byte(cmd, (SLAVE_ADDR << 1)|WRITE_BIT, ACK_CHECK_EN);
+  i2c_master_write_byte(cmd, reg, ACK_CHECK_EN);
+  i2c_master_stop(cmd); //for this device, it myst first stop the condition before a new start condition
+  i2c_master_cmd_begin(I2C_EXAMPLE_MASTER_NUM, cmd, 100 / portTICK_RATE_MS);
+  i2c_master_start(cmd2);
+  i2c_master_write_byte(cmd2, (SLAVE_ADDR << 1)| READ_BIT, ACK_CHECK_EN);
+  i2c_master_read_byte(cmd2, &d1, ACK_VAL);
+  i2c_master_read_byte(cmd2, &d2, ACK_VAL);
+  i2c_master_stop(cmd2);
+  i2c_master_cmd_begin(I2C_EXAMPLE_MASTER_NUM, cmd2, 100 / portTICK_RATE_MS);
+  i2c_cmd_link_delete(cmd);
+  i2c_cmd_link_delete(cmd2);
+  int16_t dtemp = d1 << 8;
+  int16_t data = dtemp| d2;
+  return data;
 }
 
-
-// Task to continuously poll lidar
+// Task to continuously read lidar data
 void read_lidar() {
   while (1){
     writeRegister(REG1, VAL1);
-
     frontDistance = read16(REG2);
     vTaskDelay(200 / portTICK_RATE_MS);
   }
 }
 
+// Task to get data from the micro lidars
 static void microLidar(void *arg)
 {
     /* Configure parameters of an UART driver,
@@ -531,7 +483,7 @@ static void microLidar(void *arg)
     uart_set_pin(UART_NUM_1, ECHO_TEST_TXD, ECHO_TEST_RXD, ECHO_TEST_RTS, ECHO_TEST_CTS);
     uart_driver_install(UART_NUM_1, BUF_SIZE * 2, 0, 0, NULL, 0);
 
-//    //left lidar 2
+    //left lidar 2
     uart_param_config(UART_NUM_2, &uart_config);
     uart_set_pin(UART_NUM_2, LEFT_LIDAR_TWO_TXD, LEFT_LIDAR_TWO_RXD, LEFT_LIDAR_TWO_RTS, LEFT_LIDAR_TWO_CTS);
     uart_driver_install(UART_NUM_2, BUF_SIZE * 2, 0, 0, NULL, 0);
@@ -554,6 +506,7 @@ static void microLidar(void *arg)
     }
 }
 
+// Calibrating motors and testing servo on the crawler
 void calibrateESC() {
     mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0B, 18);
     mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0A, 19);
@@ -564,7 +517,7 @@ void calibrateESC() {
     pwm_config.counter_mode = MCPWM_UP_COUNTER;
     pwm_config.duty_mode = MCPWM_DUTY_MODE_0;
     mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_0, &pwm_config);    //Configure PWM0A & PWM0B with above settings
-    
+
     // calibrating run
     printf("Calibrating forward backwards\n");
     vTaskDelay(4000 / portTICK_PERIOD_MS);  // Give yourself time to turn on crawler
@@ -577,10 +530,9 @@ void calibrateESC() {
     mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1400); // reset the ESC to neutral (non-moving) value
 
     printf("Finish calibration\n");
-    
-    //while (1) {
+
         printf("testing steering\n");
-        
+
         vTaskDelay(2000 / portTICK_PERIOD_MS);  // Give yourself time to turn on crawler
         mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 2500); // HIGH signal in microseconds
         vTaskDelay(2000 / portTICK_PERIOD_MS);
@@ -591,14 +543,12 @@ void calibrateESC() {
         mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 1450); // reset the ESC
 
         vTaskDelay(2000 / portTICK_PERIOD_MS);
-        
-        printf("test done\n");
-   // }
-    
 
-    //mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1300);
+        printf("test done\n");
+
 }
 
+// Task for using adc with optical encoder to detect wheel speed
 static void encoder() {
   //Configure ADC
       adc1_config_width(ADC_WIDTH_BIT_10);
@@ -607,7 +557,6 @@ static void encoder() {
   //Characterize ADC
   adc_chars = calloc(1, sizeof(esp_adc_cal_characteristics_t));
   esp_adc_cal_value_t val_type = esp_adc_cal_characterize(unit, atten, ADC_WIDTH_BIT_10, DEFAULT_VREF, adc_chars);
-  //print_char_val_type(val_type);
 
   //Continuously sample ADC1
   while (1) {
@@ -619,13 +568,13 @@ static void encoder() {
       adc_reading /= NO_OF_SAMPLES;
       voltage = esp_adc_cal_raw_to_voltage(adc_reading, adc_chars);
 
-      //printf("Voltage: %d\n", voltage);
       vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
 
 double pulseCount = 0;
 
+// Function for detecting pulses with the encoder
 static void pulseCounting() {
   while (1) {
     if (voltage > 500) {
@@ -644,6 +593,7 @@ static void pulseCounting() {
 
 int difference = 0;
 
+// Task for steering
 static void straightLineError() {
   while (1) {
       if(commandStop == 0) {
@@ -664,15 +614,6 @@ static void straightLineError() {
           } else {
             mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 1450);
           }
-            
-//            if(leftDistanceOne > 60) { //turn left a little
-//              //printf("diff more than 5\n");
-//              mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 2000);
-//            } else if (leftDistanceOne < 55) { //turn right a little
-//              mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 1000);
-//            } else {
-//              mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 1450);
-//            }
         } else if (collision == 1) {
           //mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 1450);
           mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1400);
@@ -684,7 +625,7 @@ static void straightLineError() {
   }
 }
 
-  int setspeed = 1265;
+int setspeed = 1265;
 double output = 0;
 int error = 0;
 int setpoint = 0.258330;
@@ -696,15 +637,14 @@ double Kp = 40;
 double Ki = 1;
 double Kd = 0.1;
 
+// PID for controlling speed of crawler
 void PID() {
     if (frontDistance < 35) {
       collision = 1;
     } else {
       collision = 0;
     }
-      
-        //printf("Output: %f\n", output);
-      
+
       if(commandStop == 0) {
         if (collision == 0) {
             error = setpoint - speed;
@@ -712,20 +652,15 @@ void PID() {
             derivative = (error - previous_error) / dt;
             output = Kp * error + Ki * integral + Kd * derivative;
             previous_error = error;
-            
-            
+
+
           mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, setspeed);
         } else if (collision == 1) {
           mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1400);
-          //vTaskDelay(pdMS_TO_TICKS(1000));
         }
-        //vTaskDelay(pdMS_TO_TICKS(500));
       } else if(commandStop == 1) {
-          //printf("I'm stopping\n");
           mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1400);
-          //vTaskDelay(pdMS_TO_TICKS(100));
       }
-  //}
 }
 
 void setspeedcontroller() {
@@ -742,34 +677,31 @@ void setspeedcontroller() {
 
 void app_main(void)
 {
-
+  // Initializations and task for sending commands to the crawler
       ESP_ERROR_CHECK(nvs_flash_init());
       tcpip_adapter_init();
       ESP_ERROR_CHECK(esp_event_loop_create_default());
       ESP_ERROR_CHECK(example_connect());
+      xTaskCreate(udp_client_task, "udp_client", 4096, NULL, configMAX_PRIORITIES, NULL);
 
-    xTaskCreate(udp_client_task, "udp_client", 4096, NULL, configMAX_PRIORITIES, NULL);
-
+// Initializations for the alphanumeric display
     i2c_master_init();
-
     alpha_oscillator();
     no_blink();
     set_brightness_max(0xF);
 
-
+// Calibrate ESC
     calibrateESC();
 
- 
       xTaskCreate(read_lidar,"read_lidar", 4096, NULL, configMAX_PRIORITIES, NULL);
       xTaskCreate(encoder,"encoder", 4096, NULL, configMAX_PRIORITIES, NULL);
       xTaskCreate(pulseCounting,"pulse_counting", 4096, NULL, configMAX_PRIORITIES, NULL);
       xTaskCreate(microLidar, "micro_lidar", 4096, NULL, configMAX_PRIORITIES, NULL);
       xTaskCreate(straightLineError, "straight_Line_Error", 4096, NULL, configMAX_PRIORITIES, NULL);
-    //xTaskCreate(printthings, "print_things", 4096, NULL, configMAX_PRIORITIES, NULL);
-    
+
+// Initialization for timer
     periodic_timer_init();
-    
-    //xTaskCreate(ultrasound,"ultrasound", 4096, NULL, configMAX_PRIORITIES-1, NULL);
+
     int count = 0;
       while (1) {
           if (count == 10) {
@@ -779,12 +711,7 @@ void app_main(void)
 
                       char speed_char[50]; // = NULL;
                       sprintf(speed_char,"%f", speed);
-                        //printf("%s\n",speed_char);
                       alpha_display(speed_char);
-
-                       // printf("Output: %f\n", output);
-                        
-              //        printf("Pulse Count = %f\n", pulseCount);
                       printf("Speed = %f m/s\n", speed);
                       printf("left One Distance = %d cm\n", leftDistanceOne);
                       printf("Left Two Distance = %d cm\n", leftDistanceTwo);
@@ -792,9 +719,10 @@ void app_main(void)
                       printf("Front Distance: %d cm\n", frontDistance);
                         pulseCount = 0;
           }
+
+          // Run PID every 100 ms (when timer is triggered)
           if (dt_complete == 1) {
               count++;
-              
             PID();
             dt_complete = 0;
             // Re-enable alarm
@@ -804,4 +732,3 @@ void app_main(void)
           vTaskDelay(pdMS_TO_TICKS(10));
       }
 }
-
