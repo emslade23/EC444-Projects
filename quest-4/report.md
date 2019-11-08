@@ -30,7 +30,7 @@ This Quest tasks us with converting a remote controled crawler into an autonomou
     -If the back LIDAR detected less distance, the crawler steers left, if the front detected less,it steered right. 
     Angle of walls
     Orientation of vehicle
-    -The placement of the microLIDARs was made to maintain a parallel relation to 
+    -The placement of the microLIDARs was made to maintain a parallel relation to one wall 
     Speed/distance/acceleration of vehicle
 3. Establish safety rules, e.g.,
     Stop when detect collision pending
