@@ -21,6 +21,8 @@ This Quest tasks us with converting a remote controled crawler into an autonomou
 1. Establish the use of selected sensors on the vehicle
     Wheel speed
        -The optical encoder was used to with the black and white circle to count pulses. Evey pulse is 5 cm and multiple it by the time         segment, 1sec. The encoder was placed on back wheel so as not to affect by the steering. 
+       -Figure 1.1 is a detailed diagram of the hardware wiring, showing all the main components including the ESP32, ECS, LIDAR, two microLIDARs, alphanumeric display, steering servo, motors, and 7.2v battery. 
+       -Figure 1.2 is an image of the actual hardware wiring. 
     Ranging (IR, LIDAR-LED, LIDAR-Lite, Ultrasonic)
       -For ranging, we used the LIDAR and two microLIDARs.
       -The  LIDAR was coded using i2c while  the mictoLIDARs used uart. 
@@ -44,8 +46,10 @@ This Quest tasks us with converting a remote controled crawler into an autonomou
 
 
 ## Sketches and Photos
-<center></center>  
-<center> </center>
+Figure 1.1
+![IMG_0707](https://user-images.githubusercontent.com/24261732/68505208-ae0f1380-0234-11ea-9dc7-91ff2c7bfeab.JPG)
+Figure 1.2
+![IMG_0705](https://user-images.githubusercontent.com/24261732/68505173-96378f80-0234-11ea-9137-e66507e776cb.JPG)
 
 
 ## Supporting Artifacts
