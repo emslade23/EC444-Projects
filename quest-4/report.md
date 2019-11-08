@@ -11,7 +11,7 @@ This Quest tasks us with converting a remote controled crawler into an autonomou
 1. Use PID for speed control at 0.1 -0.40 m/s Completed
 2. Stops within 10 cm of end Completed 
 3. Uses PID for holding center of track  Completed
-4. Successfully traversesA_B in one position or speed Completed
+4. Successfully traverses A_B in one position or speed Completed
 5. Uses alpha display to show current position or speed Completed 
 6. Controlled remotely, start and stop  Completed
 
