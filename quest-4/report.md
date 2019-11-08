@@ -54,7 +54,7 @@ Figure 1.2
 
 
 ## Supporting Artifacts
-- [Link to repo]()
+- [Link to repo](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/tree/master/quest-4)
 - [[![Watch the video](https://img.youtube.com/vi/6dlBu9K2hMU/maxresdefault.jpg)](https://youtu.be/6dlBu9K2hMU)
 
 ## References
