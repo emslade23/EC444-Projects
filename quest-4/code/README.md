@@ -1,6 +1,10 @@
 # Code Readme
 
 Brief explanation on how to navigate your code folder. For example, main consists of the entry function, and lib are where the resource libraries are located.
+
+
+# nc -u 192.168.1.145 3030 on the client side to communicate with the server.
+
 /*
   Adapted I2C example code to work with the Adafruit ADXL343 accelerometer. Ported and referenced a lot of code from the Adafruit_ADXL343 driver code.
   ----> https://www.adafruit.com/product/4097
