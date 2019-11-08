@@ -30,35 +30,35 @@
 #define NACK_VAL                           0xFF // i2c nack value
 
 // Function to initiate i2c -- note the MSB declaration!
-static void i2c_example_master_init(){
-    // Debug
-    printf("\n>> i2c Config\n");
-    int err;
-
-    // Port configuration
-    int i2c_master_port = I2C_EXAMPLE_MASTER_NUM;
-
-    /// Define I2C configurations
-    i2c_config_t conf;
-    conf.mode = I2C_MODE_MASTER;                              // Master mode
-    conf.sda_io_num = I2C_EXAMPLE_MASTER_SDA_IO;              // Default SDA pin
-    conf.sda_pullup_en = GPIO_PULLUP_ENABLE;                  // Internal pullup
-    conf.scl_io_num = I2C_EXAMPLE_MASTER_SCL_IO;              // Default SCL pin
-    conf.scl_pullup_en = GPIO_PULLUP_ENABLE;                  // Internal pullup
-    conf.master.clk_speed = I2C_EXAMPLE_MASTER_FREQ_HZ;       // CLK frequency
-    err = i2c_param_config(i2c_master_port, &conf);           // Configure
-    if (err == ESP_OK) {printf("- parameters: ok\n");}
-
-    // Install I2C driver
-    err = i2c_driver_install(i2c_master_port, conf.mode,
-                       I2C_EXAMPLE_MASTER_RX_buffer_DISABLE,
-                       I2C_EXAMPLE_MASTER_TX_buffer_DISABLE, 0);
-    // i2c_set_data_mode(i2c_master_port,I2C_DATA_MODE_LSB_FIRST,I2C_DATA_MODE_LSB_FIRST);
-    if (err == ESP_OK) {printf("- initialized: yes\n\n");}
-
-    // Dat in MSB mode
-    i2c_set_data_mode(i2c_master_port, I2C_DATA_MODE_MSB_FIRST, I2C_DATA_MODE_MSB_FIRST);
-}
+//static void i2c_example_master_init(){
+//    // Debug
+//    printf("\n>> i2c Config\n");
+//    int err;
+//
+//    // Port configuration
+//    int i2c_master_port = I2C_EXAMPLE_MASTER_NUM;
+//
+//    /// Define I2C configurations
+//    i2c_config_t conf;
+//    conf.mode = I2C_MODE_MASTER;                              // Master mode
+//    conf.sda_io_num = I2C_EXAMPLE_MASTER_SDA_IO;              // Default SDA pin
+//    conf.sda_pullup_en = GPIO_PULLUP_ENABLE;                  // Internal pullup
+//    conf.scl_io_num = I2C_EXAMPLE_MASTER_SCL_IO;              // Default SCL pin
+//    conf.scl_pullup_en = GPIO_PULLUP_ENABLE;                  // Internal pullup
+//    conf.master.clk_speed = I2C_EXAMPLE_MASTER_FREQ_HZ;       // CLK frequency
+//    err = i2c_param_config(i2c_master_port, &conf);           // Configure
+//    if (err == ESP_OK) {printf("- parameters: ok\n");}
+//
+//    // Install I2C driver
+//    err = i2c_driver_install(i2c_master_port, conf.mode,
+//                       I2C_EXAMPLE_MASTER_RX_buffer_DISABLE,
+//                       I2C_EXAMPLE_MASTER_TX_buffer_DISABLE, 0);
+//    // i2c_set_data_mode(i2c_master_port,I2C_DATA_MODE_LSB_FIRST,I2C_DATA_MODE_LSB_FIRST);
+//    if (err == ESP_OK) {printf("- initialized: yes\n\n");}
+//
+//    // Dat in MSB mode
+//    i2c_set_data_mode(i2c_master_port, I2C_DATA_MODE_MSB_FIRST, I2C_DATA_MODE_MSB_FIRST);
+//}
 
 // Utility  Functions //////////////////////////////////////////////////////////
 
@@ -338,11 +338,6 @@ for (i = 0; buffer[i]; i++) {
 
 void alpha_display(char buffer [5])
 {
-  ESP_ERROR_CHECK( uart_driver_install(UART_NUM_0, 256, 0, 0, NULL, 0) );
-  esp_vfs_dev_uart_use_driver(UART_NUM_0);
-
-  i2c_example_master_init();
-  i2c_scanner();
 
   test_alpha_display(buffer);
 }

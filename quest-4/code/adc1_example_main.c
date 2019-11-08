@@ -418,7 +418,7 @@ void app_main(void)
             printf("Speed = %f m/s\n", speed);
 
         char speed_char[5]; // = NULL;
-        gcvt(s, 5, speed_char);
+        gcvt(speed, 5, speed_char);
         alpha_display(speed_char);
 
 
