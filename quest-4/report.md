@@ -20,25 +20,24 @@ This Quest tasks us with converting a remote controled crawler into an autonomou
 
 ## Solution Design
 1. Establish the use of selected sensors on the vehicle
-    Wheel speed
-       -The optical encoder was used to with the black and white circle to count pulses. Evey pulse is 5 cm and multiple it by the time         segment, 1sec 
-    Ranging (IR, LIDAR-LED, LIDAR-Lite, Ultrasonic)
-      -For ranging we used the LIDAR and two microLIDARs
+    - Wheel speed
+            - The optical encoder was used to with the black and white circle to count pulses. Evey pulse is 5 cm and multiple it by the timesegment, 1sec 
+    - Ranging (IR, LIDAR-LED, LIDAR-Lite, Ultrasonic)
+            - For ranging we used the LIDAR and two microLIDARs
 2. Establish control approaches, e.g.,
-    Constant distance from walls
-    -
-    Angle of walls
-    Orientation of vehicle
-    Speed/distance/acceleration of vehicle
+    -  Constant distance from walls
+    -  Angle of walls
+    -  Orientation of vehicle
+    -  Speed/distance/acceleration of vehicle
 3. Establish safety rules, e.g.,
-    Stop when detect collision pending
-    Stop on wireless command
+    -  Stop when detect collision pending
+    -  Stop on wireless command
 4. Design software algorithm to satisfy timing of control algorithm, e.g.,
-    Accommodate timing limits of sensors (they vary)
-    Accommodate actuator timing
-    Set PID timing (dt – cycle time)
-    Make sure the timing is consistent (e.g., with timers or interrupts)
-    Make sure to check for collisions
+    -  Accommodate timing limits of sensors (they vary)
+    -  Accommodate actuator timing
+    -  Set PID timing (dt – cycle time)
+    -  Make sure the timing is consistent (e.g., with timers or interrupts)
+    -  Make sure to check for collisions
 
 
 ## Sketches and Photos
