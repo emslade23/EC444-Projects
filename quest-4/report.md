@@ -55,8 +55,7 @@ Figure 1.2
 
 ## Supporting Artifacts
 - [Link to repo]()
-- [Link to video demo]()
-
+- [[![Watch the video](https://img.youtube.com/vi/6dlBu9K2hMU/maxresdefault.jpg)](https://youtu.be/6dlBu9K2hMU)
 
 ## References
 class resources: http://whizzer.bu.edu/skills/lidar-LED
