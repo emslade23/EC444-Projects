@@ -4,11 +4,11 @@ Authors: Elizabeth Slade, Amy Dong, Quianna Mortimer
 2019-11-08
 
 ## Summary
-This Quest tasks us with converting a remote controled crawler into an autonomous device that can drive between two endpoints on a road segment. Certain requirements included: 1) Preventing collisions, 2) maintaining driving in the center of the track, 3) maintaining a speed of 0.1 m/s, and 4) ending wireless commands to start and stop the crawler.
+This Quest tasks us with converting a remote controled crawler into an autonomous device that can drive between two endpoints on a road segment. Certain requirements included: 1) Preventing collisions, 2) maintaining driving in the center of the track, 3) maintaining a speed of 0.1 -0.4 m/s, and 4) ending wireless commands to start and stop the crawler.
 
 
 ## Evaluation Criteria
-1. Use PID for speed control at 0.1 -0.40 m/s Completed
+1. Use PID for speed control at 0.1 -0.4 m/s Completed
 2. Stops within 10 cm of end Completed
 3. Uses PID for holding center of track  Completed
 4. Successfully traversesA_B in one position or speed Completed
