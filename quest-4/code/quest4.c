@@ -648,14 +648,9 @@ static void straightLineError() {
   while (1) {
       if(commandStop == 0) {
         difference = leftDistanceOne - leftDistanceTwo;
-        if (frontDistance < 35) {
-          collision = 1;
-        } else {
-          collision = 0;
-        }
 
         if (collision == 0) {
-          if (leftDistanceOne < 30) {
+          if (leftDistanceOne <= 35) {
           mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 700);
           } else if (difference >= 3 && difference < 8) { //turn left a little
             //printf("diff more than 5\n");
@@ -689,7 +684,7 @@ static void straightLineError() {
   }
 }
 
-  int setspeed = 1300;
+  int setspeed = 1265;
 double output = 0;
 int error = 0;
 int setpoint = 0.258330;
@@ -702,7 +697,11 @@ double Ki = 1;
 double Kd = 0.1;
 
 void PID() {
-
+    if (frontDistance < 35) {
+      collision = 1;
+    } else {
+      collision = 0;
+    }
 
         //printf("Output: %f\n", output);
 
@@ -713,14 +712,6 @@ void PID() {
             derivative = (error - previous_error) / dt;
             output = Kp * error + Ki * integral + Kd * derivative;
             previous_error = error;
-
-          if(speed > 0.258330) {
-            setspeed++;
-          } else if (speed < 0.258330) {
-            setspeed--;
-          } else {
-            setspeed = setspeed;
-          }
 
 
           mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, setspeed);
@@ -735,6 +726,18 @@ void PID() {
           //vTaskDelay(pdMS_TO_TICKS(100));
       }
   //}
+}
+
+void setspeedcontroller() {
+    if (collision == 0 && commandStop == 0) {
+        if(speed > 0.206664) {
+          setspeed++;
+        } else if (speed < 0.206664) {
+          setspeed--;
+        } else {
+          setspeed = setspeed;
+        }
+    }
 }
 
 void app_main(void)
@@ -770,6 +773,7 @@ void app_main(void)
     int count = 0;
       while (1) {
           if (count == 10) {
+              setspeedcontroller();
               count = 0;
               speed = pulseCount * 0.051666;
 
@@ -778,14 +782,14 @@ void app_main(void)
                         //printf("%s\n",speed_char);
                       alpha_display(speed_char);
 
-                        printf("Output: %f\n", output);
+                       // printf("Output: %f\n", output);
 
               //        printf("Pulse Count = %f\n", pulseCount);
                       printf("Speed = %f m/s\n", speed);
-              //        printf("left One Distance = %d cm\n", leftDistanceOne);
-              //        printf("Left Two Distance = %d cm\n", leftDistanceTwo);
+                      printf("left One Distance = %d cm\n", leftDistanceOne);
+                      printf("Left Two Distance = %d cm\n", leftDistanceTwo);
                       printf("set speed = %d \n", setspeed);
-              //        printf("Front Distance: %d cm\n", frontDistance);
+                      printf("Front Distance: %d cm\n", frontDistance);
                         pulseCount = 0;
           }
           if (dt_complete == 1) {
