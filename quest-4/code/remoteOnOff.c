@@ -99,7 +99,7 @@ static void udp_server_task(void *pvParameters)
                 {
                     printf("Waiting for valid command...\n");
                 }
-                
+
 
                 //do something with the output
                 int err = sendto(sock, rx_buffer, len, 0, (struct sockaddr *)&source_addr, sizeof(source_addr));
