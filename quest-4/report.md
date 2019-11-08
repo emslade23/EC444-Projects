@@ -4,7 +4,14 @@ Authors: Elizabeth Slade, Amy Dong, Quianna Mortimer
 2019-11-08
 
 ## Summary
-This Quest tasks us with converting a remote controled crawler into an autonomous device that can drive between two endpoints on a road segment. Certain requirements included: 1) Preventing collisions, 2) maintaining driving in the center of the track, 3) maintaining a speed of 0.1 m/s, and 4) ending wireless commands to start and stop the crawler. 
+This Quest tasks us with converting a remote controled crawler into an autonomous device that can drive between two endpoints on a road segment. Certain requirements included: 
+
+    1) Preventing collisions
+    2) maintaining driving in the center of the track
+    3) maintaining a speed of 0.1 m/s, 
+    4) wireless commands to start and stop the crawler
+    5) Using an alphanumeric display to show current speed
+    
 
 
 ## Evaluation Criteria 
