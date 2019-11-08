@@ -1,9 +1,4 @@
-/* BSD Socket API Example
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
+
 #include <stdio.h>
 #include <string.h>
 #include <sys/param.h>
@@ -95,14 +90,14 @@ static void udp_server_task(void *pvParameters)
                 char* result = rx_buffer;
                 printf("Message! %s ", result);
                 if (strcmp(result, "Stop\n") == 0){
-                    printf("STOPPPP!");
+                    printf("STOPPPP!\n");
                 }
                 else if (strcmp(result, "Start\n") == 0){
-                    printf("Start! Zoom Zoom.");
+                    printf("Start! Zoom Zoom.\n");
                 }
                 else
                 {
-                    printf("Waiting for valid command...");
+                    printf("Waiting for valid command...\n");
                 }
                 
 
