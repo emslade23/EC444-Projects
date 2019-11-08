@@ -14,7 +14,8 @@ This Quest tasks us with converting a remote controled crawler into an autonomou
 4. Successfully traversesA_B in one position or speed Completed
 5. Uses alpha display to show current position or speed Completed 
 6. Controlled remotely, start and stop  Completed
-7. Investigative Question: Define what you would want in a better sensor for the vehicle. Be very specific in quantifying it’s performance. Please cite materials found on the web to support your response.
+
+**Investigative Question**: Define what you would want in a better sensor for the vehicle. Be very specific in quantifying it’s performance. Please cite materials found on the web to support your response.
 
 
 ## Solution Design
