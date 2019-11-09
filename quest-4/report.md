@@ -64,7 +64,18 @@ Figure 1.1
 ![IMG_0707](https://user-images.githubusercontent.com/24261732/68505208-ae0f1380-0234-11ea-9dc7-91ff2c7bfeab.JPG)
 Figure 1.2
 ![IMG_0705](https://user-images.githubusercontent.com/24261732/68505173-96378f80-0234-11ea-9137-e66507e776cb.JPG)
-
+Figure 1.3
+![Image](./images/0D3EC4F3-9F26-4037-89D4-835F02764DC9_1_102_o.jpeg)
+Figure 1.4
+![Image](./images/2C9C4E47-E748-4871-BC99-A1159B593AC0_1_102_o.jpeg)
+Figure 1.5
+![Image](./images/35D16CF1-9DE7-402A-BB7F-EE2D121D942D_1_102_o.jpeg)
+Figure 1.6
+![Image](./images/ACA77EB8-2ED2-443F-8F29-113C9B0769A7_1_102_o.jpeg)
+Figure 1.7
+![Image](./images/B98F042A-289B-47A1-86F0-67DCBFB066BF_1_105_c.jpeg)
+Figure 1.8
+![Image](./images/F3EAB060-960A-4CBA-8F65-0F5095B18FC7_1_102_o.jpeg)
 
 ## Supporting Artifacts
 - [Link to repo](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/tree/master/quest-4)
