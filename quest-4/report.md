@@ -16,6 +16,14 @@ This Quest tasks us with converting a remote controled crawler into an autonomou
 6. Controlled remotely, start and stop  Completed
 7. Investigative Question: Define what you would want in a better sensor for the vehicle. Be very specific in quantifying it’s performance. Please cite materials found on the web to support your response.
 
+The most important thing that I would want in a better sensor for a vehicle is for it to be extremely reliable. With the TFmini Lidars, we discovered that every 10 or so readings, it produced erroneous results. For an autonomous vehicle that would be on the road, it would be essential for it's lidar to be extremely reliable. By reliable, I mean that the sensor should be giving reliable readings at every iteration, 95% of the time. If there is an erroneous result, then we can filter it out by the associated results, but it is essential for the sensor to be reading data as reliably as possible. 
+
+Furthermore, having the sensor be robust is another essential part of the sensor's function. Since the vehicle is moving, it is very likely for the sensor to be moving wildly or for it's hardware to collide with another part of the machine. It is essential, that given this environment, the sensor can still operate reliably.
+
+Furthermore, another important aspect for the ideal sensor would be some type of indicator to let the user know whether or not the sensor is malfunctioning. This would be very important because if the sensor is malfunctioning, the vehicle becomes very dangerous as it will be reading erroneous values from that given sensor. So, if the sensor, assuming it still has power, but is giving erronous values, or isnt wired properly, that it gives a strength signal to denote the quality of the readings that are being read, so that in the software side, we can rank the less strong lidar readings as less valuable in the decision algorithm. I would want the strength reading to be in probabilistic percentages of its accuracy, and i would expect that the strength reading would be accurate + or -5%.
+
+
+
 
 ## Solution Design
 1. Establish the use of selected sensors on the vehicle
