@@ -193,6 +193,6 @@ void app_main(void)
         gpio_set_level(BLINK_RED, 0);
         gpio_set_level(BLINK_GREEN, 0);
       }
-      vTaskDelay(1000 / portTICK_PERIOD_MS);
+      vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }
