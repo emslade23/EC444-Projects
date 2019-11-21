@@ -8,8 +8,13 @@ This quest tasks us with creating a key fob using a the esp32 board, a transmitt
 
 
 ## Evaluation Criteria
-
-
+1. Fob relays {fob_ID,code} to security hub, hub sends {fob_ID,hub_ID,code} to server;server responds to fob, fob green light turns on
+2. Logs fob accesses to database {fob_ID,hub_ID,person,time,location}
+3. Database is on RPi
+4. Web-based management interface shows real-time active unlocked fobs and history of unlocked fobs (with actual time of unlock)
+5. Uses at least 3 fobs with unique IDs
+6. Demo delivered at scheduled time and report submitted in team folder with all required components
+7. Investigative question: comment on the security of your system. How would you best hack into this system if you were so inclined? How could you prevent this attack? Describe the steps.
 
 ## Solution Design
 
