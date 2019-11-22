@@ -4,7 +4,7 @@ Authors: Amy Dong, Liz Slade, Quianna Mortimer
 2019-11-22
 
 ## Summary
-This quest tasks us with creating a key fob using a the esp32 board, a transmitter, and a receiver. This key is met to interact with a hub by sending a unique ID and code which the hub then relays to a servers along with its own ID. Through a local network, the server on the RPi and a web client receive both IDs, the location and time of the interaction as well as the person. The hub then sends an unlocked signal to the fob triggering a green LED on the board. Figure 1.1 below is an illustration of a state machine for the overall system.  
+This quest tasks us with creating a key fob using a the esp32 board, a transmitter, and a receiver. This key is met to interact with a hub by sending a unique ID and code which the hub then relays to a servers along with its own ID. Through a local network, the server on the RPi and a web client receive both IDs, the location and time of the interaction as well as the person. The hub then sends an unlocked signal to the fob triggering a green LED on the board. Figure 1.1 below is an illustration of a state machine and chart for the overall system.  
 
 
 ## Evaluation Criteria
@@ -33,6 +33,7 @@ This quest tasks us with creating a key fob using a the esp32 board, a transmitt
 ## Sketches and Photos
 Figure 1.1
 ![FSM](https://user-images.githubusercontent.com/24261732/69369318-dd2c7880-0c69-11ea-9867-b4cc6f45a6e6.JPG)
+![fsm chart (2)](https://user-images.githubusercontent.com/24261732/69457026-1fbd8600-0d3a-11ea-9583-780175b1e618.png)
 
  Figure 1.2: Hub and Fobs
 ![Circuit](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/F4BAE448-A62E-4951-B355-CD5D12906AB7_1_105_c.jpeg)
