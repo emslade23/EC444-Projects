@@ -1,4 +1,4 @@
-//CODE FOR KEYFOB 1
+//CODE FOR HUB
 
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
@@ -63,6 +63,7 @@
 
  int push_button_state = 0;
  int flag = 0;
+ uint8_t *data;
 
 //static void udp_client_task(void *pvParameters)
 static void udp_client_task()
@@ -71,8 +72,10 @@ static void udp_client_task()
      char addr_str[128];
      int addr_family;
      int ip_protocol;
-     char command[128];
-     char* payload = "1,80085";
+     //char command[128];
+     //char* payload = "hello";
+
+     //while(1) {
 
      struct sockaddr_in dest_addr;
      dest_addr.sin_addr.s_addr = inet_addr(HOST_IP_ADDR);
@@ -91,48 +94,48 @@ static void udp_client_task()
      ESP_LOGI(TAG, "Socket created, sending to %s:%d", HOST_IP_ADDR, PORT);
      int index = 0;
 
-    // while (1) {
+     //while (1) {
 
            //printf("index： %d\n", index);
 
           // index = index + 1;
 
-           if (push_button_state == 1) {
+           //if (push_button_state == 1) {
              // printf("hi!!\n");
 
-             int err = sendto(sock, payload, strlen(payload), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
+             int err = sendto(sock, (char *) data, strlen((char *)data), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
              if (err < 0) {
                  ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
                   //break;
              }
 
              //Recieveing data from node.js
-             struct sockaddr_in source_addr; // Large enough for both IPv4 or IPv6
-             socklen_t socklen = sizeof(source_addr);
-             int len = recvfrom(sock, command, sizeof(command) - 1, 0, (struct sockaddr *)&source_addr, &socklen);
-
-               // Error occurred during receiving
-               if (len < 0) {
-                   ESP_LOGE(TAG, "recvfrom failed: errno %d", errno);
-                   //break;
-               } else {
-                   command[len] = 0;
-
-                   // Recieved command handling
-                   if (strcmp(command, "yes") == 0){
-                       printf("Access granted\n");
-                       gpio_set_level(BLINK_GREEN, 1);
-                       vTaskDelay(2000/portTICK_PERIOD_MS);
-                       gpio_set_level(BLINK_GREEN, 0);
-                   } else if (strcmp(command, "no") == 0){
-                       printf("Access denied\n");
-                   } else {
-                       printf("Waiting for valid command...\n");
-                   }
-               }
-           }
-           vTaskDelay(100 / portTICK_PERIOD_MS);
-      // }
+             // struct sockaddr_in source_addr; // Large enough for both IPv4 or IPv6
+             // socklen_t socklen = sizeof(source_addr);
+             // int len = recvfrom(sock, command, sizeof(command) - 1, 0, (struct sockaddr *)&source_addr, &socklen);
+             //
+             //   // Error occurred during receiving
+             //   if (len < 0) {
+             //       ESP_LOGE(TAG, "recvfrom failed: errno %d", errno);
+             //       //break;
+             //   } else {
+             //       command[len] = 0;
+             //
+             //       // Recieved command handling
+             //       if (strcmp(command, "yes") == 0){
+             //           printf("Access granted\n");
+             //           gpio_set_level(BLINK_GREEN, 1);
+             //           vTaskDelay(2000/portTICK_PERIOD_MS);
+             //           gpio_set_level(BLINK_GREEN, 0);
+             //       } else if (strcmp(command, "no") == 0){
+             //           printf("Access denied\n");
+             //       } else {
+             //           printf("Waiting for valid command...\n");
+             //       }
+             //   }
+           //}
+           //vTaskDelay(2000 / portTICK_PERIOD_MS);
+      //}
 
          // if (sock != -1) {
          //     ESP_LOGE(TAG, "Shutting down socket and restarting...");
@@ -224,7 +227,6 @@ static void udp_client_task()
      ESP_ERROR_CHECK(rmt_translator_init(config.channel, u8_to_rmt));
  }
 
-uint8_t *data;
 //uint8_t *data;
 
 static void echo_task(void *arg)
@@ -247,28 +249,28 @@ static void echo_task(void *arg)
 
     // Configure a temporary buffer for the incoming data
 
-    char *msg = "1,80085";
+    char *msg = "data transmitted";
 
     while (1) {
-      if (push_button_state == 1) {
-        uart_write_bytes(UART_NUM_1, (char *) msg, 10);
+      //if (push_button_state == 1) {
+        uart_write_bytes(UART_NUM_1, (char *) msg, 20);
 
           // Read data from the UART
-        //int len = uart_read_bytes(UART_NUM_1, data, 20, 20 / portTICK_RATE_MS);
+        int len = uart_read_bytes(UART_NUM_1, data, 20, 20 / portTICK_RATE_MS);
         //printf("length: %d \n", len);
-        //printf("data: %s\n", data);
+        printf("data: %s\n", data);
 
-      }
+      //}
       //printf("%s\n", msg);
 
-        vTaskDelay(50 / portTICK_PERIOD_MS);
+        vTaskDelay(500 / portTICK_PERIOD_MS);
     }
 }
 
 void app_main(void)
 {
-  gpio_pad_select_gpio(BLINK_GREEN);
-  gpio_set_direction(BLINK_GREEN, GPIO_MODE_OUTPUT);
+  // gpio_pad_select_gpio(BLINK_GREEN);
+  // gpio_set_direction(BLINK_GREEN, GPIO_MODE_OUTPUT);
   //
   ESP_ERROR_CHECK(nvs_flash_init());
   tcpip_adapter_init();
@@ -283,9 +285,21 @@ void app_main(void)
     //printf("initialized\n");
 
     while (1) {
-      if (push_button_state == 1) {
-        udp_client_task();
-      }
-      vTaskDelay(10 / portTICK_PERIOD_MS);
+      if (strcmp((char *)data,"1,80085") == 0) {
+          strcpy((char*) data,"1,1");
+         udp_client_task();
+         strcpy((char*) data,"0");
+       }
+       if (strcmp((char *)data,"2,80085") == 0) {
+         strcpy((char*) data,"2,1");
+          udp_client_task();
+          strcpy((char*) data,"0");
+        }
+        if (strcmp((char *)data,"3,80085") == 0) {
+          strcpy((char*) data,"3,1");
+           udp_client_task();
+           strcpy((char*) data,"0");
+         }
+      vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }

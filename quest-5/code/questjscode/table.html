@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Secure Key Fob</title>
+</head>
+
+<body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+        $(function () {
+            var socket = io();
+            socket.on('fob1', function(fob1){
+                console.log(fob1);
+                var html = "<table border='1|1'> <p>Fob 1 Activity</p>";
+                    html+="<tr>";
+                        html+="<td>"+"Date and Time"+"</td>";
+                        html+="<td>"+"Sensor ID"+"</td>";
+                        html+="<td>"+"Hub ID"+"</td>";
+                        html+="<td>"+"Name"+"</td>";
+                        html+="<td>"+"Location"+"</td>";
+                        html+="</tr>";
+                for (var i = 0; i < fob1.time.length; i++) {
+                        html+="<tr>";
+                        html+="<td>"+fob1.time[i]+"</td>";
+                        html+="<td>"+fob1.sensor[i]+"</td>";
+                        html+="<td>"+fob1.hub[i]+"</td>";
+                        html+="<td>"+fob1.name[i]+"</td>";
+                        html+="<td>"+fob1.location[i]+"</td>";
+                        html+="</tr>";
+                    }
+                html+="</table>";
+                document.getElementById("box").innerHTML = html;
+            });
+
+            socket.on('fob2', function(fob2){
+                console.log(fob2);
+                var html = "<table border='1|1'> <p>Fob 2 Activity</p>";
+                    html+="<tr>";
+                    html+="<td>"+"Date and Time"+"</td>";
+                    html+="<td>"+"Sensor ID"+"</td>";
+                    html+="<td>"+"Hub ID"+"</td>";
+                    html+="<td>"+"Name"+"</td>";
+                    html+="<td>"+"Location"+"</td>";
+                        html+="</tr>";
+                for (var i = 0; i < fob2.time.length; i++) {
+                        html+="<tr>";
+                        html+="<td>"+fob2.time[i]+"</td>";
+                        html+="<td>"+fob2.sensor[i]+"</td>";
+                        html+="<td>"+fob2.hub[i]+"</td>";
+                        html+="<td>"+fob2.name[i]+"</td>";
+                        html+="<td>"+fob2.location[i]+"</td>";
+                        html+="</tr>";
+                    }
+                html+="</table>";
+                document.getElementById("box2").innerHTML = html;
+            });
+
+            socket.on('fob3', function(fob3){
+                console.log(fob3);
+                var html = "<table border='1|1'> <p>Fob 3 Activity</p>";
+                    html+="<tr>";
+                    html+="<td>"+"Date and Time"+"</td>";
+                    html+="<td>"+"Sensor ID"+"</td>";
+                    html+="<td>"+"Hub ID"+"</td>";
+                    html+="<td>"+"Name"+"</td>";
+                    html+="<td>"+"Location"+"</td>";
+                        html+="</tr>";
+                for (var i = 0; i < fob3.time.length; i++) {
+                        html+="<tr>";
+                        html+="<td>"+fob3.time[i]+"</td>";
+                        html+="<td>"+fob3.sensor[i]+"</td>";
+                        html+="<td>"+fob3.hub[i]+"</td>";
+                        html+="<td>"+fob3.name[i]+"</td>";
+                        html+="<td>"+fob3.location[i]+"</td>";
+                        html+="</tr>";
+                    }
+                html+="</table>";
+                document.getElementById("box3").innerHTML = html;
+            });
+        });
+
+    </script>
+    <div id= "box"></div>
+    <div id= "box2"></div>
+    <div id= "box3"></div>
+
+</body>
+
+</html>
