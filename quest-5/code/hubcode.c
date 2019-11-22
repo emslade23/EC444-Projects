@@ -56,8 +56,8 @@
   #define BLINK_GREEN 32
  // #define BLINK_BLUE 14
 
- #define HOST_IP_ADDR "192.168.1.131" //ip address for communicating with the node.js server
- #define PORT 3030
+ #define HOST_IP_ADDR "192.168.1.127" //ip address for communicating with the node.js server
+ #define PORT 9000
 
  static const char *TAG = "example";
 
