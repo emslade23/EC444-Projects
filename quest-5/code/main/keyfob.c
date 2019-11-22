@@ -1,3 +1,6 @@
+// Author: Amy Dong, Elizabeth Slade, Quianna Mortimer
+// Date: 11/22/2019
+
 //CODE FOR KEYFOBS
 
 #include <stdio.h>

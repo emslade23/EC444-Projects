@@ -1,4 +1,6 @@
-//////////////////////////
+// Author: Amy Dong, Elizabeth Slade, Quianna Mortimer
+// Date: 11/22/2019
+
 // Required module
 var dgram = require('dgram');
 const readline = require('readline');
@@ -24,7 +26,7 @@ app.get('/', function(req, res){
       console.log(req.body.command);
       res.sendFile(__dirname + '/table.html');
   })
-//******************************************************************* */
+
 var http = require('http').Server(app);
 http.listen(8080, function(){
     console.log('graphing at port 8080');
@@ -74,8 +76,8 @@ setInterval(function(){
     var fob3 = {};
 
 
-var PORT = 3030;
-var HOST = '192.168.1.131';
+var PORT = 9000;
+var HOST = '192.168.1.127';
 
 
 // Create socket
@@ -90,7 +92,7 @@ server.on('listening', function () {
 // On connection, print out received message
 server.on('message', function (message, remote) {
     console.log(remote.address + ':' + remote.port +' - ' + message);
-    if(remote.address == "192.168.1.144") {
+    if(remote.address == "192.168.1.144") { //only react to data recieved by hub
       var str = message.toString();
       line = str.split(",");
       readSmokeData(line);

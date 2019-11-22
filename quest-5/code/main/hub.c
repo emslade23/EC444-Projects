@@ -1,4 +1,7 @@
-//CODE FOR HUB
+// Author: Amy Dong, Elizabeth Slade, Quianna Mortimer
+// Date: 11/22/2019
+
+//CODE FOR SECURITY HUB
 
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"

@@ -1,5 +1,10 @@
 # Code Readme
 
+Author: Amy Dong, Elizabeth Slade, Quianna Mortimer
+Date: 11/22/2019
+
+
+
 In the main folder, hub.c is the code ran on the security hub esp32 and keyfob.c is ran on the key fobs. keyfob.c is altered slightly and contains a unique ID for each of the fobs.
 
 db.is the ???
