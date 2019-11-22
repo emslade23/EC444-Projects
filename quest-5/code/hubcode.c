@@ -229,8 +229,8 @@ static void echo_task(void *arg)
 
 void app_main(void)
 {
-  // gpio_pad_select_gpio(BLINK_GREEN);
-  // gpio_set_direction(BLINK_GREEN, GPIO_MODE_OUTPUT);
+   gpio_pad_select_gpio(BLINK_GREEN);
+   gpio_set_direction(BLINK_GREEN, GPIO_MODE_OUTPUT);
   //
   ESP_ERROR_CHECK(nvs_flash_init());
   tcpip_adapter_init();
@@ -247,37 +247,44 @@ void app_main(void)
     while (1) {
       if (push_button_state == 0) {
         if (strcmp((char *)data,"1,80085") == 0) {
+          gpio_set_level(BLINK_GREEN, 1);
             strcpy((char*) data,"1,1,80085");
            udp_client_task();
            strcpy((char*) data,"0");
          }
          if (strcmp((char *)data,"2,80085") == 0) {
+           gpio_set_level(BLINK_GREEN, 1);
            strcpy((char*) data,"2,1,80085");
             udp_client_task();
             strcpy((char*) data,"0");
           }
           if (strcmp((char *)data,"3,80085") == 0) {
+            gpio_set_level(BLINK_GREEN, 1);
             strcpy((char*) data,"3,1,80085");
              udp_client_task();
              strcpy((char*) data,"0");
            }
       } if (push_button_state == 1) {
         if (strcmp((char *)data,"1,80085") == 0) {
+          gpio_set_level(BLINK_GREEN, 1);
             strcpy((char*) data,"1,2,80085");
            udp_client_task();
            strcpy((char*) data,"0");
          }
         if (strcmp((char *)data,"2,80085") == 0) {
+          gpio_set_level(BLINK_GREEN, 1);
            strcpy((char*) data,"2,2,80085");
             udp_client_task();
             strcpy((char*) data,"0");
           }
         if (strcmp((char *)data,"3,80085") == 0) {
+          gpio_set_level(BLINK_GREEN, 1);
             strcpy((char*) data,"3,2,80085");
              udp_client_task();
              strcpy((char*) data,"0");
            }
       }
       vTaskDelay(2000 / portTICK_PERIOD_MS);
+      gpio_set_level(BLINK_GREEN, 0);
     }
 }
