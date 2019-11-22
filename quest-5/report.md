@@ -14,9 +14,18 @@ This quest tasks us with creating a key fob using a the esp32 board, a transmitt
 4. Web-based management interface shows real-time active unlocked fobs and history of unlocked fobs (with actual time of unlock) Completed
 5. Uses at least 3 fobs with unique IDs Completed
 6. Demo delivered at scheduled time and report submitted in team folder with all required components Completed
-7. Investigative question: comment on the security of your system. How would you best hack into this system if you were so inclined? How could you prevent this attack? Describe the steps.
+Bonus: We included DDNS to allow access to the web client on multiple devices if connect to an service.  
 
-8. Bonus: We included DDNS to allow access to the web client on multiple devices if connect to an service.  
+**Investigative question: comment on the security of your system. How would you best hack into this system if you were so inclined? How could you prevent this attack? Describe the steps.**
+
+  When thinking about the security of our system, there are three main parts: the security of the receiver/transmitter communication, the security of the UDP socket communication, and the security of the web client. 
+
+  #### Security of the Receiver and Transmitter Communication
+  A major vulnerability in this communication is that anyone can create a receiver which can receive the transmitted fob signal. If a bad actor makes his own receiver and receives the fob signal, then the bad actor could potentially decode the password for the fob. If this fob was meant to unlock a car or a house, then the bad actor could program another fob to emit the same password signal and trick the receiver to unlock the car or house. This presents a huge security threat with RX/TX communication. This vulnerability could be prevented by switching from UDP communication where there is no SYM/ACK talking, to TCP communication where there is a handshake before any real data is transmitted. This handshake allows for an acknowledgement that the client, or the person receiving the data, is in fact authorized to receive the data.
+  #### Security of the UDP Socket Communication
+  #### Security of the Web Client
+
+
 
 ## Solution Design
 1. Hardware: IR TX/RX
