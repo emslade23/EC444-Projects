@@ -3,6 +3,7 @@
 
 //CODE FOR KEYFOBS
 
+//library defines
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -42,9 +43,10 @@
 #include "driver/timer.h"
 #include "esp_types.h"
 
+
+//Defines for IR transmission
  #define RMT_TX_CHANNEL RMT_CHANNEL_0
  #define RMT_TX_GPIO 26
-
  #define ECHO_TEST_TXD  25
  #define ECHO_TEST_RXD  34
  #define ECHO_TEST_RTS  (UART_PIN_NO_CHANGE)
@@ -55,19 +57,20 @@
  //define for button
  #define BUTTON 4
 
- // #define BLINK_RED 33
+ // define for LED
   #define BLINK_GREEN 32
- // #define BLINK_BLUE 14
 
- #define HOST_IP_ADDR "192.168.1.131" //ip address for communicating with the node.js server
- #define PORT 3030
+ #define HOST_IP_ADDR "192.168.1.127" //ip address for communicating with the node.js server
+ #define PORT 9000
 
  static const char *TAG = "example";
 
+//states
  int push_button_state = 0;
  int flag = 0;
 
-//static void udp_client_task(void *pvParameters)
+
+// function for establishing a socket between keyfob and raspberry pi inorder to recieve commands from pi
 static void udp_client_task()
  {
      //char rx_buffer[128];
@@ -94,14 +97,8 @@ static void udp_client_task()
      ESP_LOGI(TAG, "Socket created, sending to %s:%d", HOST_IP_ADDR, PORT);
      int index = 0;
 
-    // while (1) {
-
-           //printf("index： %d\n", index);
-
-          // index = index + 1;
 
            if (push_button_state == 1) {
-             // printf("hi!!\n");
 
              int err = sendto(sock, payload, strlen(payload), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
              if (err < 0) {
@@ -121,7 +118,8 @@ static void udp_client_task()
                } else {
                    command[len] = 0;
 
-                   // Recieved command handling
+                   // Recieved command handling, if the passcode matches up
+                   // with the one stored in the raspberry pi, it will send back "yes" and cause the LED on the keyfob to light up
                    if (strcmp(command, "yes") == 0){
                        printf("Access granted\n");
                        gpio_set_level(BLINK_GREEN, 1);
@@ -135,20 +133,14 @@ static void udp_client_task()
                }
            }
            vTaskDelay(100 / portTICK_PERIOD_MS);
-      // }
-
-         // if (sock != -1) {
-         //     ESP_LOGE(TAG, "Shutting down socket and restarting...");
-         //     shutdown(sock, 0);
-         //     close(sock);
-         // }
-     //}
  }
 
+// interrupt for button
  static void IRAM_ATTR button_isr_handler(void* arg) {
      flag ^= 1;
  }
 
+//configuring button interrupt
  static void button() {
      gpio_pad_select_gpio(BUTTON);
      gpio_set_direction(BUTTON, GPIO_MODE_INPUT);
@@ -157,6 +149,7 @@ static void udp_client_task()
      gpio_install_isr_service(ESP_INTR_FLAG_LEVEL3);
      gpio_isr_handler_add(BUTTON, button_isr_handler,(void*) BUTTON);
 
+//changing states if there is an interrupt, letting it transmit data through UART and recieve command from the raspberry pi
      while(1) {
         if(flag == 1) {
           push_button_state = 1;
@@ -201,6 +194,7 @@ static void udp_client_task()
       *item_num = num;
   }
 
+//configuration for the transmitter
  static void rmt_tx_int(void)
  {
      rmt_config_t config;
@@ -228,8 +222,8 @@ static void udp_client_task()
  }
 
 uint8_t *data;
-//uint8_t *data;
 
+// task for sending and recieveing data though the transmitter and receiver
 static void echo_task(void *arg)
 {
   data = (uint8_t *) malloc(20);
@@ -248,12 +242,11 @@ static void echo_task(void *arg)
     uart_set_line_inverse(UART_NUM_1, UART_INVERSE_RXD);
     uart_driver_install(UART_NUM_1, BUF_SIZE * 2, 0, 0, NULL, 0);
 
-    // Configure a temporary buffer for the incoming data
-
+    // fob ID and passcode transmitted to the hub through UART, for different key fobs the ID will vary
     char *msg = "1,80085";
 
     while (1) {
-      if (push_button_state == 1) {
+      if (push_button_state == 1) { // only transmitting if the button is pressed
         uart_write_bytes(UART_NUM_1, (char *) msg, 10);
 
           // Read data from the UART
@@ -262,7 +255,6 @@ static void echo_task(void *arg)
         //printf("data: %s\n", data);
 
       }
-      //printf("%s\n", msg);
 
         vTaskDelay(50 / portTICK_PERIOD_MS);
     }
@@ -270,22 +262,25 @@ static void echo_task(void *arg)
 
 void app_main(void)
 {
+  // configuring green LED
   gpio_pad_select_gpio(BLINK_GREEN);
   gpio_set_direction(BLINK_GREEN, GPIO_MODE_OUTPUT);
-  //
+
+// initializing udp client
   ESP_ERROR_CHECK(nvs_flash_init());
   tcpip_adapter_init();
   ESP_ERROR_CHECK(esp_event_loop_create_default());
   ESP_ERROR_CHECK(example_connect());
-  //xTaskCreate(udp_client_task, "udp_client", 4096, NULL, configMAX_PRIORITIES, NULL);
 
+// initializing transmitter
     rmt_tx_int();
-    //button();
+
+
     xTaskCreate(echo_task, "uart_echo_task", 1024, NULL, 10, NULL);
     xTaskCreate(button,"button", 1024*2, NULL, configMAX_PRIORITIES, NULL);
-    //printf("initialized\n");
 
     while (1) {
+      // recieve command from raspberry pi when button is pressed
       if (push_button_state == 1) {
         udp_client_task();
       }
