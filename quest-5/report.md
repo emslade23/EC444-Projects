@@ -44,11 +44,48 @@ Figure 1.3: Raspberry Pi
 Figure 1.4: Raspberry Pi Demo of Writing & Reading from Database and Displaying Fob History on Web Client
 ![Circuit](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/C4AAD81D-3DA0-4C90-8B59-0F8A62FDA791_1_105_c.jpeg)
 
-Figure 1.3: Raspberry Pi
-![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/DFBCDDAC-0A9F-4EF7-B728-B7CC93FB522F_1_105_c.jpeg)
+Figure 1.5: Fob and Hub
+![Circuit](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/A9830081-BF52-4230-A55D-B488FDE25ED1_1_105_c.jpeg)
 
-Figure 1.3: Raspberry Pi
-![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/DFBCDDAC-0A9F-4EF7-B728-B7CC93FB522F_1_105_c.jpeg)
+Figure 1.6: Data on Raspi and Web Client
+![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/A08A55CC-35A0-426D-A9F8-32E90C204F24_1_105_c.jpeg)
+
+Figure 1.7: Display
+![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/9FCC4B36-4057-48C0-A009-348309C6EF78_1_105_c.jpeg)
+
+Figure 1.8: Green Light!
+![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/90E4CB06-A3FE-448E-855D-0B0419FECB8D_1_105_c.jpeg)
+
+Figure 1.9: Amy's Fob
+![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/7AA7F0B0-BD05-42AA-8277-145064782EB9_1_105_c.jpeg)
+
+Figure 1.10: The Hub
+![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/6D69EA30-2933-489D-A513-88FBA7BD5F4F_1_105_c.jpeg)
+
+Figure 1.11: Fob
+![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/6830EEE9-B223-4C3F-9B4C-3D1EDEE8708A_1_105_c.jpeg)
+
+Figure 1.12: Data on Raspi and Web Client
+![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/A08A55CC-35A0-426D-A9F8-32E90C204F24_1_105_c.jpeg)
+
+Figure 1.13: Hub
+![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/534AD0E8-32E7-44C0-A6E4-67C9467C9CFA_1_105_c.jpeg)
+
+Figure 1.14: Sensor Setup
+![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/4A484D44-1776-4E25-BFE1-0CC25FB58F77_1_105_c.jpeg)
+
+Figure 1.15: Web Client
+![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/18EECF87-63C5-4839-BFDA-567C04D23605_1_105_c.jpeg)
+
+Figure 1.16: Professor Little
+![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/1875AD8E-1367-4885-8986-988AF44B8775_1_105_c.jpeg)
+
+Figure 1.6: Raspi on Device List
+![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/0A4E7A60-A7FC-4910-81D5-54BD1DEBC1BE_1_102_o.jpeg)
+
+Figure 1.6: Technical Design
+![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/01ECDD7D-85B0-449C-8C8A-A67A434BA551_1_105_c.jpeg)
+
 Figure : Great Job Team 4!
 ![Circuit](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/E2278929-852B-4645-B21A-C25C4161CAE2_1_105_c.jpeg)
 
