@@ -24,8 +24,10 @@ This quest tasks us with creating a key fob using a the esp32 board, a transmitt
   b. Hub - Due to ESP32 board shortages, one hub was physically built, however  two IDs were assigned to it - a button was used to switch between the two IDs. The hub is essentially built the same as the fob ( with a IR  diode and IR LED) with the exception of the use of the LED. On the hub, the LED lights up when it successfully received information. The hub IDs were each assigned to a place. Hub 1 is the "Front door" while hub 2 is the "Garage door".
   c. RPi - This quest required the node.js to be on the RPi for authentification and the display on the web client.
 2. Software
+
   a. ESP32 code - 
-  b. Node.js - The NodeJS application reads in timestamp, fob id, location, and hub id data from the ESP32 through UDP socket. It then stores this data into a json format in the LevelDB database. The database is set up as follows:
+  
+  b. Node.js and Web Client - The NodeJS application reads in timestamp, fob id, location, and hub id data from the ESP32 through UDP socket. It then stores this data into a json format in the LevelDB database. The database is set up as follows:
           
           LevelDB Structure - Key : Value
           
@@ -41,8 +43,10 @@ This quest tasks us with creating a key fob using a the esp32 board, a transmitt
   
   This is the case for all of the sensors. We have the key stored as the sensor id number and the value as a json that keeps getting concatenated with new values as the fobs are used. 
   
-  We then pull data for each of the fobs, and then we send this fob data for each of the fobs, to the client side of through a UDP socket. 
-  c. Web client - 
+  We then pull data from the leveldb database for each of the fobs. Then we send this fob data for each of the fobs, to the client side of the app through a UDP socket. Using the Socket.IO library that we installed using npm, we are able to update the tables with fob data in real time. We have the client successfully running on a Raspberry Pi that is connected to our Group 4 wifi. Because the NodeJS web application is running on the RasPi, we had to be sure to change the LAN IP from our Laptop's IP to the RasPi IP so that the Fobs and the Hub can communicate with the RasPi. It is important to note here that because our NodeJS application is running on the RasPI, that means our LevelDB database is also running on the RasPi. In order to make this step work, it required a lot of debugging and we figured out that using nvm install 9, updates nodejs and allows for an easy install of level (the package for leveldb). 
+ 
+
+
 3. Combined system  
 Technical Design
 ![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/01ECDD7D-85B0-449C-8C8A-A67A434BA551_1_105_c.jpeg)
