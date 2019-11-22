@@ -24,11 +24,14 @@ This quest tasks us with creating a key fob using a the esp32 board, a transmitt
   b. Hub - Due to ESP32 board shortages, one hub was physically built, however  two IDs were assigned to it - a button was used to switch between the two IDs. The hub is essentially built the same as the fob ( with a IR  diode and IR LED) with the exception of the use of the LED. On the hub, the LED lights up when it successfully received information. The hub IDs were each assigned to a place. Hub 1 is the "Front door" while hub 2 is the "Garage door".
   c. RPi - This quest required the node.js to be on the RPi for authentification and the display on the web client.
 2. Software
-  a. ESP32 code
-  b. Node.js
-  c. Web client
+  a. ESP32 code - 
+  b. Node.js - The NodeJS application reads in timestamp, fob id, location, and hub id data from the ESP32 through UDP socket. It then stores this data into a json format in the LevelDB database. The database is set up as follows:
+  
+  We then pull data for each of the fobs, and then we send this fob data for each of the fobs, to the client side of through a UDP socket. 
+  c. Web client - 
 3. Combined system  
-
+Technical Design
+![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/01ECDD7D-85B0-449C-8C8A-A67A434BA551_1_105_c.jpeg)
 
 ## Sketches and Photos
 Figure 1.1
@@ -80,13 +83,10 @@ Figure 1.15: Web Client
 Figure 1.16: Professor Little
 ![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/1875AD8E-1367-4885-8986-988AF44B8775_1_105_c.jpeg)
 
-Figure 1.6: Raspi on Device List
+Figure 1.17: Raspi on Device List
 ![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/0A4E7A60-A7FC-4910-81D5-54BD1DEBC1BE_1_102_o.jpeg)
 
-Figure 1.6: Technical Design
-![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/01ECDD7D-85B0-449C-8C8A-A67A434BA551_1_105_c.jpeg)
-
-Figure : Great Job Team 4!
+Figure 1.18: Great Job Team 4!
 ![Circuit](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/E2278929-852B-4645-B21A-C25C4161CAE2_1_105_c.jpeg)
 
 
