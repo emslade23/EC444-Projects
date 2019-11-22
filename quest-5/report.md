@@ -26,6 +26,20 @@ This quest tasks us with creating a key fob using a the esp32 board, a transmitt
 2. Software
   a. ESP32 code - 
   b. Node.js - The NodeJS application reads in timestamp, fob id, location, and hub id data from the ESP32 through UDP socket. It then stores this data into a json format in the LevelDB database. The database is set up as follows:
+          
+          LevelDB Structure - Key : Value
+          
+           {
+                
+                time: [ array of timestamps ],
+                sensor: [array of sensor ID 1],
+                hub: [array of hub references for each fob 1 request],
+                name: [array of names of the owner of this fob],
+                location: [array of locations based on the hub reference]
+           
+           } 
+  
+  This is the case for all of the sensors. We have the key stored as the sensor id number and the value as a json that keeps getting concatenated with new values as the fobs are used. 
   
   We then pull data for each of the fobs, and then we send this fob data for each of the fobs, to the client side of through a UDP socket. 
   c. Web client - 
