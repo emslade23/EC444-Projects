@@ -92,57 +92,14 @@ static void udp_client_task()
          //break;
      }
      ESP_LOGI(TAG, "Socket created, sending to %s:%d", HOST_IP_ADDR, PORT);
-     int index = 0;
+     //int index = 0;
 
-     //while (1) {
-
-           //printf("index： %d\n", index);
-
-          // index = index + 1;
-
-           //if (push_button_state == 1) {
-             // printf("hi!!\n");
 
              int err = sendto(sock, (char *) data, strlen((char *)data), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
              if (err < 0) {
                  ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
                   //break;
              }
-
-             //Recieveing data from node.js
-             // struct sockaddr_in source_addr; // Large enough for both IPv4 or IPv6
-             // socklen_t socklen = sizeof(source_addr);
-             // int len = recvfrom(sock, command, sizeof(command) - 1, 0, (struct sockaddr *)&source_addr, &socklen);
-             //
-             //   // Error occurred during receiving
-             //   if (len < 0) {
-             //       ESP_LOGE(TAG, "recvfrom failed: errno %d", errno);
-             //       //break;
-             //   } else {
-             //       command[len] = 0;
-             //
-             //       // Recieved command handling
-             //       if (strcmp(command, "yes") == 0){
-             //           printf("Access granted\n");
-             //           gpio_set_level(BLINK_GREEN, 1);
-             //           vTaskDelay(2000/portTICK_PERIOD_MS);
-             //           gpio_set_level(BLINK_GREEN, 0);
-             //       } else if (strcmp(command, "no") == 0){
-             //           printf("Access denied\n");
-             //       } else {
-             //           printf("Waiting for valid command...\n");
-             //       }
-             //   }
-           //}
-           //vTaskDelay(2000 / portTICK_PERIOD_MS);
-      //}
-
-         // if (sock != -1) {
-         //     ESP_LOGE(TAG, "Shutting down socket and restarting...");
-         //     shutdown(sock, 0);
-         //     close(sock);
-         // }
-     //}
  }
 
  static void IRAM_ATTR button_isr_handler(void* arg) {
@@ -158,13 +115,16 @@ static void udp_client_task()
      gpio_isr_handler_add(BUTTON, button_isr_handler,(void*) BUTTON);
 
      while(1) {
-        if(flag == 1) {
+        if(flag == 1 && push_button_state == 0) {
+          printf("Hub2\n");
           push_button_state = 1;
           flag = 0;
-        } else {
+        } else if (flag == 1 && push_button_state == 1) {
+          printf("Hub1\n");
           push_button_state = 0;
+          flag = 0;
         }
-        vTaskDelay(100/portTICK_PERIOD_MS);
+        vTaskDelay(500/portTICK_PERIOD_MS);
       }
  }
 
@@ -258,12 +218,12 @@ static void echo_task(void *arg)
           // Read data from the UART
         int len = uart_read_bytes(UART_NUM_1, data, 20, 20 / portTICK_RATE_MS);
         //printf("length: %d \n", len);
-        printf("data: %s\n", data);
+        //printf("data: %s\n", data);
 
       //}
       //printf("%s\n", msg);
 
-        vTaskDelay(500 / portTICK_PERIOD_MS);
+        vTaskDelay(600 / portTICK_PERIOD_MS);
     }
 }
 
@@ -285,21 +245,39 @@ void app_main(void)
     //printf("initialized\n");
 
     while (1) {
-      if (strcmp((char *)data,"1,80085") == 0) {
-          strcpy((char*) data,"1,1");
-         udp_client_task();
-         strcpy((char*) data,"0");
-       }
-       if (strcmp((char *)data,"2,80085") == 0) {
-         strcpy((char*) data,"2,1");
-          udp_client_task();
-          strcpy((char*) data,"0");
-        }
-        if (strcmp((char *)data,"3,80085") == 0) {
-          strcpy((char*) data,"3,1");
+      if (push_button_state == 0) {
+        if (strcmp((char *)data,"1,80085") == 0) {
+            strcpy((char*) data,"1,1,80085");
            udp_client_task();
            strcpy((char*) data,"0");
          }
-      vTaskDelay(1000 / portTICK_PERIOD_MS);
+         if (strcmp((char *)data,"2,80085") == 0) {
+           strcpy((char*) data,"2,1,80085");
+            udp_client_task();
+            strcpy((char*) data,"0");
+          }
+          if (strcmp((char *)data,"3,80085") == 0) {
+            strcpy((char*) data,"3,1,80085");
+             udp_client_task();
+             strcpy((char*) data,"0");
+           }
+      } if (push_button_state == 1) {
+        if (strcmp((char *)data,"1,80085") == 0) {
+            strcpy((char*) data,"1,2,80085");
+           udp_client_task();
+           strcpy((char*) data,"0");
+         }
+        if (strcmp((char *)data,"2,80085") == 0) {
+           strcpy((char*) data,"2,2,80085");
+            udp_client_task();
+            strcpy((char*) data,"0");
+          }
+        if (strcmp((char *)data,"3,80085") == 0) {
+            strcpy((char*) data,"3,2,80085");
+             udp_client_task();
+             strcpy((char*) data,"0");
+           }
+      }
+      vTaskDelay(2000 / portTICK_PERIOD_MS);
     }
 }

@@ -7,6 +7,7 @@ var http = require('http');
 var line;
 var command = "yes";
 
+
 const express = require('express')
 const app = express()
 
@@ -99,13 +100,13 @@ server.on('message', function (message, remote) {
       line = str.split(",");
       readSmokeData(line);
       DatabaseUsage();
+    } else if (remote.address != "192.168.1.144") {
+      if (parseInt[1] = 80085) {
+          console.log("Access granted");
+          server.send(command,remote.port,remote.address,function(error){
+          });
+      }
     }
-
-
-// send command
-    console.log(line);
-      server.send(command,remote.port,remote.address,function(error){
-      });
 
 });
 
