@@ -77,8 +77,8 @@ Technical Design
 
 ## Sketches and Photos
 Figure 1.1
-![FSM](https://user-images.githubusercontent.com/24261732/69369318-dd2c7880-0c69-11ea-9867-b4cc6f45a6e6.JPG)
-![fsm chart (2)](https://user-images.githubusercontent.com/24261732/69457026-1fbd8600-0d3a-11ea-9583-780175b1e618.png)
+![IMG_0722](https://user-images.githubusercontent.com/24261732/69471848-0fc19880-0d72-11ea-826d-d97d481f9590.JPG)
+![fsm_table](https://user-images.githubusercontent.com/24261732/69471882-5a431500-0d72-11ea-9558-9c2a70e335e4.png)
 
  Figure 1.2: Hub and Fobs
 ![Circuit](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/F4BAE448-A62E-4951-B355-CD5D12906AB7_1_105_c.jpeg)
