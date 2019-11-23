@@ -15,6 +15,8 @@ const app = express()
 
 app.use(express.urlencoded())
 
+// import server and nodejs framework routes, set up routes and server
+
 var http = require('http').Server(app);
 
 app.get('/', function(req, res){
@@ -31,6 +33,8 @@ var http = require('http').Server(app);
 http.listen(8080, function(){
     console.log('graphing at port 8080');
    });
+
+//import sockets 
 
 var io = require('socket.io')(http);
 io.on('connection', function(socket){
@@ -95,7 +99,7 @@ server.on('message', function (message, remote) {
     if(remote.address == "192.168.1.144") { //only react to data recieved by hub
       var str = message.toString();
       line = str.split(",");
-      readSmokeData(line);
+      readData(line);
       DatabaseUsage();
     } else if (remote.address != "192.168.1.144") {
       if (parseInt[1] = 80085) {
@@ -113,8 +117,8 @@ server.bind(PORT, HOST);
 /////////////////////////
 
 
-
-function readSmokeData(line){
+// reading in data from the ESP32 and putting the data into an array
+function readData(line){
               sensorID = parseInt(line[0]);
               var ti = new Date();
               time = ti.toLocaleString();
@@ -178,6 +182,7 @@ function readSmokeData(line){
               }
   }
 
+//pushing data to the database
 async function DatabaseUsage(){
       // store formatted data into the database
           let promise = new Promise((resolve, reject) => {
