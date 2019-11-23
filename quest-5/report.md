@@ -19,16 +19,16 @@ Bonus: We included DDNS to allow access to the web client on multiple devices if
 **Investigative question: comment on the security of your system. How would you best hack into this system if you were so inclined? How could you prevent this attack? Describe the steps.**
 
 
-  When thinking about the security of our system, there are three main parts: the security of the receiver/transmitter communication, the security of the UDP socket communication, and the security of the web client. 
+  When thinking about the security of our system, there are three main parts: the security of the receiver/transmitter communication, the security of the UDP socket communication, and the security of the web client.
 
   #### Security of the Receiver and Transmitter Communication
-  A major vulnerability in this communication is that anyone can create a receiver which can receive the transmitted fob signal. If a bad actor makes his own receiver and receives the fob signal, then the bad actor could potentially decode the password for the fob. If this fob was meant to unlock a car or a house, then the bad actor could program another fob to emit the same password signal and trick the receiver to unlock the car or house. This presents a huge security threat with RX/TX communication. One solution would be encrypting the data with SHA256 encryption so that it would be nearly imopssible to decrypt the data without the hash function. 
- 
+  A major vulnerability in this communication is that anyone can create a receiver which can receive the transmitted fob signal. If a bad actor makes his own receiver and receives the fob signal, then the bad actor could potentially decode the password for the fob. If this fob was meant to unlock a car or a house, then the bad actor could program another fob to emit the same password signal and trick the receiver to unlock the car or house. This presents a huge security threat with RX/TX communication. One solution would be encrypting the data with SHA256 encryption so that it would be nearly imopssible to decrypt the data without the hash function.
+
  Another solution could be to have the transmitter and receiver engage in some type of a handshake to confirm the recipient, before any data is sent, could also be an effective way to keep the data in the hands of the people authorized to have it.
-  
+
   #### Security of the UDP Socket Communication
  A big vulnerability in the UDP Socket Communication between the ESP32 and the NodeJS app is the mere fact of using UDP. Since there is no acknowledgement, meaning that there is no way to know if the person sending to the NodeJS server is authorized to be doing so, this means that anyone can be sending larges volumes of packets. This could potentially result in a Denial of Service attack preventing the people who are suppose to be viewing the data from seeing it. A solution for this vulnerability would be to have some code that monitors packets coming into the server, and has a certain threshold of packets per second, and when that threshold is reached, then maybe it doesnt accept packets for some time, or it sends a warning to an admin.
- 
+
  Furthermore, another vulnerability that comes with UDP communication is the ease of packet sniffing. It would be relatively simple to intercept a packet being sent from the ESP32 to the NodeJS server, decode the message, and then understand the data being sent. This vulnerability could be prevented by switching from UDP communication where there is no SYM/ACK talking, to TCP communication where there is a handshake before any real data is transmitted. This handshake allows for an acknowledgement that the client, or the person receiving the data, is in fact authorized to receive the data.
 
 
@@ -39,35 +39,33 @@ Bonus: We included DDNS to allow access to the web client on multiple devices if
   b. Hub - Due to ESP32 board shortages, one hub was physically built, however  two IDs were assigned to it - a button was used to switch between the two IDs. The hub is essentially built the same as the fob ( with a IR  diode and IR LED) with the exception of the use of the LED. On the hub, the LED lights up when it successfully received information. The hub IDs were each assigned to a place. Hub 1 is the "Front door" while hub 2 is the "Garage door".
   c. RPi - This quest required the node.js to be on the RPi for authentification and the display on the web client.
 2. Software
-  
-  a. ESP32 Code - For the ESP 32 there are two different kind of code, one is for the key fob, one is for the security hub. For the key fob code, it sends its unique ID and the passcode to the security hub using Uart and also a socket is established between the key fob and the server on raspberry pi. Whenever the button is pressed, the Uart and the UDP client start to function for a brief time, so that the transmission and sockets are not functioning continuously but only when the button is pushed.
-  
-  For the security hub, it continuously reads the transmissions through Uart, and if the transmission matches A certain structure, it would then create a socket and pass The identification information to the raspberry pi. The udp client socket is not transmitting data continuously so that the server is able to only log the activity once. 
-  
-  For the key fob code, when the button is pressed it sends and receives information from the raspberry pi once only, and the received information contains a command that will trigger it’s green LED to light up up.
-  
-  
+
+  a. ESP32 Code - For the ESP 32 there are two different kinds of code, one is for the key fob, one is for the security hub. For the key fob code, it sends its unique ID and the passcode to the security hub using Uart and also a socket is established between the key fob and the server on raspberry pi. Whenever the button is pressed, the Uart and the UDP client start to function for a brief time, so that the transmission and sockets are not functioning continuously but only when the button is pushed. When the button is pressed the fob sends and receives information from the raspberry pi only once, and the received information contains a command that will trigger it’s green LED to light up.
+
+  For the security hub, it continuously reads the transmissions through Uart, and if the transmission matches A certain structure, it would then create a socket and pass The identification information to the raspberry pi. The udp client socket is not transmitting data continuously so that the server is able to only log the activity once.
+
+
+
   b. Node.js and Web Client - The NodeJS application reads in timestamp, fob id, location, and hub id data from the ESP32 through UDP socket. It then stores this data into a json format in the LevelDB database. The database is set up as follows:
-          
+
           LevelDB Structure - Key : Value
-          
+
            {
-                
+
                 time: [ array of timestamps ],
                 sensor: [array of sensor ID 1],
                 hub: [array of hub references for each fob 1 request],
                 name: [array of names of the owner of this fob],
                 location: [array of locations based on the hub reference]
-           
-           } 
-  
-  This is the case for all of the sensors. We have the key stored as the sensor id number and the value as a json that keeps getting concatenated with new values as the fobs are used. 
-  
-  We then pull data from the leveldb database for each of the fobs. Then we send this fob data for each of the fobs, to the client side of the app through a UDP socket. Using the Socket.IO library that we installed using npm, we are able to update the tables with fob data in real time. We have the client successfully running on a Raspberry Pi that is connected to our Group 4 wifi. Because the NodeJS web application is running on the RasPi, we had to be sure to change the LAN IP from our Laptop's IP to the RasPi IP so that the Fobs and the Hub can communicate with the RasPi. It is important to note here that because our NodeJS application is running on the RasPI, that means our LevelDB database is also running on the RasPi. In order to make this step work, it required a lot of debugging and we figured out that using nvm install 9, updates nodejs and allows for an easy install of level (the package for leveldb). 
- 
+
+           }
+
+  This is the case for all of the sensors. We have the key stored as the sensor id number and the value as a json that keeps getting concatenated with new values as the fobs are used.
+
+  We then pull data from the leveldb database for each of the fobs. Then we send this fob data for each of the fobs, to the client side of the app through a UDP socket. Using the Socket.IO library that we installed using npm, we are able to update the tables with fob data in real time. We have the client successfully running on a Raspberry Pi that is connected to our Group 4 wifi. Because the NodeJS web application is running on the RasPi, we had to be sure to change the LAN IP from our Laptop's IP to the RasPi IP so that the Fobs and the Hub can communicate with the RasPi. It is important to note here that because our NodeJS application is running on the RasPI, that means our LevelDB database is also running on the RasPi. In order to make this step work, it required a lot of debugging and we figured out that using nvm install 9, updates nodejs and allows for an easy install of level (the package for leveldb).
 
 
-3. Combined system  
+
 Technical Design
 ![RasPi](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-5/images/01ECDD7D-85B0-449C-8C8A-A67A434BA551_1_105_c.jpeg)
 
