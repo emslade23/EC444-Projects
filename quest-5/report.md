@@ -40,7 +40,14 @@ Bonus: We included DDNS to allow access to the web client on multiple devices if
   c. RPi - This quest required the node.js to be on the RPi for authentification and the display on the web client.
 2. Software
   
-  a. Node.js and Web Client - The NodeJS application reads in timestamp, fob id, location, and hub id data from the ESP32 through UDP socket. It then stores this data into a json format in the LevelDB database. The database is set up as follows:
+  a. ESP32 Code - For the ESP 32 there are two different kind of code, one is for the key fob, one is for the security hub. For the key fob code, it sends its unique ID and the passcode to the security hub using Uart and also a socket is established between the key fob and the server on raspberry pi. Whenever the button is pressed, the Uart and the UDP client start to function for a brief time, so that the transmission and sockets are not functioning continuously but only when the button is pushed.
+  
+  For the security hub, it continuously reads the transmissions through Uart, and if the transmission matches A certain structure, it would then create a socket and pass The identification information to the raspberry pi. The udp client socket is not transmitting data continuously so that the server is able to only log the activity once. 
+  
+  For the key fob code, when the button is pressed it sends and receives information from the raspberry pi once only, and the received information contains a command that will trigger it’s green LED to light up up.
+  
+  
+  b. Node.js and Web Client - The NodeJS application reads in timestamp, fob id, location, and hub id data from the ESP32 through UDP socket. It then stores this data into a json format in the LevelDB database. The database is set up as follows:
           
           LevelDB Structure - Key : Value
           
