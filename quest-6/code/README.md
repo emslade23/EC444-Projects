@@ -1,3 +1,5 @@
-# Code Readme
+# To Dos:
 
-Brief explanation on how to navigate your code folder. For example, main consists of the entry function, and lib are where the resource libraries are located.
+- RasPi Camera Skill: http://whizzer.bu.edu/skills/webcam
+- How to make car work with autonomous driving AND with human control from web application?
+- Web Application: Steering, Speed, Live Camera Feed, Split Times from Receivers
