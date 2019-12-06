@@ -92,7 +92,7 @@
 #define RECIEVER_CTS  (UART_PIN_NO_CHANGE)
 
 // Defines for client communication
-#define HOST_IP_ADDR "192.168.1.145" //ip address for communicating with the node.js server
+#define HOST_IP_ADDR "192.168.1.111" //ip address for communicating with the node.js server
 #define PORT 3030
 static const char *TAG = "example";
 
