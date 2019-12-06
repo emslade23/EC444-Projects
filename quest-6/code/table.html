@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<title>Final Quest</title>
+</head>
+
+<script>
+     $(function () {
+        var socket = io();
+        socket.emit('left', "null");
+        socket.emit('right', "null");
+        socket.emit('forward', "null");
+        socket.emit('backward', "null");
+        socket.emit('stop', "null");
+        socket.emit('mode', "null");
+
+        $(document).ready(function(){
+            $(".left").on('click',function(e){
+                socket.emit('left', "left");
+                console.log("left")
+            });
+        });
+        $(document).ready(function(){
+            $(".right").on('click',function(e){
+                socket.emit('right', "right");
+                console.log("right")
+            });
+        });
+        $(document).ready(function(){
+            $(".up").on('click',function(e){
+                socket.emit('forward', "forward");
+                console.log("forward")
+            });
+        });
+        $(document).ready(function(){
+            $(".down").on('click',function(e){
+                socket.emit('backward', "backward");
+                console.log("backward");
+            });
+        });
+        $(document).ready(function(){
+            $(".stop").on('click',function(e){
+                socket.emit('stop', "stop");
+                console.log("STOP");
+            });
+        });
+        $(".mode").on('change', function(){
+          if($(".mode").is(':checked')){
+            socket.emit('mode', "manual");
+            console.log("manual");
+            }
+           else{
+              socket.emit('mode', "auto");
+              console.log("auto");
+            }
+        });
+        socket.on('split_time', function(split_time){
+                        console.log(split_time)
+                        var html = "<table border='1|1'> <p>Split Times</p>";
+                        html+="<tr>";
+                        html+="<td>"+"Count"+"</td>";
+                        html+="<td>"+"Split Time (ms)"+"</td>";
+                        html+="</tr>";
+                        for (var i = 0; i < split_time.length; i++) {
+                                html+="<tr>";
+                                html+="<td>"+ i +"</td>";
+                                html+="<td>"+split_time[i]+"</td>";
+                                html+="</tr>";
+                            }
+                        html+="</table>";
+                        document.getElementById("box").innerHTML = html;
+                    });
+
+        
+  });
+</script>
+<body>
+    <h1>Manual Control of the Crawler</h1>
+    <br>
+    
+    <div class="spacing1">
+        <a class="up previous round">&#8249;</a>
+    </div>
+    <div class="spacing2">
+        <a class="left previous round">&#8249;</a>
+
+        <a class="right next round">&#8250;</a>
+    </div>
+    <div>
+        <a class="down previous round">&#8249;</a>
+    </div>
+    <div>
+            <img class = "stop" src="https://img.icons8.com/color/96/000000/stop-sign.png">
+    </div>
+    <div>
+        <input type="checkbox" class="mode"> Checked is manual, unchecked is auto. <br>
+    </div>
+    <iframe width="560" height="315" src="http://192.168.1.110:8081/" ></iframe>
+    <div id= "box"></div>
+
+</body>
+<style>
+    .stop{
+        margin-left: 25%;
+    }
+    .stop:hover{
+        background-color: #34495E;
+    }
+    .spacing2 {
+        margin-left: 38%;
+    }
+    div {
+        margin-left: 40%;
+    }
+    h1{
+        text-align: center;
+    }
+   a {
+        text-decoration: none;
+        display: inline-block;
+        padding: 8px 16px;
+
+    }
+
+a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.previous {
+  background-color: #4CAF50;
+  color: white;
+  margin-right: 1.5%;
+}
+
+.up {
+  background-color: #4CAF50;
+  color: white;
+  transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+}
+
+.down{
+    background-color: #4CAF50;
+    color: white;
+    transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
+}
+
+.next {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.round {
+  border-radius: 50%;
+}
+</style>
+
+</html>
