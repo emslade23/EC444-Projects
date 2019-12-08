@@ -39,6 +39,7 @@
 #include "driver/timer.h"
 #include "esp_types.h"
 
+
 //Defines for the timer
 #define TIMER_DIVIDER         16  //  Hardware timer clock divider
 #define TIMER_SCALE           (TIMER_BASE_CLK / TIMER_DIVIDER)  // convert counter value to seconds
@@ -111,8 +112,9 @@ int leftDistanceOne = 0;
 int leftDistanceTwo = 0;
 int16_t frontDistance = 0;
 uint8_t *data;
-uint8_t *id;
-uint8_t *color;
+//uint8_t *id;
+//uint8_t *color;
+int elapsedtime = 0;
 
 
 // Flags
@@ -157,6 +159,7 @@ static void periodic_timer_init()
     //start timer
     timer_start(TIMER_GROUP_0, TIMER_0);
 }
+
 
 // Font table for alpha displays
 uint16_t font_table(int num) {
@@ -222,6 +225,10 @@ uint16_t font_table(int num) {
     return fonttable[num];
 }
 
+int sock;
+int len;
+char* payload = "hello";
+struct sockaddr_in6 source_addr; // Large enough for both IPv4 or IPv6
 // Task for remotely starting and stopping the crawler
 static void udp_client_task(void *pvParameters)
 {
@@ -231,9 +238,7 @@ static void udp_client_task(void *pvParameters)
   int ip_protocol;
   char command[128];
   //char rx_buffer[128];
-  char* payload = "hello";
-  char previousCommand[128];
-    int newCommand = 1;
+
 
     while (1) {
       //configuring socket
@@ -256,7 +261,7 @@ static void udp_client_task(void *pvParameters)
       #endif
 
       // establishing socket
-      int sock = socket(addr_family, SOCK_DGRAM, ip_protocol);
+      sock = socket(addr_family, SOCK_DGRAM, ip_protocol);
         if (sock < 0) {
             ESP_LOGE(TAG, "Unable to create socket: errno %d", errno);
             break;
@@ -272,9 +277,9 @@ static void udp_client_task(void *pvParameters)
         while (1) {
 
           ESP_LOGI(TAG, "Waiting for data");
-           struct sockaddr_in6 source_addr; // Large enough for both IPv4 or IPv6
+           //struct sockaddr_in6 source_addr; // Large enough for both IPv4 or IPv6
            socklen_t socklen = sizeof(source_addr);
-           int len = recvfrom(sock, command, sizeof(command) - 1, 0, (struct sockaddr *)&source_addr, &socklen);
+           len = recvfrom(sock, command, sizeof(command) - 1, 0, (struct sockaddr *)&source_addr, &socklen);
 
           if (len < 0) {
               ESP_LOGE(TAG, "recvfrom failed: errno %d", errno);
@@ -291,40 +296,46 @@ static void udp_client_task(void *pvParameters)
               ESP_LOGI(TAG, "Received %d bytes from %s:", len, addr_str);
               ESP_LOGI(TAG, "%s", command);
 
-              if (strcmp(command, "auto") == 0){
+
+              if (strncmp(command, "auto",4) == 0){
                   printf("Autonomous driving on\n");
                   commandStop = 0;
-              } else if (strcmp(command, "manual") == 0){
+                  slowdown = 0;
+              } else if (strncmp(command, "manual",6) == 0){
                   printf("Manual driving on\n");
                   commandStop = 1;
+                  slowdown = 0;
+                  mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1400);
               } else {
                   printf("Waiting for valid command...\n");
               }
 
               if (commandStop == 1) {
-                if (strcmp(command,"forward") == 0) {
+                if (strncmp(command,"straight",8) == 0) {
                   mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 1450);
-                  mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1200);
-                } else if (strcmp(command,"backwards") == 0) {
+                  //mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1250);
+                } else if (strncmp(command,"backward",8) == 0) {
                   mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 1450);
                   mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1500);
-                } else if (strcmp(command,"left") == 0) {
+                } else if (strncmp(command,"left",4) == 0) {
                   mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 2400);
-                  mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1300);
-                } else if (strcmp(command,"right") == 0) {
+                  //mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1300);
+                } else if (strncmp(command,"right",5) == 0) {
                   mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 800);
-                  mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1300);
-                } else if (strcmp(command,"stop") == 0) {
+                  //mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1300);
+                } else if (strncmp(command,"stop",4) == 0) {
                   mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1400);
-               }
+                } else if (strncmp(command,"speedup",6) == 0) {
+                  mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1300);
+                }
              }
 
 
-              int err = sendto(sock, payload, len, 0, (struct sockaddr *)&source_addr, sizeof(source_addr));
-              if (err < 0) {
-                  ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
-                  break;
-              }
+              // int err = sendto(sock, payload, len, 0, (struct sockaddr *)&source_addr, sizeof(source_addr));
+              // if (err < 0) {
+              //     ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
+              //     break;
+              // }
           }
 
                //vTaskDelay(2000 / portTICK_PERIOD_MS);
@@ -739,6 +750,32 @@ void setspeedcontroller() {
     }
 }
 
+int beaconid;
+char color[5];
+char previouscolor[5];
+int previousbeaconid;
+
+void sendsplittime() {
+  asprintf(&payload,"%d,%s,%d",elapsedtime, color, beaconid);
+
+  if(previousbeaconid != beaconid) {
+    printf("message is: %s\n",payload);
+
+    char splittime_char[50]; // = NULL;
+    sprintf(splittime_char,"%d", elapsedtime);
+    alpha_display(splittime_char);
+
+    // int err = sendto(sock, payload, len, 0, (struct sockaddr *)&source_addr, sizeof(source_addr));
+    // if (err < 0) {
+    //     ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
+    //     //break;
+    // }
+  }
+  strcpy(previouscolor,color);
+  previousbeaconid = beaconid;
+}
+
+
 static void recieveLight(void *arg)
 {
   data = (uint8_t *) malloc(20);
@@ -747,7 +784,7 @@ static void recieveLight(void *arg)
     /* Configure parameters of an UART driver,
      * communication pins and install the driver */
     uart_config_t uart_config_reciever = {
-        .baud_rate = 2400,
+        .baud_rate = 1200,
         .data_bits = UART_DATA_8_BITS,
         .parity    = UART_PARITY_DISABLE,
         .stop_bits = UART_STOP_BITS_1,
@@ -763,32 +800,74 @@ static void recieveLight(void *arg)
     while (1) {
       // sending info back to the fob
         //uart_write_bytes(UART_NUM_1, (char *) msg, 20);
-
+        if (commandStop == 0) {
         int len = uart_read_bytes(UART_NUM_1, data, 20, 20 / portTICK_RATE_MS);
 
         //if (len >= 1) {
           //printf(" length: %d \n", len);
-          printf("%s \n", data);
+          //printf("%x %x %x %x\n", data[0], data[1], data[2], data[3]);
+          for (int i = 0; i < 4; i++) {
+            if(data[i] == 0x1B) {
+              if (i != 3) {
+                if(data[i+1] == 0x52) { //"R"
+                  printf("Light is red\n");
+                  redlight = 1;
+                  slowdown = 0;
+                  strcpy(color,"R");
+                } else if (data[i+1] == 0x59) { //"Y"
+                  redlight = 0;
+                  slowdown = 1;
+                  printf("Light is yellow\n");
+                  strcpy(color,"Y");
+                } else if (data[i+1] == 0x47) { //"G'"
+                  redlight = 0;
+                  slowdown = 0;
+                  printf("Light is green\n");
+                  strcpy(color,"G");
+                }
+                if (i == 0 || i == 1) {
+                  beaconid = data[i+2];
+                } else if (i == 2) {
+                  beaconid = data[0];
+                }
+              } else if (i == 3) {
+                if(data[0] == 0x52) { //"R"
+                  printf("Light is red\n");
+                  redlight = 1;
+                  slowdown = 0;
+                  strcpy(color,"R");
+                } else if (data[0] == 0x59) { //"Y"
+                  redlight = 0;
+                  slowdown = 1;
+                  printf("Light is yellow\n");
+                  strcpy(color,"Y");
+                } else if (data[0] == 0x47) { //"G'"
+                  redlight = 0;
+                  slowdown = 0;
+                  printf("Light is green\n");
+                  strcpy(color,"G");
+                }
+                beaconid = data[1];
+              }
+              //printf("%d\n", beaconid);
+              sendsplittime();
+            }
+          }
+          data[0] = 0;
+          data[1] = 0;
+          data[2] = 0;
+          data[3] = 0;
           //*color = data[1];
           //*id = data[2];
-          printf("Color: %c, ID: %c\n", data[1], data[2]);
-
-        if(data[1] == 'R') {
-          printf("Light is red\n");
-          redlight = 1;
-          slowdown = 0;
-        } else if (data [1] == 'Y') {
-          redlight = 0;
-          slowdown = 1;
-          printf("Light is yellow\n");
-        } else if (data [1] == 'G') {
-          redlight = 0;
-          slowdown = 0;
-          printf("Light is green\n");
-        }
+          /*char color, id;
+          //int id;
+          sprintf(color, "%x"， data[1]);
+          sprintf(id, "%x", data[2]);
+          printf("Color: %c, ID: %c\n", color, id);*/
 
         //printf("imreading\n");
         //}
+      }
 
         vTaskDelay(500 / portTICK_PERIOD_MS);
     }
@@ -830,32 +909,32 @@ void app_main(void)
 
     int count = 0;
       while (1) {
-          if (count == 10) {
-              setspeedcontroller();
-              count = 0;
-              speed = pulseCount * 0.051666;
-
-                      char speed_char[50]; // = NULL;
-                      sprintf(speed_char,"%f", speed);
-                      alpha_display(speed_char);
-                      printf("Speed = %f m/s\n", speed);
-                      printf("left One Distance = %d cm\n", leftDistanceOne);
-                      printf("Left Two Distance = %d cm\n", leftDistanceTwo);
-                      printf("set speed = %d \n", setspeed);
-                      printf("Front Distance: %d cm\n", frontDistance);
-                      printf("collision = %d, slowdown = %d, commandstop = %d\n", collision, slowdown, commandStop);
-                        pulseCount = 0;
-          }
 
           // Run PID every 100 ms (when timer is triggered)
           if (dt_complete == 1) {
               count++;
+              if (count == 10) {
+                  setspeedcontroller();
+                  count = 0;
+                  elapsedtime++;
+                  printf("%d\n",elapsedtime);
+                  speed = pulseCount * 0.051666;
+
+                          printf("Speed = %f m/s\n", speed);
+                          printf("left One Distance = %d cm\n", leftDistanceOne);
+                          printf("Left Two Distance = %d cm\n", leftDistanceTwo);
+                          printf("set speed = %d \n", setspeed);
+                          printf("Front Distance: %d cm\n", frontDistance);
+                          printf("collision = %d, slowdown = %d, commandstop = %d\n", collision, slowdown, commandStop);
+                            pulseCount = 0;
+              }
+
             PID();
             dt_complete = 0;
             // Re-enable alarm
             TIMERG0.hw_timer[TIMER_0].config.alarm_en = 1;
               //printf("working timer: %d\n", count);
            }
-          vTaskDelay(pdMS_TO_TICKS(10));
+          vTaskDelay(pdMS_TO_TICKS(50));
       }
 }
