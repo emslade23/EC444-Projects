@@ -12,7 +12,7 @@
 #include <math.h>
 #include "esp_attr.h"
 #include "driver/mcpwm.h"
-#include "soc/mcpwm_periph.h"
+//#include "soc/mcpwm_periph.h"
 #include "driver/i2c.h"
 #include "freertos/queue.h"
 #include "freertos/event_groups.h"
@@ -520,7 +520,7 @@ static void microLidar(void *arg)
     /* Configure parameters of an UART driver,
      * communication pins and install the driver */
     uart_config_t uart_config = {
-        .baud_rate = 115200,
+        .baud_rate = 115200, //1200
         .data_bits = UART_DATA_8_BITS,
         .parity    = UART_PARITY_DISABLE,
         .stop_bits = UART_STOP_BITS_1,
