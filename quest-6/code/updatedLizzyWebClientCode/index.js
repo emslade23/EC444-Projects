@@ -7,7 +7,7 @@ var command = "no command";
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/table.html');
   });
-  
+
 //******************************************************************* */
 var http = require('http').Server(app);
 http.listen(8080, function(){
@@ -18,13 +18,15 @@ var HOST = '192.168.1.111';
 var dgram = require('dgram');
 sendMessage(command);
 
-var splitData = 
+var splitData =
 {
     time: [],
     color: [],
     id: []
 }
 var inputSplit = [];
+var splitDatabase = {};
+
 //time,color,id
 // var input = "34,red,3";
 // var inputSplit = input.split(',');
@@ -45,6 +47,7 @@ function sendMessage(command){
         splitData.time.push(inputSplit[0]);
         splitData.color.push(inputSplit[1]);
         splitData.id.push(inputSplit[2]);
+        DatabaseUsage();
         console.log(splitData)
       });
 
@@ -56,11 +59,13 @@ function sendMessage(command){
 //******************************************************************* */
 var io = require('socket.io')(http);
 io.on('connection', function(socket){
-    io.emit('splitData', splitData);
+    io.emit('splitDatabase', splitDatabase);
 });
 setInterval(function(){
-        io.emit('splitData', splitData);
+        io.emit('splitDatabase', splitDatabase);
     }, 1000);
+
+    var db = require('./db');
 
 io.on('connection', function(socket){
     socket.on('left', function(msg){
@@ -99,3 +104,27 @@ io.on('connection', function(socket){
         console.log('mode? ' + msg);
         });
   });
+
+  //pushing data to the database
+  async function DatabaseUsage(){
+        // store formatted data into the database
+            let promise = new Promise((resolve, reject) => {
+                setTimeout(() => resolve("done!"), 500)
+              });
+
+            let result = await promise; // wait until the promise resolves (*)
+           // console.log(result, "after db:", sensorID1);
+
+            db.put(1, splitData);
+
+            db.get(1, function(err, value) {
+                    if (err) {
+                    console.error("null");
+                    }
+                    else{
+                        console.log("Split Time:", value);
+                        splitDatabase = value;
+                    }
+              });
+
+        }

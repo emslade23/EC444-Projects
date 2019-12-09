@@ -66,8 +66,8 @@
               console.log("auto");
             }
         });
-        socket.on('splitData', function(splitData){
-                        console.log(splitData)
+        socket.on('splitDatabase', function(splitDatabase){
+                        console.log(splitDatabase)
                         var html = "<table border='1|1'> <p>Split Times</p>";
                         html+="<tr>";
                         html+="<td>"+"Count"+"</td>";
@@ -75,12 +75,12 @@
                         html+="<td>"+"Split Color"+"</td>";
                         html+="<td>"+"Split ID"+"</td>";
                         html+="</tr>";
-                        for (var i = 0; i < splitData.time.length; i++) {
+                        for (var i = 0; i < splitDatabase.time.length; i++) {
                                 html+="<tr>";
                                 html+="<td>"+ i +"</td>";
-                                html+="<td>"+splitData.time[i]+"</td>";
-                                html+="<td>"+splitData.color[i]+"</td>";
-                                html+="<td>"+splitData.id[i]+"</td>";
+                                html+="<td>"+splitDatabase.time[i]+"</td>";
+                                html+="<td>"+splitDatabase.color[i]+"</td>";
+                                html+="<td>"+splitDatabase.id[i]+"</td>";
                                 html+="</tr>";
                             }
                         html+="</table>";
@@ -105,7 +105,7 @@
 <body>
     <h1>Manual Control of the Crawler</h1>
     <br>
-    
+
     <div class="spacing1">
         <a class="up previous round">&#8249;</a>
     </div>
@@ -139,7 +139,7 @@
 
     <!-- <img id = "img1" src="http://localhost:8080/images/qr.jpeg"></img> -->
     <span id="result1"></span><br>
-    
+
     <div id="theDiv"></div>
 
 </body>
