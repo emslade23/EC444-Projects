@@ -8,20 +8,20 @@ The purpose of this quest is to program a crawler to automatically navigate itse
 
 
 ## Evaluation Criteria
-Web user interface:
+### Web user interface:
   1. Functional web steering and speed control L,R,F,R, stop  Completed
   2. Web display showing historical splits from database  Completed
   3. Web stream from webcam on crawler  Completed
   4. All web interfaces in same browser window  Completed
   
-Devices:
+### Devices:
   1. Functional range sensors Completed
   2. Functional collision sensor  Completed
   3. Functional PID control on variable speed setpoint  Completed
   4. Functional IR sensor Completed
   5. Alpha display shows last beacon split time Completed
   
-Behaviors:
+### Behaviors:
   1. No collisions in runs
   2. Autonomous: drives straight on long walls without touching Completed
   3. Autonomous: makes turns, L or R turns around obstacles Completed
@@ -32,17 +32,17 @@ Behaviors:
   8. Able to remote drive vehicle Completed
 
 ## Solution Design
-1. Hardware
-    a. ESP - Receive and process all information from the sensors. Sets wheel speed and direction. Server side of the udp connection between the ESP and the Node.js on Raspberry Pi. Sends split time data to Node.js. Receives commands from Node.js for manual driving.
-    b. microLidars - Two of the microLidars are attached to the left side of the crawler. They detect distance between the unit to the wall, and the ESP reads this information by using UART.
-    c. Lidar - Attached to the front of the unit and detects distace between the unit to the wall. ESP reads this information by using i2C.
-    d. Encoder - The optical encoder was used with the black and white circle to detect pulses. Every pulse is 5 cm and multiple it by the time segment, 1sec. The encoder was placed on back wheel so as not to affect by the steering. ESP reads this information by using ADC, and then converts it to wheel speed.
-    e. IR receiver - ESP uses UART to read data from the IR receiver, which will receive data from the traffic light beacons.
-    f. Raspberry Pi - Runs the node.js server and supports the webcam. Receives user input from the web browser and sends commands to the ESP. Processes the QR code. Uses the database leveldb.
-    h. Webcam - Attached to the Raspberry pi, and lives streams to a web browser. Used for capturing the QR code.
-    i. Alphanumeric display - Displays the most recent split time.
+### 1. Hardware
+  a. ESP - Receive and process all information from the sensors. Sets wheel speed and direction. Server side of the udp connection between the ESP and the Node.js on Raspberry Pi. Sends split time data to Node.js. Receives commands from Node.js for manual driving.
+  b. microLidars - Two of the microLidars are attached to the left side of the crawler. They detect distance between the unit to the wall, and the ESP reads this information by using UART.
+  c. Lidar - Attached to the front of the unit and detects distace between the unit to the wall. ESP reads this information by using i2C.
+  d. Encoder - The optical encoder was used with the black and white circle to detect pulses. Every pulse is 5 cm and multiple it by the time segment, 1sec. The encoder was placed on back wheel so as not to affect by the steering. ESP reads this information by using ADC, and then converts it to wheel speed.
+  e. IR receiver - ESP uses UART to read data from the IR receiver, which will receive data from the traffic light beacons.
+  f. Raspberry Pi - Runs the node.js server and supports the webcam. Receives user input from the web browser and sends commands to the ESP. Processes the QR code. Uses the database leveldb.
+  h. Webcam - Attached to the Raspberry pi, and lives streams to a web browser. Used for capturing the QR code.
+  i. Alphanumeric display - Displays the most recent split time.
 
-2. Software
+### 2. Software
   a. ESP32 code -  
     - The two microLIDARs were placed at the front and back of one side of the crawler. When detecting a difference in the distance measured in both, the steering servo was turned accordingly. If the back microLIDAR detected less distance, the crawler steers left, if the front detected less, it steered right. The placement of the microLIDARs was made to maintain a parallel relation to one wall.
     - The big LIDAR placed at the front end of the crawler is used to detect collisions and also to make the crawler turn right when a wall is approaching.
