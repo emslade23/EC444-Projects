@@ -87,6 +87,8 @@ Figure 1.9: Herbert meditating
 Figure 1.10: Herbert meditating 2
 ![Herbert](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-6/images/IMG_5332.jpeg)
 
+Figure 1.11: Herbert and his Dysfunctional Fam
+![Herbert](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-6/images/IMG_5345.jpeg)
 
 
 
