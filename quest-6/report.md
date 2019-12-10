@@ -13,12 +13,14 @@ Web user interface:
   2. Web display showing historical splits from database  Completed
   3. Web stream from webcam on crawler  Completed
   4. All web interfaces in same browser window  Completed
+  
 Devices:
   1. Functional range sensors Completed
   2. Functional collision sensor  Completed
   3. Functional PID control on variable speed setpoint  Completed
   4. Functional IR sensor Completed
   5. Alpha display shows last beacon split time Completed
+  
 Behaviors:
   1. No collisions in runs
   2. Autonomous: drives straight on long walls without touching Completed
