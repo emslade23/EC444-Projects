@@ -4,6 +4,7 @@ Authors: Amy Dong, Liz Slade, Quianna Mortimer
 2019-12-10
 
 ## Summary
+The purpose of this quest is to program a crawler to automatically navigate itself though a course and also react to different signals. The crawler must also be able to controlled manually though a web client and also have the functionality to decode a QR code.
 
 
 ## Evaluation Criteria
