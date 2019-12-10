@@ -1,3 +1,3 @@
 # Code Readme
 
-Brief explanation on how to navigate your code folder. For example, main consists of the entry function, and lib are where the resource libraries are located.
+Main folder contains the c file that runs on the ESP32, called udp_client.
