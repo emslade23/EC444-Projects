@@ -54,7 +54,7 @@ The purpose of this quest is to program a crawler to automatically navigate itse
 
 
 ## Sketches and Photos
-Figure 1.0: Herbert
+Figure 1.0: Herbert, the Winner in Our Hearts
 ![Herbert](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-6/images/IMG_5343.jpeg)
 
 Figure 1.1: Herbert, Q and Amy
