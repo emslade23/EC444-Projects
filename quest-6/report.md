@@ -54,6 +54,40 @@ The purpose of this quest is to program a crawler to automatically navigate itse
 
 
 ## Sketches and Photos
+Figure 1.0: Herbert
+![Herbert](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-6/images/IMG_5343.jpeg)
+
+Figure 1.1: Herbert, Q and Amy
+![Herbert](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-6/images/IMG_5342.jpeg)
+
+Figure 1.2: Herbert, Q and Shy Amy
+![Herbert](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-6/images/IMG_5341.jpeg)
+
+Figure 1.3: A Portrait of Herbert and his Nurturing Mother
+![Herbert](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-6/images/IMG_5340.jpeg)
+
+Figure 1.4: Herbert and his Nurturing Mother
+![Herbert](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-6/images/IMG_5339.jpeg)
+
+Figure 1.5: Herbert
+![Herbert](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-6/images/IMG_5338.jpeg)
+
+Figure 1.6: Herbert 2
+![Herbert](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-6/images/IMG_5337.jpeg)
+
+Figure 1.7: Herbert looking at Q for support before his race.
+![Herbert](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-6/images/IMG_5335.jpeg)
+
+Figure 1.8: Q giving her son a pep talk.
+![Herbert](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-6/images/IMG_5334.jpeg)
+
+Figure 1.9: Herbert meditating
+![Herbert](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-6/images/IMG_5333.jpeg)
+
+Figure 1.10: Herbert meditating 2
+![Herbert](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-6/images/IMG_5332.jpeg)
+
+
 
 
 ## Supporting Artifacts
