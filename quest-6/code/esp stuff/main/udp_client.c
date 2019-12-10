@@ -12,7 +12,7 @@
 #include <math.h>
 #include "esp_attr.h"
 #include "driver/mcpwm.h"
-//#include "soc/mcpwm_periph.h"
+#include "soc/mcpwm_periph.h"
 #include "driver/i2c.h"
 #include "freertos/queue.h"
 #include "freertos/event_groups.h"
@@ -124,6 +124,9 @@ int dt_complete = 0; // Timer Flag
 int slowdown = 0;
 int manual = 0;
 int redlight = 0;
+int turn = 0;
+int runNumber = 0;
+int splittimeperbeacon = 0;
 
 //Define timer interrupt handler
 void IRAM_ATTR timer_isr(void* arg)
@@ -306,6 +309,9 @@ static void udp_client_task(void *pvParameters)
                   commandStop = 1;
                   slowdown = 0;
                   mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1400);
+              } else if (strncmp(command, "run",3) == 0) {
+                  elapsedtime = 0;
+                  runNumber++;
               } else {
                   printf("Waiting for valid command...\n");
               }
@@ -326,7 +332,7 @@ static void udp_client_task(void *pvParameters)
                 } else if (strncmp(command,"stop",4) == 0) {
                   mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1400);
                 } else if (strncmp(command,"speedup",6) == 0) {
-                  mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1300);
+                  mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1250);
                 }
              }
 
@@ -520,7 +526,7 @@ static void microLidar(void *arg)
     /* Configure parameters of an UART driver,
      * communication pins and install the driver */
     uart_config_t uart_config = {
-        .baud_rate = 115200, //1200
+        .baud_rate = 115200,
         .data_bits = UART_DATA_8_BITS,
         .parity    = UART_PARITY_DISABLE,
         .stop_bits = UART_STOP_BITS_1,
@@ -642,26 +648,38 @@ static void pulseCounting() {
 int difference = 0;
 
 // Task for steering
-static void straightLineError() {
-  while (1) {
+//static void straightLineError() {
+void straightLineError() {
+  //while (1) {
       if(commandStop == 0) {
         difference = leftDistanceOne - leftDistanceTwo;
         if (redlight == 0) {
           if (collision == 0) {
-            if (leftDistanceOne <= 35) {
-            mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 700);
-            } else if (difference >= 3 && difference < 8) { //turn left a little
-              //printf("diff more than 5\n");
-              mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 1800);
-            } else if (difference <= -3 && difference > -8) { //turn right a little
-              mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 1200);
-            } else if (difference >= 10) {
-              mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 2400);
-            } else if (difference <= -10) {
-              mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 800);
-            } else {
-              mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 1450);
-            }
+            if (turn == 1) { // Turn right
+              mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 680); // <1400 TURN RIGHT >1400 TURN LEFT
+              printf("right turn coming up\n");
+            } else if (leftDistanceOne <= 70) { // turn right moderately
+              mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 1000);
+              printf("turn right too close to wall\n");
+            } else if (leftDistanceOne > 90) { //turn left moderately
+              mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 1850);
+              printf("turn left too far from wall\n");
+              } else if (difference >= 3 && difference < 8) { //turn left a little
+                printf("turn left a little\n");
+                mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 1600);
+              } else if (difference <= -3 && difference > -8) { //turn right a little
+                printf("turn right a little\n");
+                mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 1200);
+              } else if (difference >= 8) { // turn left a lot
+                printf("turn left a lot\n");
+                mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 2400);// this is perfect number for most left
+              } else if (difference <= -8) { // turn right a lot
+                printf("turn right a lot\n");
+                mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 700);
+              } else { // straight
+                printf("straight\n");
+                mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 1450);
+              }
           } else if (collision == 1) {
             //mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, 1450);
             mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1400);
@@ -669,11 +687,13 @@ static void straightLineError() {
         } else if (redlight == 1) {
           mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1400);
         }
-        vTaskDelay(pdMS_TO_TICKS(100));
-      } else if(commandStop == 1) {
-        vTaskDelay(pdMS_TO_TICKS(100));
+        //vTaskDelay(pdMS_TO_TICKS(100));
       }
-  }
+      //} else if(commandStop == 1) {
+        //vTaskDelay(pdMS_TO_TICKS(100));
+
+      //}
+  //}
 }
 
 int setspeed = 1265;
@@ -696,6 +716,12 @@ void PID() {
       collision = 0;
     }
 
+    if (frontDistance > 40 && frontDistance < 200) {
+      turn = 1;
+    } else {
+      turn = 0;
+    }
+
       if(commandStop == 0) {
         if (redlight == 0) {
           if (collision == 0) {
@@ -705,7 +731,9 @@ void PID() {
               output = Kp * error + Ki * integral + Kd * derivative;
               previous_error = error;
             if (slowdown == 0) {
-              mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, setspeed);
+              //if (frontDistance > 100) {
+                mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, setspeed);
+              //}
             } else if (slowdown == 1) {
               mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, setspeed);
             }
@@ -715,9 +743,10 @@ void PID() {
         } else if (redlight == 1) {
           mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, 1400);
         }
-      } else if(commandStop == 1) {
-          vTaskDelay(pdMS_TO_TICKS(100));
       }
+      // } else if(commandStop == 1) {
+      //     vTaskDelay(pdMS_TO_TICKS(1));
+      // }
 }
 
 void setspeedcontroller() {
@@ -735,13 +764,13 @@ void setspeedcontroller() {
           setspeed = setspeed;
         }
       } else if (slowdown == 1){
-        if(speed > 0.1 && speed < 0.21) {
+        if(speed > 0.1 && speed < 0.20) {
           setspeed++;
         } else if (speed < 0.1 && speed > 0.03) {
           setspeed--;
         } else if (speed < 0.03) {
           setspeed = setspeed - 5;
-        } else if (speed > 0.37) {
+        } else if (speed > 0.20) {
           setspeed = setspeed + 5;
         } else {
           setspeed = setspeed;
@@ -756,20 +785,23 @@ char previouscolor[5];
 int previousbeaconid;
 
 void sendsplittime() {
-  asprintf(&payload,"%d,%s,%d",elapsedtime, color, beaconid);
+  asprintf(&payload,"%d,%d,%s,%d,%d",runNumber, splittimeperbeacon, color, beaconid, elapsedtime);
 
   if(previousbeaconid != beaconid) {
+    splittimeperbeacon = 0;
     printf("message is: %s\n",payload);
 
     char splittime_char[50]; // = NULL;
-    sprintf(splittime_char,"%d", elapsedtime);
+    sprintf(splittime_char,"%d  ", splittimeperbeacon);
     alpha_display(splittime_char);
 
-    // int err = sendto(sock, payload, len, 0, (struct sockaddr *)&source_addr, sizeof(source_addr));
-    // if (err < 0) {
-    //     ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
-    //     //break;
-    // }
+    len = strlen(payload);
+
+    int err = sendto(sock, payload, len, 0, (struct sockaddr *)&source_addr, sizeof(source_addr));
+    if (err < 0) {
+        ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
+        //break;
+    }
   }
   strcpy(previouscolor,color);
   previousbeaconid = beaconid;
@@ -778,7 +810,7 @@ void sendsplittime() {
 
 static void recieveLight(void *arg)
 {
-  data = (uint8_t *) malloc(20);
+  data = (uint8_t *) malloc(256);
 
 
     /* Configure parameters of an UART driver,
@@ -801,28 +833,31 @@ static void recieveLight(void *arg)
       // sending info back to the fob
         //uart_write_bytes(UART_NUM_1, (char *) msg, 20);
         if (commandStop == 0) {
-        int len = uart_read_bytes(UART_NUM_1, data, 20, 20 / portTICK_RATE_MS);
+        int len = uart_read_bytes(UART_NUM_1, data, 256, 10 / portTICK_RATE_MS);
 
+        int i = 0;
         //if (len >= 1) {
           //printf(" length: %d \n", len);
           //printf("%x %x %x %x\n", data[0], data[1], data[2], data[3]);
-          for (int i = 0; i < 4; i++) {
+
+          while (i < 4) {
+            i++;
             if(data[i] == 0x1B) {
               if (i != 3) {
                 if(data[i+1] == 0x52) { //"R"
-                  printf("Light is red\n");
+                  printf("Light is red!\n");
                   redlight = 1;
                   slowdown = 0;
                   strcpy(color,"R");
                 } else if (data[i+1] == 0x59) { //"Y"
                   redlight = 0;
                   slowdown = 1;
-                  printf("Light is yellow\n");
+                  printf("Light is yellow!\n");
                   strcpy(color,"Y");
                 } else if (data[i+1] == 0x47) { //"G'"
                   redlight = 0;
                   slowdown = 0;
-                  printf("Light is green\n");
+                  printf("Light is green!\n");
                   strcpy(color,"G");
                 }
                 if (i == 0 || i == 1) {
@@ -832,31 +867,35 @@ static void recieveLight(void *arg)
                 }
               } else if (i == 3) {
                 if(data[0] == 0x52) { //"R"
-                  printf("Light is red\n");
+                  printf("Light is red!!\n");
                   redlight = 1;
                   slowdown = 0;
                   strcpy(color,"R");
                 } else if (data[0] == 0x59) { //"Y"
                   redlight = 0;
                   slowdown = 1;
-                  printf("Light is yellow\n");
+                  printf("Light is yellow!!\n");
                   strcpy(color,"Y");
                 } else if (data[0] == 0x47) { //"G'"
                   redlight = 0;
                   slowdown = 0;
-                  printf("Light is green\n");
+                  printf("Light is green!!\n");
                   strcpy(color,"G");
                 }
                 beaconid = data[1];
               }
               //printf("%d\n", beaconid);
               sendsplittime();
+              //uart_flush(UART_NUM_1);
+              data[0] = 0;
+              data[1] = 0;
+              data[2] = 0;
+              data[3] = 0;
+              break;
             }
           }
-          data[0] = 0;
-          data[1] = 0;
-          data[2] = 0;
-          data[3] = 0;
+
+
           //*color = data[1];
           //*id = data[2];
           /*char color, id;
@@ -869,7 +908,7 @@ static void recieveLight(void *arg)
         //}
       }
 
-        vTaskDelay(500 / portTICK_PERIOD_MS);
+        vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }
 
@@ -899,7 +938,7 @@ void app_main(void)
       //printf("3\n");
       xTaskCreate(microLidar, "micro_lidar", 4096, NULL, configMAX_PRIORITIES, NULL);
       //printf("4\n");
-      xTaskCreate(straightLineError, "straight_Line_Error", 4096, NULL, configMAX_PRIORITIES, NULL);
+      //xTaskCreate(straightLineError, "straight_Line_Error", 4096, NULL, configMAX_PRIORITIES, NULL);
       //printf("5\n");
       xTaskCreate(recieveLight, "recieve_light", 4096, NULL, configMAX_PRIORITIES, NULL);
 
@@ -917,6 +956,7 @@ void app_main(void)
                   setspeedcontroller();
                   count = 0;
                   elapsedtime++;
+                  splittimeperbeacon++;
                   printf("%d\n",elapsedtime);
                   speed = pulseCount * 0.051666;
 
@@ -930,11 +970,12 @@ void app_main(void)
               }
 
             PID();
+            straightLineError();
             dt_complete = 0;
             // Re-enable alarm
             TIMERG0.hw_timer[TIMER_0].config.alarm_en = 1;
               //printf("working timer: %d\n", count);
            }
-          vTaskDelay(pdMS_TO_TICKS(50));
+          vTaskDelay(pdMS_TO_TICKS(30));
       }
 }
