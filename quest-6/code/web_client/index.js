@@ -1,3 +1,4 @@
+//setting up nodejs application with express routes.
 const express = require('express');
 const app = express();
 app.use(express.static('public'))
@@ -10,6 +11,7 @@ app.get('/', function(req, res){
   });
   
 //******************************************************************* */
+//setting up server
 var http = require('http').Server(app);
 http.listen(8080, function(){
     console.log('graphing at port 8080');
@@ -29,18 +31,11 @@ var splitData =
     total: []
 }
 var inputSplit = [];
-//time,color,id
-// var input = "34,red,3";
-// var inputSplit = input.split(',');
 
-// splitData.time.push(inputSplit[0]);
-// splitData.color.push(inputSplit[1]);
-// splitData.id.push(inputSplit[2]);
-// console.log(splitData)
-
+//sending and receiving data from ESP32
 function sendMessage(command){
-    var message = new Buffer(command);
-
+    
+    //receiving data from esp32
     var client = dgram.createSocket('udp4');
     client.on('message',function(msg,info){
         console.log('Data received from server : ' + msg.toString());
@@ -52,15 +47,17 @@ function sendMessage(command){
         splitData.id.push(inputSplit[3]);
         splitData.total.push(inputSplit[4]);
         DatabaseUsage();
-        console.log(splitData)
       });
-
+    
+    //sending data to esp32
+    var message = new Buffer(command);
     client.send(message, 0, message.length, PORT, HOST, function(err, bytes) {
         if (err) throw err;
         console.log('UDP message '+message+ ' sent to ' + HOST +':'+ PORT);
         });
 }
 //******************************************************************* */
+//socket set up between js and html
 var io = require('socket.io')(http);
 io.on('connection', function(socket){
     io.emit('splitData', splitData);
@@ -69,6 +66,7 @@ setInterval(function(){
         io.emit('splitData', splitData);
     }, 1000);
 
+//socket setup between nodejs app and esp32, setting command here to be shipped to esp32
 io.on('connection', function(socket){
     socket.on('left', function(msg){
         command = msg;
@@ -111,6 +109,7 @@ io.on('connection', function(socket){
         console.log('run? ' + msg);
         });
   });
+
 //pushing data to the database
 async function DatabaseUsage(){
     // store formatted data into the database
