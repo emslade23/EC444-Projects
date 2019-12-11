@@ -129,14 +129,18 @@ Figure 2
 
 
 ## Supporting Artifacts
-- [Link to repo]()
-- [Link to video demo]()
+- [Link to repo](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/edit/master/quest-6/report.md)
+- [Link to video demo](https://www.youtube.com/watch?v=9xKs3fbmaRE&feature=youtu.be)
 
 
 ## References
-Class resources: http://whizzer.bu.edu/quests/primary/rollup
-https://github.com/BU-EC444/code-examples/tree/master/ir-car-beacon-capture // to create testing beacon
-https://pimylifeup.com/raspberry-pi-webcam-server/ // to bring up the webcam
+Class resources: 
+
+- http://whizzer.bu.edu/quests/primary/rollup
+
+- https://github.com/BU-EC444/code-examples/tree/master/ir-car-beacon-capture // to create testing beacon
+
+- https://pimylifeup.com/raspberry-pi-webcam-server/ // to bring up the webcam
 
 -----
 
