@@ -4,7 +4,7 @@ Authors: Amy Dong, Liz Slade, Quianna Mortimer
 2019-12-10
 
 ## Summary
-The purpose of this quest is to program a crawler to automatically navigate itself though a course and also react to different signals. The crawler must also be able to controlled manually though a web client and also have the functionality to decode a QR code.
+The purpose of this quest is to program a crawler to automatically navigate itself though a course and react to different signals emmited from beacons on the track as smoothly as possible. The crawler must also include a manually controlled feature though a web client and use a webcam to decipher a QR code.
 
 
 ## Evaluation Criteria
@@ -82,6 +82,8 @@ The purpose of this quest is to program a crawler to automatically navigate itse
   
   - We are using a logitech camera
 
+Figure 2 below is a system diagram dividing the manual and automatic crawler states. It includes the general flow between the interactive comments.
+
 
 
 ## Sketches and Photos
@@ -121,6 +123,8 @@ Figure 1.10: Herbert meditating 2
 Figure 1.11: Herbert and his Dysfunctional Fam
 ![Herbert](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/blob/master/quest-6/images/IMG_5345.jpeg)
 
+Figure 2
+![sys_digram](https://user-images.githubusercontent.com/24261732/70589080-c7d9a880-1b9c-11ea-98ad-5979559b1eed.jpeg)
 
 
 ## Supporting Artifacts
@@ -129,6 +133,9 @@ Figure 1.11: Herbert and his Dysfunctional Fam
 
 
 ## References
+Class resources: http://whizzer.bu.edu/quests/primary/rollup
+https://github.com/BU-EC444/code-examples/tree/master/ir-car-beacon-capture // to create testing beacon
+https://pimylifeup.com/raspberry-pi-webcam-server/ // to bring up the webcam
 
 -----
 
