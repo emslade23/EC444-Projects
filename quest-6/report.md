@@ -60,7 +60,27 @@ The purpose of this quest is to program a crawler to automatically navigate itse
 
   - The IR receiver detects the colors sent by the beacons placed on the ground. The ESP processes these color commands and controls the crawler to slowdown, stop or go. When a beacon with a new ID is detected by the IR receiver, the ESP sends this information gets sent to the Node.js server. It also records the elapsed time of this detection and displays that on the alphanumeric display.
 
-  b. Node.js code on Raspberry Pi, web client (LIZ WRITE THIS PLEASE)
+  b. Node.js code on Raspberry Pi, web client
+  
+  - The NodeJS application acts as a client that connects to a server that is running on the ESP32. 
+  
+  - The checkbox on the application is what initiates switches between autonomous and manual mode. If the check box is unchecked, then the car is in autonomous mode. If the check box is checked, then a manual command gets sent to the ESP32 and processed.
+  
+  - If the up arrow is pressed, then the command "up" is sent to the ESP32 and the wheels face forward.
+  
+  - If the left arrow is pressed, then the command "left" is sent to the ESP32 and the wheels turn left. 
+  
+  - If the right arrow is pressed, then the command "right" is sent to the ESP32 and the wheels turn right. 
+  
+  - If the down arrow is pressed, then the command "backward" is sent to the ESP32 and the car goes backwards.
+  
+  - If the go button is pressed, then the command "go" is sent to the ESP32 and the car goes forwards.
+  
+  - If the stop button is pressed, then the command "stop" is sent to the ESP32 and the car stops. 
+  
+  - The NodeJS application is also waiting for split times from the ESP32. When it receives split time from the ESP32, it will display it in a table, along with ID, Color, Total Elapsed Time and Run. This data is stored in a leveldb database in a json format (key, value pair). Since there is a socket connection, every time a split time is updated and sent to the NodeJS application, it updates the web client table in real time. 
+  
+  - We are using a logitech camera
 
 
 
