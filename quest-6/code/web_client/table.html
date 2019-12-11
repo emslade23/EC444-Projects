@@ -10,8 +10,12 @@
 </head>
 
 <script>
+    
     var decoded = false;
     var answer = "";
+    
+     // setting up socket on html side.
+     //onclick event, send command to nodejs so it can be sent to esp32.
      $(function () {
         var socket = io();
         socket.emit('left', "null");
@@ -73,6 +77,7 @@
               console.log("auto");
             }
         });
+         //if we receive data from esp32 and send that split time data to this socket, display the resulting table here
         socket.on('splitData', function(splitData){
                         console.log(splitData)
                         var html = "<table border='1|1'> <p>Split Times</p>";
@@ -98,6 +103,8 @@
                         document.getElementById("box").innerHTML = html;
                     });
   });
+  
+    // interval to check for QR code
   var refreshIntervalId;
     if (!decoded){
         refreshIntervalId = setInterval(qrcode, 1000);
@@ -105,28 +112,29 @@
     else if(decoded){
         document.getElementById("decodedResult").innerHTML = answer;
     }
-
+    
+    //attempts to decode image for QR code
     function qrcode(){
-        var qr = new QrCode();
+        var QRcode = new QrCode();
         var canvas = document.getElementById("canvas");
         canvas.style.display="none";
-        var ctx = canvas.getContext('2d');
+        var context = canvas.getContext('2d');
 
         var img = document.getElementById("source");
 
         canvas.width = img.width;
         canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-        var data = ctx.getImageData(0, 0, img.width, img.height);
+        context.drawImage(img, 0, 0);
+        var data = context.getImageData(0, 0, img.width, img.height);
         console.log("data", data);
 
-        qr.callback = function(err, value){
+        QRcode.callback = function(err, value){
             if (err){
                 console.log(err);
             }
             else{
+                // if image is decoded, set H4 dom element to the answer, and stop checking for QR code
                 decoded = true;
-                console.log("total ", value);
                 console.log("result: ", value.result);
                 answer = value.result;
                 document.getElementById("decodedResult").innerHTML = "QR Message Here: " + answer;
@@ -134,7 +142,7 @@
 
             }
         }
-        qr.decode(data);
+        QRcode.decode(data);
         
     }
 </script>
@@ -172,13 +180,12 @@
                 <input type="checkbox" class="mode"> Checked is manual, unchecked is auto. <br>
             </div>
 
-    <img crossorigin="anonymous" id = "source" width="640" height="480" src="http://192.168.1.110:8081/stream" style="display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;">
-
-    <!-- <button onclick="qrcode()" id="decode1" class="btn btn-info">Decode the QR Code!</button><br> -->
-    <!-- <iframe width="700" height="700" src="http://192.168.1.110:8081/" ></iframe> -->
+    <img crossorigin="anonymous" id = "source" width="640" height="480" src="http://192.168.1.110:8081/stream" 
+         style="display: block;
+         margin-left: auto;
+         margin-right: auto;
+         width: 50%;">
+    
     <div id= "box"></div>
 
     <canvas id="canvas"></canvas>
