@@ -80,7 +80,8 @@ The purpose of this quest is to program a crawler to automatically navigate itse
   
   - The NodeJS application is also waiting for split times from the ESP32. When it receives split time from the ESP32, it will display it in a table, along with ID, Color, Total Elapsed Time and Run. This data is stored in a leveldb database in a json format (key, value pair). Since there is a socket connection, every time a split time is updated and sent to the NodeJS application, it updates the web client table in real time. 
   
-  - We are using a logitech camera
+  - We are using a logitech camera to live stream video of what Herbert sees. This livestream is displayed on the NodeJS application. The livestream is represented in an image tag that references the IP that is hosting the livestream. I created a script that takes the content of the image tag and redraws it on a canvas. And then, the script takes the redrawn image and puts it through a QR decoder function. This process repeats every second until a QR code is detected. If the resulting code is figured out, then the code gets displayed on the web client in h4 tags. 
+
 
 Figure 2 below is a system diagram dividing the manual and automatic crawler states. It includes the general flow between the interactive comments.
 
