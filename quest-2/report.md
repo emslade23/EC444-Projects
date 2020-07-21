@@ -6,6 +6,9 @@ Authors: Elizabeth Slade, Amy Dong, Quianna Mortimer
 ## Summary
 This quest required the periodic measuring of IR and ultrsonic sensor in meters and the measuring of thermistor in Celsius which were then plotted in real time on canvas.js. 
 
+## Video
+- [![Watch the video](https://img.youtube.com/vi/vtBfmNzGsuc/maxresdefault.jpg)](https://youtu.be/vtBfmNzGsuc)
+
 
 ## Evaluation Criteria
 1. Periodic measuring of ultrasonic sensor in m
