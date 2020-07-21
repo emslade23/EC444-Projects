@@ -2,6 +2,8 @@
 Authors: Amy Dong, Liz Slade, Quianna Mortimer
 
 2019-12-10
+### Video
+[Link to video demo](https://www.youtube.com/watch?v=9xKs3fbmaRE&feature=youtu.be)
 
 ## Summary
 The purpose of this quest is to program a crawler to automatically navigate itself though a course and react to different signals emmited from beacons on the track as smoothly as possible. The crawler must also include a manually controlled feature though a web client and use a webcam to decipher a QR code.
