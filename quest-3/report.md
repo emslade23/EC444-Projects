@@ -26,6 +26,10 @@ When a user checks the disable battery, temperature or steps data, in each case,
 
 
 Furthermore, we have integrated port forwarding such that the user can view our web application from any device connected to the internet.
+
+## Video
+- [Link to video demo](https://youtu.be/s8XyCHvXPtk)
+
 ## Evaluation Criteria
 Objective Criteria
 1. Send data across seperate IP network to control remote device through web client- complete
