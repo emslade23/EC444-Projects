@@ -89,47 +89,46 @@ Figure 2 below is a system diagram dividing the manual and automatic crawler sta
 
 ## Sketches and Photos
 Figure 1.0: Herbert, the Winner in Our Hearts
-![Herbert](https://github.com/emslade23/EC444-Projects/tree/master/quest-6/images/IMG_5343.jpeg)
+![Herbert](images/IMG_5343.jpeg)
 
 Figure 1.1: Herbert, Q and Amy
-![Herbert](https://github.com/emslade23/EC444-Projects/tree/master/quest-6/images/IMG_5342.jpeg)
+![Herbert](images/IMG_5342.jpeg)
 
 Figure 1.2: Herbert, Q and Shy Amy
-![Herbert](https://github.com/emslade23/EC444-Projects/tree/master/quest-6/images/IMG_5341.jpeg)
+![Herbert](images/IMG_5341.jpeg)
 
 Figure 1.3: A Portrait of Herbert and his Nurturing Mother
-![Herbert](https://github.com/emslade23/EC444-Projects/tree/master/quest-6/images/IMG_5340.jpeg)
+![Herbert](images/IMG_5340.jpeg)
 
 Figure 1.4: Herbert and his Nurturing Mother
-![Herbert](https://github.com/emslade23/EC444-Projects/tree/master/quest-6/images/IMG_5339.jpeg)
+![Herbert](images/IMG_5339.jpeg)
 
 Figure 1.5: Herbert
-![Herbert](https://github.com/emslade23/EC444-Projects/tree/master/quest-6/images/IMG_5338.jpeg)
+![Herbert](images/IMG_5338.jpeg)
 
 Figure 1.6: Herbert 2
-![Herbert](https://github.com/emslade23/EC444-Projects/tree/master/quest-6/images/IMG_5337.jpeg)
+![Herbert](images/IMG_5337.jpeg)
 
 Figure 1.7: Herbert looking at Q for support before his race.
-![Herbert](https://github.com/emslade23/EC444-Projects/tree/master/quest-6/images/IMG_5335.jpeg)
+![Herbert](images/IMG_5335.jpeg)
 
 Figure 1.8: Q giving her son a pep talk.
-![Herbert](https://github.com/emslade23/EC444-Projects/tree/master/quest-6/images/IMG_5334.jpeg)
+![Herbert](images/IMG_5334.jpeg)
 
 Figure 1.9: Herbert meditating
-![Herbert](https://github.com/emslade23/EC444-Projects/tree/master/quest-6/images/IMG_5333.jpeg)
+![Herbert](images/IMG_5333.jpeg)
 
 Figure 1.10: Herbert meditating 2
-![Herbert](https://github.com/emslade23/EC444-Projects/tree/master/quest-6/images/IMG_5332.jpeg)
+![Herbert](images/IMG_5332.jpeg)
 
 Figure 1.11: Herbert and his Dysfunctional Fam
-![Herbert](https://github.com/emslade23/EC444-Projects/tree/master/quest-6/images/IMG_5345.jpeg)
+![Herbert](images/IMG_5345.jpeg)
 
 Figure 2
 ![sys_digram](https://user-images.githubusercontent.com/24261732/70589080-c7d9a880-1b9c-11ea-98ad-5979559b1eed.jpeg)
 
 
 ## Supporting Artifacts
-- [Link to repo](https://github.com/BU-EC444/Team4-Dong-Mortimer-Slade/edit/master/quest-6/report.md)
 - [Link to video demo](https://www.youtube.com/watch?v=9xKs3fbmaRE&feature=youtu.be)
 
 
